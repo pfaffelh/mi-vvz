@@ -71,7 +71,7 @@ def display_navigation():
     #    unsafe_allow_html=True,
     #)
 
-    st.sidebar.image("static/ufr.png")
+    # st.sidebar.image("static/ufr.png")
     st.sidebar.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("VVZ.py", label="VVZ")
     st.sidebar.page_link("pages/01_Veranstaltungen.py", label="Veranstaltungen")
@@ -88,4 +88,6 @@ def display_navigation():
     st.sidebar.page_link("pages/09_Gebäude.py", label="Gebäude")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/10_Semester.py", label="Semester")
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("pages/11_Dokumentation.py", label="Dokumentation")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
