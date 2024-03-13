@@ -7,43 +7,43 @@ from misc.util import *
 
 # Wird benötigt, falls ein Gebäude gelöscht wird, das noch Orte hat.
 gebaeude_leer = gebaeude.find_one({"name_de": "-"})
-ort_leer = ort.find_one({"name_de": "-"})
+raum_leer = raum.find_one({"name_de": "-"})
 
 def delete_confirm_one(x):
-    # Check wo dieser Ort vorkommt (in Kursen) und dort gegen den leeren Ort tauschen!
-#    y = list(ort.find({"gebaeude": x["_id"]}))
+    # Check wo dieser Raum vorkommt (in Kursen) und dort gegen den leeren Raum tauschen!
+#    y = list(raum.find({"gebaeude": x["_id"]}))
     s = ""
 #    for z in y:
 #        z_updated = {"gebaeude": x_leer["_id"]}
-#        ort.update_one(z, {"$set": z_updated })
+#        raum.update_one(z, {"$set": z_updated })
 #        s = f"{s}  \n{z['name_de']}"
 #    if s != "":
 #        if len(y) == 1:
 #            s = s +  "  \nhat nun kein Gebäude mehr."
 #        else:
 #            s = s +  "  \nhaben nun kein Gebäude mehr."
-    ort.delete_one(x)
+    raum.delete_one(x)
     reset()
     st.success(f"Erfolgreich gelöscht! {s}")
 
 def update_confirm(x, x_updated):
-    ort.update_one(x, {"$set": x_updated })
+    raum.update_one(x, {"$set": x_updated })
     reset()
     st.success("Erfolgreich geändert!")
 
 # Ändert die Reihenfolge der Darstellung
 def move_up(x):
-    target = ort.find_one({"rang": {"$lt": x["rang"]}}, sort = [("rang",pymongo.DESCENDING)])
+    target = raum.find_one({"rang": {"$lt": x["rang"]}}, sort = [("rang",pymongo.DESCENDING)])
     if target:
         n= target["rang"]
-        ort.update_one(target, {"$set": {"rang": x["rang"]}})    
-        ort.update_one(x, {"$set": {"rang": n}})    
+        raum.update_one(target, {"$set": {"rang": x["rang"]}})    
+        raum.update_one(x, {"$set": {"rang": n}})    
 def move_down(x):
-    target = ort.find_one({"rang": {"$gt": x["rang"]}}, sort = [("rang", pymongo.ASCENDING)])
+    target = raum.find_one({"rang": {"$gt": x["rang"]}}, sort = [("rang", pymongo.ASCENDING)])
     if target:
         n= target["rang"]
-        ort.update_one(target, {"$set": {"rang": x["rang"]}})    
-        ort.update_one(x, {"$set": {"rang": n}})    
+        raum.update_one(target, {"$set": {"rang": x["rang"]}})    
+        raum.update_one(x, {"$set": {"rang": n}})    
 
 # make all neccesary variables available to session_state
 setup_session_state()
@@ -63,11 +63,11 @@ if st.session_state.logged_in:
   if st.button('**Neue Ort hinzufügen**'):
     z = gebaeude.find()
     rang = (sorted(z, key=lambda x: x['rang'])[0])["rang"]-1
-    x = ort.insert_one({"name_de": "neu", "name_en": "", "kurzname": "", "gebaeude": gebaeude_leer["_id"], "raum": "", "groesse": 0, "sichtbar": True, "kommentar": "", "rang": rang})
+    x = raum.insert_one({"name_de": "neu", "name_en": "", "kurzname": "", "gebaeude": gebaeude_leer["_id"], "raum": "", "groesse": 0, "sichtbar": True, "kommentar": "", "rang": rang})
     st.session_state.expanded=x.inserted_id
     st.rerun()
 
-  y = list(ort.find(sort=[("rang", pymongo.ASCENDING)]))
+  y = list(raum.find(sort=[("rang", pymongo.ASCENDING)]))
 
   geb = list(gebaeude.find({"sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
   gebaeude_sichtbar = { x["_id"]: x["name_de"] for x in geb }
@@ -77,8 +77,8 @@ if st.session_state.logged_in:
     with co1:
         with st.expander(f"**{x['name_de']}**" if x["sichtbar"] else x["name_de"], (True if x["_id"] == st.session_state.expanded else False)):
             with st.form(f'ID-{x["_id"]}'):
-                sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == ort_leer["_id"] else False))
-                name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == ort_leer["_id"] else False))
+                sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == raum_leer["_id"] else False))
+                name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == raum_leer["_id"] else False))
                 name_en=st.text_input('Name (en)', x["name_en"])
                 kurzname=st.text_input('Kurzname', x["kurzname"])
                 if x["gebaeude"] not in gebaeude_sichtbar:
