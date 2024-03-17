@@ -10,19 +10,80 @@ setup_session_state()
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+logo()
 
 # Navigation in Sidebar anzeigen
 display_navigation()
 
+def edit(v_id):
+    st.session_state.edit = v_id
+
+# Eine Veranstaltung nach oben verschieben
+def ver_move_up(v):
+    target = veranstaltung.find_one( {"kategorie": v["kategorie"], "rang": {"$lt": v["rang"]}}, sort = [("rang",-1)])
+    if target:
+        n= target["rang"]
+        veranstaltung.update_one(target, {"$set": {"rang": v["rang"]}})    
+        veranstaltung.update_one(v, {"$set": {"rang": n}})    
+
+def ver_move_down(v):
+    target = veranstaltung.find_one({"kategorie": v["kategorie"],"rang": {"$gt": v["rang"]}}, sort = [("rang",+1)])
+    if target:
+        n= target["rang"]
+        veranstaltung.update_one(target, {"$set": {"rang": v["rang"]}})    
+        veranstaltung.update_one(v, {"$set": {"rang": n}})    
+
+def name_of_sem_id(semester_id):
+    x = semester.find_one({"_id": semester_id})
+    return x["name_de"]
+
+def name_of_ver_id(ver_id):
+    x = veranstaltung.find_one({"_id": ver_id})
+    return x["name_de"]
+
 # Ab hier wird die Seite angezeigt
-st.header("FAQ")
+st.header("Veranstaltungsverzeichnis")
 
 if st.session_state.logged_in:
-    st.write("Wir listen alle Frage-Antwort-Paare in allen Kategorien auf.")
-    st.divider()
+    if st.session_state.edit == "":
+        semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+        st.session_state.semester = semesters[0]["_id"]
 
-    col1, col2 = st.columns([1,1]) 
-    # Der Sprach-Umschalter
+        sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = 0, format_func = name_of_sem_id, placeholder = "Wähle ein Semester", label_visibility = "collapsed")
+        st.session_state.semester = sem_id
+
+        submit = False
+        if sem_id is not None:
+            kat = list(kategorie.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
+            for k in kat:
+                st.write(k["prefix_de"])
+                st.write(k["titel_de"])
+                ver = list(veranstaltung.find({"kategorie": k["_id"]},sort=[("rang", pymongo.ASCENDING)]))
+                for v in ver:
+                    col1, col2, col3, col4 = st.columns([1,1,3,20]) 
+                    with col1:
+                        st.button('↓', key=f'down-{v["_id"]}', on_click = ver_move_down, args = (v, ))
+                    with col2:
+                        st.button('↑', key=f'up-{v["_id"]}', on_click = ver_move_up, args = (v, ))
+                    with col3:
+                        st.button('Bearbeiten', key=f"edit-{v['_id']}", on_click = edit, args = (v["_id"], ))
+                    with col4:
+                        d = [(person.find_one({"_id": x}))["name"] for x in v["dozent"]]
+                        st.write(f"{v['name']} ({', '.join(d)})")
+    else:
+        v = veranstaltung.find_one({"_id": st.session_state.edit})
+        col1, col2 = st.columns([20,3])
+        with col1:
+            st.subheader(v["name_de"])
+        with col2: 
+            st.button('Bearbeiten', key=f'edit-{v["_id"]}', on_click = edit, args = ("", ))
+
+
+
+
+
+
+    col1, col2, col3, col4 = st.columns([20,3,1,1]) 
     with col1:
         st.button("en" if st.session_state.lang == "de" else "de", on_click = change_lang)
     # Der Ausklapp-Umschalter

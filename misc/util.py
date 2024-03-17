@@ -73,6 +73,9 @@ def setup_session_state():
     # Element to delete
     if "delete" not in st.session_state:
         st.session_state.delete = False
+    # Element to delete
+    if "edit" not in st.session_state:
+        st.session_state.edit = ""
 
 # Diese Funktion löschen, wenn die Verbindung sicher ist.
 def authenticate2(username, password):
@@ -178,19 +181,17 @@ def display_navigation():
 try:
     cluster = pymongo.MongoClient(mongo_location)
     mongo_db = cluster["vvz"]
+    anforderung = mongo_db["anforderung"]
+    anforderungkategorie = mongo_db["anforderungkategorie"]
+    code = mongo_db["code"]
     gebaeude = mongo_db["gebaeude"]
+    kategorie = mongo_db["kategorie"]
+    modul = mongo_db["modul"]
+    person = mongo_db["person"]
     raum = mongo_db["raum"]
     semester = mongo_db["semester"]
-    kategorie = mongo_db["kategorie"]
-    code = mongo_db["code"]
-
-    course = mongo_db["course"]
-    course_category = mongo_db["course_category"]
-    group = mongo_db["group"]
-    person = mongo_db["person"]
-    person_category = mongo_db["person_category"]
-    program = mongo_db["program"]
-
+    studiengang = mongo_db["studiengang"]
+    veranstaltung = mongo_db["veranstaltung"]
 
     mongo_db_users = cluster["user"]
     user = mongo_db_users["user"]
