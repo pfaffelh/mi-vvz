@@ -22,7 +22,7 @@ def configure_logging(file_path, level=logging.INFO):
 logger = configure_logging(log_file)
 
 def logo():
-    add_logo("misc/ufr.png", height=600)
+    add_logo("static/ufr.png", height=600)
 
 def login():
     st.session_state.logged_in = True
@@ -76,6 +76,9 @@ def setup_session_state():
     # Element to delete
     if "edit" not in st.session_state:
         st.session_state.edit = ""
+    # Determines which page we are on
+    if "page" not in st.session_state:
+        st.session_state.page = ""
 
 # Diese Funktion löschen, wenn die Verbindung sicher ist.
 def authenticate2(username, password):
@@ -125,6 +128,7 @@ def reset(text=""):
     st.session_state.submitted = False
     st.session_state.expand_all = False
     st.session_state.expanded = ""
+    st.session_state.edit = ""
     if text != "":
         st.success(text)
 
@@ -148,25 +152,14 @@ def can_edit(username):
     return (True if "faq" in u["groups"] else False)
 
 def display_navigation():
-    #st.sidebar.markdown("<img src='./app/static/ufr.png'/>", unsafe_allow_html=True)
-    #st.markdown(
-    #    '<img src="./app/static/ufr.png" height="333" style="border: 5px solid orange">',
-    #    unsafe_allow_html=True,
-    #)
-
-    # st.sidebar.image("static/ufr.png")
-    st.sidebar.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-    st.sidebar.page_link("VVZ.py", label="VVZ")
-    st.sidebar.page_link("pages/01_Veranstaltungen.py", label="Veranstaltungen")
-    st.sidebar.page_link("pages/02_Veranstaltungs-Kategorien.py", label="Veranstaltungs-Kategorien")
+    st.sidebar.image("static/ufr.png")
+    st.sidebar.write("<hr style='height:0px;margin:50px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("VVZ.py", label="Veranstaltungen")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/03_Personen.py", label="Personen")
-    st.sidebar.page_link("pages/04_Gruppen.py", label="Gruppen")
-    st.sidebar.page_link("pages/05_Personen-Kategorien.py", label="Personen-Kategorien")
-    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/06_Studiengänge.py", label="Studiengänge")
     st.sidebar.page_link("pages/07_Module.py", label="Module")
-    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/08_Räume.py", label="Räume")
     st.sidebar.page_link("pages/09_Gebäude.py", label="Gebäude")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
@@ -199,3 +192,153 @@ except:
     logger.error("Verbindung zur Datenbank nicht möglich!")
     st.write("**Verbindung zur Datenbank nicht möglich!**  \nKontaktieren Sie den Administrator.")
 
+collection_name = {
+    gebaeude: "Gebäude",
+    raum: "Räume",
+    semester: "Semester",
+    kategorie: "Kategorien",
+    code: "Codes",
+    person: "Personen",
+    studiengang: "Studiengänge",
+    modul: "Module",
+    anforderung: "Anforderungen",
+    anforderungkategorie: "Anforderungskategorien",
+    veranstaltung: "Veranstaltungen"
+}
+
+leer = {
+    gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
+    raum: raum.find_one({"name_de": "-"})["_id"],
+    person: person.find_one({"name": "-"})["_id"],
+    studiengang: studiengang.find_one({"name": "-"})["_id"],
+    modul: modul.find_one({"name_de": "-"})["_id"],
+    kategorie: kategorie.find_one({"titel_de": "-"})["_id"],
+#    anforderungkategorie: anforderungkategorie.find_one({"name_de": "_"})["_id"]
+}
+
+new = {
+    gebaeude: {"name_de": "neu", 
+               "name_en": "", 
+               "kurzname": "", 
+               "adresse": "", 
+               "url": "", 
+               "sichtbar": True, 
+               "kommentar": ""},
+    raum: {"name_de": "neu", 
+           "name_en": "", 
+           "kurzname": "", 
+           "gebaeude": leer[gebaeude], 
+           "raum": "", 
+           "groesse": 0, 
+           "sichtbar": True, 
+           "kommentar": ""
+    },
+    person: {"name": "Neue Person",
+             "vorname": "", 
+             "name_prefix": "", 
+             "titel": "", 
+             "tel": "", 
+             "email": "", 
+             "sichtbar": True, 
+             "hp_sichtbar": True, 
+             "semester": [], 
+             "veranstaltung": [] 
+    },
+    studiengang: {"name": "Neuer Studiengang",
+             "kurzname": "", 
+             "kommentar": "", 
+             "sichtbar": True,
+             "modul": [] 
+    },
+    modul: {"name_de": "Neues Modul",
+            "name_en": "Neues Modul",
+            "kurzname": "", 
+            "kommentar": "", 
+            "sichtbar": True,
+            "studiengang": [] 
+    }
+}
+
+def repr(collection, id, show_collection = True):
+    x = collection.find_one({"_id": id})
+    if collection == gebaeude:
+        res = x['name_de']
+        if show_collection:
+            res = "Gebäude: " + res
+    elif collection == raum:
+        res = x['name_de']
+        if show_collection:
+            res = "Raum: " + res
+    elif collection == semester:
+        res = x['kurzname']
+        if show_collection:
+            res = "Semester: " + res
+    elif collection == kategorie:
+        sem = semester.find_one({"_id": x["semester"]})["kurzname"]
+        res = f"{x['titel_de']} ({sem})"
+        if show_collection:
+            res = "Kategorie: " + res
+    elif collection == code:
+        sem = semester.find_one({"_id": x["semester"]})["kurzname"]
+        res = f"{x['titel_de']} ({sem})"    
+        if show_collection:
+            res = "Code: " + res
+    elif collection == person:
+        res = f"{x['name']}, {x['name_prefix']}"
+        if show_collection:
+            res = "Person: " + res
+    elif collection == studiengang:
+        res = f"{x['name']}"
+        if show_collection:
+            res = "Studiengang: " + res
+    elif collection == modul:
+        s = ", ".join([studiengang.find_one({"_id" : id1})["kurzname"] for id1 in x["studiengang"]])
+        res = f"{x['name_de']} ({s})"
+        if show_collection:
+            res = "Modul: " + res
+    elif collection == anforderung:
+        res = x['name_de']
+        if show_collection:
+            res = "Anforderung: " + res
+    elif collection == anforderungkategorie:
+        res = x['name_de']
+        if show_collection:
+            res = "Anforderungskategorie: " + res
+    elif collection == veranstaltung:
+        s = ", ".join([person.find_one({"_id" : id1})["name"] for id1 in x["dozent"]])
+        sem = semester.find_one({"_id": x["semester"]})["kurzname"]
+        res = f"{x['name_de']} ({s}, {sem})"
+        if show_collection:
+            res = "Veranstaltung: " + res
+    return res
+
+abhaengigkeit = {
+    gebaeude: [{"collection": raum, "field": "gebaeude", "list": False}],
+    raum    : [{"collection": veranstaltung, "field": "einmaliger_termin.raum", "list": False}, 
+                 {"collection": veranstaltung, "field": "woechentlicher_termin.raum", "list": False}],
+    semester: [{"collection": veranstaltung, "field": "semester", "list": False},
+                 {"collection": person, "field": "semester", "list": True},
+                 {"collection": kategorie, "field": "semester", "list": False}, 
+                 {"collection": code, "field": "semester", "list": False}, ],
+    kategorie:[{"collection": semester, "field": "kategorie", "list": True}, 
+                 {"collection": veranstaltung, "field": "kategorie", "list": False}],
+    code:     [{"collection": semester, "field": "code", "list": True}, 
+                 {"collection": veranstaltung, "field": "code", "list": True}],
+    person  : [{"collection": veranstaltung, "field": "dozent", "list": True}, 
+                 {"collection": veranstaltung, "field": "assistent", "list": True}, 
+                 {"collection": veranstaltung, "field": "organisation", "list": True}, 
+                 {"collection": veranstaltung, "field": "einmaliger_termin.person", "list": False}, 
+                 {"collection": veranstaltung, "field": "woechentlicher_termin.person", "list": False}],
+    studiengang:[{"collection": modul, "field": "studiengang", "list": True}],  
+    modul:     [{"collection": studiengang, "field": "modul", "list": True}, 
+                  {"collection": veranstaltung, "field": "verwendbarkeit_modul", "list": True},
+                  {"collection": veranstaltung, "field": "verwendbarkeit.modul", "list": False}],
+    anforderungkategorie: [{"collection": anforderung, "field": "anforderungskategorie", "list": False}],
+    anforderung:[{"collection": veranstaltung, "field": "verwendbarkeit_anforderung", "list": True},
+                  {"collection": veranstaltung, "field": "verwendbarkeit.anforderung", "list": False}],
+    veranstaltung:[{"collection": semester, "field": "veranstaltung", "list": True},
+                  {"collection": kategorie, "field": "veranstaltung", "list": True},
+                  {"collection": code, "field": "veranstaltung", "list": True},
+                  {"collection": person, "field": "veranstaltung", "list": True},
+                  {"collection": semester, "field": "veranstaltung", "list": True}]
+}
