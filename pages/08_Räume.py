@@ -33,7 +33,7 @@ gebaeude_sichtbar = [ x["_id"]  for x in geb ]
 if st.session_state.logged_in:
     st.header("Räume")
     if st.session_state.edit == "" or st.session_state.page != "Räume":
-        st.write("**Fettgrdruckte** Räume sind in Auswahlmenüs sichtbar.")
+        st.write("Mit 😎 markierte Räume sind in Auswahlmenüs sichtbar.")
         st.write(" ")
         co1, co2, co3 = st.columns([1,1,23]) 
         with co3:
@@ -49,7 +49,7 @@ if st.session_state.logged_in:
                 st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
             with co3:
                 abk = f"{x['name_de'].strip()}"
-                abk = f"**{abk.strip()}**" if x["sichtbar"] else f"{abk.strip()}"
+                abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
                 st.button(abk, key=f"edit-{x['_id']}", on_click = edit, args = (x["_id"], ))
     else:
         x = collection.find_one({"_id": st.session_state.edit})

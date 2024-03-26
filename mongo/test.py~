@@ -1,0 +1,21 @@
+import pymongo
+cluster = MongoClient("mongodb://127.0.0.1:27017")
+mongo_db = cluster["vvz"]
+kat = mongo_db["kategorie"]
+
+newkat = {"titel_de": "Neue Kategorie",
+            "titel_en": "",
+            "untertitel_de": "", 
+            "untertitel_en": "", 
+            "prefix_de": "", 
+            "prefix_en": "", 
+            "suffix_de": "", 
+            "suffix_en": "", 
+            "hp_sichtbar": True,
+            "veranstaltung": [] ,
+            "kommentar": "", 
+            "rang": -100,
+            "semester": st.session_state.semester
+    }
+
+kat.insert_one(newkat)

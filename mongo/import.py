@@ -1,8 +1,10 @@
 from pymongo import MongoClient
+import pymongo
 import os
+import datetime
 
 # This is the mongodb
-os.system("mongo vvz --eval  'db.dropDatabase()'")
+os.system("mongo vvz --eval 'db.dropDatabase()'")
 os.system("mongorestore --archive='vvz_backup'")
 
 cluster = MongoClient("mongodb://127.0.0.1:27017")
@@ -19,9 +21,34 @@ stu = mongo_db["studiengang"]
 anf = mongo_db["anforderung"]
 anfkat = mongo_db["anforderungkategorie"]
 ver = mongo_db["veranstaltung"]
+import schema
+mongo_db.command('collMod','veranstaltung', validator=schema.veranstaltung_validator, validationLevel='off')
 
 # Ab hier wird die Datenbank verändert
 
+# leere Person hinzufügen
+z = per.find()
+rang = (sorted(z, key=lambda x: x['rang'])[0])["rang"]-1
+per.insert_one( {"name": "-",
+             "vorname": "", 
+             "name_prefix": "", 
+             "titel": "", 
+             "tel": "", 
+             "email": "", 
+             "sichtbar": True, 
+             "hp_sichtbar": False,
+             "semester": [x["_id"] for x in list(sem.find())],
+             "veranstaltung": [],
+             "rang": rang
+    })
+
+# 
+for v in ver.find():
+    for p in list(set(v["dozent"] + v["assistent"] + v["organisation"])):
+        per.update_one({"_id": p}, {"$push": {"veranstaltung": v["_id"]}})
+for p in per.find():
+        per.update_one({"_id": p}, {"$set": {"veranstaltung": list(set(p["veranstaltung"]))}})
+        
 # Veranstaltungen brauchen einen Rang und hp_sichtbar
 veranstaltung = list(ver.find({}, sort = [("name_de",1)]))
 i = 0
@@ -29,6 +56,59 @@ for v in veranstaltung:
     ver.update_one({"_id": v["_id"]}, {"$set": {"rang": i, "hp_sichtbar": True}})
     i = i+1
 print("Update von Rang der Veranstaltungen")
+
+# veranstaltung.verwendbarkeit_modul darf keine Duplikate enthalten
+veranstaltung = list(ver.find({}))
+for v in veranstaltung:
+    ver.update_one({"_id": v["_id"]}, {"$set": {"verwendbarkeit_modul": list(dict.fromkeys(v["verwendbarkeit_modul"]).keys())}})
+    ver.update_one({"_id": v["_id"]}, {"$set": {"verwendbarkeit_anforderung": list(dict.fromkeys(v["verwendbarkeit_anforderung"]).keys())}})
+
+# veranstaltung.woechentlicher_termin.raum muss besetzt sein
+veranstaltung = list(ver.find({}))
+# leerer wöchentlicher Termin:
+leerer_termin = {
+    "key": "",
+    "kommentar": "",
+    "wochentag": None,
+    "raum": raum.find_one({"name_de": "-"})["_id"],
+    "person": [per.find_one({"name": "-"})["_id"]],
+    "start": None,
+    "ende": None
+}
+leerer_termin2 = {
+    "key": "",
+    "kommentar": "",
+    "raum": [raum.find_one({"name_de": "-"})["_id"]],
+    "person": [per.find_one({"name": "-"})["_id"]],
+    "start": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0),
+    "ende": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0) 
+}
+
+for v in veranstaltung:
+    wt = v["woechentlicher_termin"]
+    ver.update_one({"_id": v["_id"]}, {"$set": {"woechentlicher_termin": []}})
+    for w in wt:
+        termin = {}
+        for key, value in leerer_termin.items():
+            termin[key] = value
+        for key, value in w.items():
+            termin[key] = value
+        ver.update_one({"_id": v["_id"]}, {"$push": {"woechentlicher_termin": termin}})
+    wt = v["einmaliger_termin"]
+    ver.update_one({"_id": v["_id"]}, {"$set": {"einmaliger_termin": []}})
+    for w in wt:
+        termin = leerer_termin2
+        for key, value in w.items():
+            termin[key] = value
+        ver.update_one({"_id": v["_id"]}, {"$push": {"einmaliger_termin": termin}})
+#        ver.update_one({"_id": v["_id"], "woechentlicher_termin.start": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.start": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0)}})
+#ver.update_one({"_id": v["_id"], "woechentlicher_termin.start": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.start": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0)}})
+#    ver.update_one({"_id": v["_id"], "woechentlicher_termin.end": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.end": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0)}})
+#    ver.update_one({"_id": v["_id"], "woechentlicher_termin.raum": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.raum": raum.find_one({"name_de": "-"})["_id"]}})
+#    ver.update_one({"_id": v["_id"], "woechentlicher_termin.wochentag": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.wochentag": "Sonntag"}})
+
+
+
 
 # Module brauchen einen Rang
 modul = list(mod.find({}, sort = [("name_de",1)]))
@@ -49,34 +129,16 @@ for p in person:
 # studiengang.modul darf keine Duplikate enthalten
 studiengang = list(stu.find({}))
 for s in studiengang:
-    stu.update_one({"_id": s["_id"]}, {"$set": {"modul": list(set(s["modul"]))}})
+    stu.update_one({"_id": s["_id"]}, {"$set": {"modul": list(dict.fromkeys(s["modul"]).keys())}})
     
 # modul.studiengang darf keine Duplikate enthalten
 modul = list(mod.find({}))
 for m in modul:
-    mod.update_one({"_id": m["_id"]}, {"$set": {"studiengang": list(set(m["studiengang"]))}})
-    
-
-
-# leere Person hinzufügen
-z = per.find()
-rang = (sorted(z, key=lambda x: x['rang'])[0])["rang"]-1
-per.insert_one( {"name": "-",
-             "vorname": "", 
-             "name_prefix": "", 
-             "titel": "", 
-             "tel": "", 
-             "email": "", 
-             "sichtbar": True, 
-             "hp_sichtbar": False,
-             "semester": [x["_id"] for x in list(sem.find())],
-             "veranstaltung": [],
-             "rang": rang
-    })
+    mod.update_one({"_id": m["_id"]}, {"$set": {"studiengang": list(dict.fromkeys(m["studiengang"]).keys())}})
 
 # leeren Studiengang hinzufügen
 z = stu.find()
-rang = (sorted(z, key=lambda x: x['rang'])[0])["rang"]-1
+rang = (sorted(z, key=lambda x: x['rang'], reverse=True)[0])["rang"]+1
 stu.insert_one( {
     "name": "-",
     "kurzname": "-",
@@ -88,7 +150,7 @@ stu.insert_one( {
 
 # leeres Modul hinzufügen
 z = mod.find()
-rang = (sorted(z, key=lambda x: x['rang'])[0])["rang"]-1
+rang = (sorted(z, key=lambda x: x['rang'], reverse=True)[0])["rang"]+1
 mod.insert_one( {
     "name_de": "-", 
     "name_en": "-", 
@@ -99,11 +161,22 @@ mod.insert_one( {
     "kommentar": ""
 })
 
+# leere Anforderungkategorie hinzufügen
+z = anfkat.find()
+rang = (sorted(z, key=lambda x: x['rang'], reverse=True)[0])["rang"]+1
+anfkat.insert_one( {
+    "name_de": "-", 
+    "name_en": "", 
+    "sichtbar": False, 
+    "rang": rang,
+    "kommentar": ""
+})
+
 # leere Kategorie in jedem Semester hinzufügen
 all_sem = list(sem.find())
 for s in [x["_id"] for x in all_sem]:
     z = kat.find({"semester": s})
-    rang = (sorted(z, key=lambda x: x['rang'])[0])["rang"]-1
+    rang = (sorted(z, key=lambda x: x['rang'], reverse = True)[0])["rang"]+1
     kat.insert_one( {   
         "hp_sichtbar": False, 
         "titel_de": "-", 
@@ -120,6 +193,33 @@ for s in [x["_id"] for x in all_sem]:
         "kommentar":""
     })
 
+gebaeude_mit_url = {
+    "Geb. 101, Georges-Köhler-Allee": "https://www.openstreetmap.org/?mlat=48.01251&mlon=7.83492#map=19/48.01251/7.83492",
+    "Albertstr. 23b": "https://www.openstreetmap.org/?mlat=48.00233\&mlon=7.84788\#map=19/48.00233/7.84788",
+    "Albertstr. 21": "https://www.openstreetmap.org/?mlat=48.00156\&mlon=7.84931\#map=19/48.00156/7.84931",
+    "Albertstr. 21a": "https://www.openstreetmap.org/?mlat=48.00170\&mlon=7.84946\#map=19/48.00170/7.84946",
+    "Ernst-Zermelo-Straße 1": "https://www.openstreetmap.org/?mlat=48.00065\&mlon=7.84591\#map=19/48.00065/7.84591",
+    "Hermann-Herder-Str. 10": "https://www.openstreetmap.org/?mlat=48.00351\&mlon=7.84815\#map=19/48.00351/7.84815",
+    "Stefan-Meier-Str. 26": "https://www.openstreetmap.org/?mlat=48.00248\&mlon=7.84681\#map=19/48.00248/7.84681",
+#    "Fakultätssitzungsraum, Ernst-Zermelo-Straße 1": "https://www.openstreetmap.org/?mlat=48.00065\&mlon=7.84591\#map=19/48.00065/7.84591",
+    "PH Freiburg": "https://www.openstreetmap.org/?mlat=47.98132\&mlon=7.89420\#map=17/47.98132/7.89420",
+    "Oltmannstraße 22": "https://www.openstreetmap.org/?mlat=47.98021\&mlon=7.82836\#map=19/47.98021/7.82836",
+#    "Breisacher Tor": "https://www.openstreetmap.org/?mlat=47.99252\&mlon=7.84775\#map=19/47.99252/7.84775"
+}
+
+for key, value in gebaeude_mit_url.items():
+    g = gebaeude.find_one_and_update({"name_de": key}, { "$set": {"url": value}}, upsert = True)
+    raum.update_many({"gebaeude": gebaeude.find_one({"name_de": f'<a href="{value}">{key}</a>'})["_id"]}, { "$set": { "gebaeude": g["_id"]}})
+    gebaeude.delete_many({"name_de": f'<a href="{value}">{key}</a>'})
+
+g = gebaeude.find_one_and_update({"name_de": "Fakultätssitzungsraum, Ernst-Zermelo-Straße 1"}, { "$set": {"url": "https://www.openstreetmap.org/?mlat=48.00065\&mlon=7.84591\#map=19/48.00065/7.84591"}}, upsert = True)
+raum.update_many({"gebaeude": gebaeude.find_one({"name_de": 'Fakultätssitzungsraum, <a href="https://www.openstreetmap.org/?mlat=48.00065\&mlon=7.84591\#map=19/48.00065/7.84591">Ernst-Zermelo-Straße 1</a>'})["_id"]}, { "$set": { "gebaeude": g["_id"]}})
+gebaeude.delete_one({"name_de": 'Fakultätssitzungsraum, <a href="https://www.openstreetmap.org/?mlat=48.00065\&mlon=7.84591\#map=19/48.00065/7.84591">Ernst-Zermelo-Straße 1</a>'})
+gebaeude.update_one({"name_de": '<a href="https://www.openstreetmap.org/?mlat=47.99252\&mlon=7.84775\#map=19/47.99252/7.84775">Breisacher Tor</a>'}, { "$set": {"name_de": "Breisacher Tor", "url": "https://www.openstreetmap.org/?mlat=47.99252\&mlon=7.84775\#map=19/47.99252/7.84775"}})
+gebaeude.update_one({"name_de": "Ernst-Zermelo-Straße 1"}, {"$set": {"sichtbar": True}})
+gebaeude.update_one({"name_de": "Hermann-Herder-Str. 10"}, {"$set": {"sichtbar": True}})
+
+
 # Ab hier wird das Schema gecheckt
 import schema
 mongo_db.command("collMod", "semester", validator = schema.semester_validator)
@@ -133,8 +233,6 @@ mongo_db.command("collMod", "code", validator = schema.code_validator)
 mongo_db.command("collMod", "studiengang", validator = schema.studiengang_validator)
 mongo_db.command("collMod", "modul", validator = schema.modul_validator)
 mongo_db.command("collMod", "veranstaltung", validator = schema.veranstaltung_validator)
-
-
 
 
 

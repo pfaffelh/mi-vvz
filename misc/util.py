@@ -14,7 +14,7 @@ def configure_logging(file_path, level=logging.INFO):
     logger.setLevel(level)
     file_handler = logging.FileHandler(file_path)
     file_handler.setLevel(level)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - MI-FAQ - %(message)s")
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - MI-VVZ - %(message)s")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -43,8 +43,8 @@ def change_expand_all():
 
 def setup_session_state():
     # sem ist ein gewähltes Semester
-    if "sem" not in st.session_state:
-        st.session_state.sem = None
+    if "semester" not in st.session_state:
+        st.session_state.semester = None
     # lang ist die Sprache (de, en)
     if "lang" not in st.session_state:
         st.session_state.lang = "de"
@@ -79,6 +79,8 @@ def setup_session_state():
     # Determines which page we are on
     if "page" not in st.session_state:
         st.session_state.page = ""
+
+setup_session_state()
 
 # Diese Funktion löschen, wenn die Verbindung sicher ist.
 def authenticate2(username, password):
@@ -158,8 +160,9 @@ def display_navigation():
     st.sidebar.page_link("VVZ.py", label="Veranstaltungen")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/03_Personen.py", label="Personen")
-    st.sidebar.page_link("pages/06_Studiengänge.py", label="Studiengänge")
-    st.sidebar.page_link("pages/07_Module.py", label="Module")
+    st.sidebar.page_link("pages/05_Studiengänge.py", label="Studiengänge")
+    st.sidebar.page_link("pages/06_Module.py", label="Module")
+    st.sidebar.page_link("pages/07_Anforderungen.py", label="Anforderungen")
     st.sidebar.page_link("pages/08_Räume.py", label="Räume")
     st.sidebar.page_link("pages/09_Gebäude.py", label="Gebäude")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
@@ -212,10 +215,13 @@ leer = {
     person: person.find_one({"name": "-"})["_id"],
     studiengang: studiengang.find_one({"name": "-"})["_id"],
     modul: modul.find_one({"name_de": "-"})["_id"],
-    kategorie: kategorie.find_one({"titel_de": "-"})["_id"],
-#    anforderungkategorie: anforderungkategorie.find_one({"name_de": "_"})["_id"]
+    kategorie: "",
+    anforderung: "",
+    code: "",    
+    anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"]
 }
 
+semester_id = semester.find_one()["_id"]
 new = {
     gebaeude: {"name_de": "neu", 
                "name_en": "", 
@@ -256,6 +262,38 @@ new = {
             "kommentar": "", 
             "sichtbar": True,
             "studiengang": [] 
+    },
+    kategorie: {"titel_de": "Neue Kategorie",
+            "titel_en": "",
+            "untertitel_de": "", 
+            "untertitel_en": "", 
+            "prefix_de": "", 
+            "prefix_en": "", 
+            "suffix_de": "", 
+            "suffix_en": "", 
+            "hp_sichtbar": True,
+            "veranstaltung": [] ,
+            "kommentar": ""
+    },
+    code:  {"name": "",
+            "beschreibung_de": "Neuer Code",
+            "beschreibung_en": "", 
+            "hp_sichtbar": True,
+            "veranstaltung": [] ,
+            "kommentar": "", 
+            "semester": semester_id
+    },
+    anforderung: {"name_de": "Neu",
+                  "name_en": "",
+                  "anforderungskategorie": leer[anforderungkategorie],
+                  "kommentar": "", 
+                  "sichtbar": True
+    },
+    anforderungkategorie: {
+        "name_de": "Neu",
+        "name_en": "",
+        "kommentar": "", 
+        "sichtbar": True
     }
 }
 
@@ -280,7 +318,7 @@ def repr(collection, id, show_collection = True):
             res = "Kategorie: " + res
     elif collection == code:
         sem = semester.find_one({"_id": x["semester"]})["kurzname"]
-        res = f"{x['titel_de']} ({sem})"    
+        res = f"{x['beschreibung_de']} ({sem})"    
         if show_collection:
             res = "Code: " + res
     elif collection == person:
@@ -339,6 +377,5 @@ abhaengigkeit = {
     veranstaltung:[{"collection": semester, "field": "veranstaltung", "list": True},
                   {"collection": kategorie, "field": "veranstaltung", "list": True},
                   {"collection": code, "field": "veranstaltung", "list": True},
-                  {"collection": person, "field": "veranstaltung", "list": True},
-                  {"collection": semester, "field": "veranstaltung", "list": True}]
+                  {"collection": person, "field": "veranstaltung", "list": True}]
 }

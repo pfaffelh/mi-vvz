@@ -36,7 +36,7 @@ def edit(id):
 if st.session_state.logged_in:
     st.header("Personen")
     if st.session_state.edit == "" or st.session_state.page != "Person":
-        st.write("**Fettgrdruckte** Personen sind in Auswahlmenüs sichtbar.")
+        st.write("Mit 😎 markierte Personen sind in Auswahlmenüs sichtbar.")
         st.write(" ")
         co1, co2, co3 = st.columns([1,1,23]) 
         with co3:
@@ -52,7 +52,7 @@ if st.session_state.logged_in:
                 st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
             with co3:
                 abk = f"{x['name'].strip()}, {x['vorname'].strip()}"
-                abk = f"**{abk.strip()}**" if x["sichtbar"] else f"{abk.strip()}"
+                abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
                 st.button(abk, key=f"edit-{x['_id']}", on_click = edit, args = (x["_id"], ))
     else:
         x = collection.find_one({"_id": st.session_state.edit})

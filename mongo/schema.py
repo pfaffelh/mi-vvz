@@ -523,7 +523,7 @@ anforderung_validator = {
     "$jsonSchema": {
         "bsonType": "object",
         "title": "Beschreibung einer Anforderung (zB Mündliche Prüfung, 30 Minuten.).",
-        "required": ["name_de", "name_en", "rang", "sichtbar", "kommentar"],
+        "required": ["name_de", "name_en", "anforderungskategorie", "rang", "sichtbar", "kommentar"],
         "properties": {
             "name_de": {
                 "bsonType": "string",
@@ -667,6 +667,7 @@ veranstaltung_validator = {
                 "items": {
                     "bsonType": "object",
                     "description": "Beschreibung einer Verwendbarkeit",
+                    "required": ["modul", "anforderung"],
                     "properties": {
                         "modul": {
                             "bsonType": "objectId",
@@ -709,6 +710,7 @@ veranstaltung_validator = {
                 "items": {
                     "bsonType": "object",
                     "description": "Beschreibung des Termins.",
+                    "required": ["key", "raum", "person", "wochentag", "start", "ende", "kommentar"],
                     "properties": {
                         "key": {
                             "bsonType": "string",
@@ -727,15 +729,15 @@ veranstaltung_validator = {
                             }
                         },
                         "wochentag": {
-                            "enum": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
+                            "enum": ["null", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
                             "description": "Der Wochentag."
                         },
                         "start": {
-                            "bsonType": "date",
+                            "bsonType": ["null", "date"],
                             "description": "Die Zeit, an der der Termin startet."
                         },
                         "ende": {
-                            "bsonType": "date",
+                            "bsonType": ["null", "date"],
                             "description": "Die Zeit, an der der Termin endet."
                         },
                         "kommentar": {
@@ -751,6 +753,7 @@ veranstaltung_validator = {
                 "items": {
                     "bsonType": "object",
                     "description": "Beschreibung des Termins.",
+                    "required": ["key", "raum", "person", "start", "ende", "kommentar"],
                     "properties": {
                         "key": {
                             "bsonType": "string",

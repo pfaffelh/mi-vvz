@@ -1,5 +1,6 @@
 import streamlit as st
 import pymongo
+import time
 import misc.util as util
 
 def move_up(collection, x, query = {}):
@@ -18,16 +19,40 @@ def move_down(collection, x, query = {}):
         collection.update_one(target, {"$set": {"rang": x["rang"]}})    
         collection.update_one(x, {"$set": {"rang": n}})    
 
-def update_confirm(collection, x, x_updated):
-    collection.update_one(x, {"$set": x_updated })
-    util.reset()
-    st.success("Erfolgreich geändert!")
+def move_up_list(collection, id, field, element):
+    list = collection.find_one({"_id": id})[field]
+    i = list.index(element)
+    if i > 0:
+        x = list[i-1]
+        list[i-1] = element
+        list[i] = x
+    collection.update_one({"_id": id}, { "$set": {field: list}})
 
-def new(collection):
+def move_down_list(collection, id, field, element):
+    list = collection.find_one({"_id": id})[field]
+    i = list.index(element)
+    if i+1 < len(list):
+        x = list[i+1]
+        list[i+1] = element
+        list[i] = x
+    collection.update_one({"_id": id}, { "$set": {field: list}})
+
+def remove_from_list(collection, id, field, element):
+    collection.update_one({"_id": id}, {"$pull": {field: element}})
+
+def update_confirm(collection, x, x_updated, reset = True):
+    collection.update_one(x, {"$set": x_updated })
+    if reset:
+        util.reset()
+    st.toast("🎉 Erfolgreich geändert!")
+
+def new(collection, ini = {}):
     z = list(collection.find(sort = [("rang", pymongo.ASCENDING)]))
-    st.write(z[0])
     rang = z[0]["rang"]-1
-    util.new[collection]["rang"] = rang
+    st.write(util.new[collection])
+    util.new[collection]["rang"] = rang    
+    for key, value in ini.items():
+        util.new[collection][key] = value
     x = collection.insert_one(util.new[collection])
     st.session_state.expanded=x.inserted_id
     st.session_state.edit=x.inserted_id
@@ -60,10 +85,12 @@ def find_dependent_items(collection, id):
     return res
 
 def delete_item_update_dependent_items(collection, id):
-    if id == util.leer[collection]:
-        st.error("Dieses Item kann nicht gelöscht werden!")
-        util.reset()
-    else:
+    print(util.collection_name[collection])
+    try:
+        if id == util.leer[collection]:
+            st.error("Dieses Item kann nicht gelöscht werden!")
+            util.reset()
+    except:
         s = ("  \n".join(find_dependent_items(collection, id)))
         if s:
             s = f"\n{s}  \ngeändert."     
@@ -74,7 +101,71 @@ def delete_item_update_dependent_items(collection, id):
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
         collection.delete_one({"_id": id})
         util.reset()
-        st.success(f"Erfolgreich gelöscht!  {s}")
+        st.success(f"🎉 Erfolgreich gelöscht!  {s}")
+
+def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
+    v = util.veranstaltung.find_one({"_id": id})
+    # Das wird die Kategorie der kopierten Veranstaltung, falls das neue Semester 
+    k = v["kategorie"] if v["semester"] == kop_sem_id else util.kategorie.find_one({"semester": kop_sem_id, "titel_de": "-"})["_id"]
+    # Das wird der Rang der kopierten Veranstaltung
+    try:
+        r = util.veranstaltung.find_one({"semester": kop_sem_id, "kategorie": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
+    except:
+        r = 0
+
+    v_new = {
+        "kurzname": v["kurzname"],
+        "name_de": v["name_de"],
+        "name_en": v["name_en"],
+        "midname_de": v["midname_de"],
+        "midname_en": v["midname_en"],
+        "ects": v["ects"],
+        "url": "",
+        "semester": kop_sem_id,
+        "kategorie": k,
+        "code": v["code"] if v["semester"] == kop_sem_id else [],
+        "rang": r,
+        "kommentar_html_de": v["kommentar_html_de"],
+        "kommentar_html_en": v["kommentar_html_en"],
+        "inhalt_de": v["inhalt_de"] if kopiere_kommVVZ else "",
+        "inhalt_en":  v["inhalt_en"] if kopiere_kommVVZ else "",
+        "literatur_de": v["literatur_de"] if kopiere_kommVVZ else "", 
+        "literatur_en":  v["literatur_en"] if kopiere_kommVVZ else "",
+        "vorkenntnisse_de": v["vorkenntnisse_de"] if kopiere_kommVVZ else "",
+        "vorkenntnisse_en": v["vorkenntnisse_en"] if kopiere_kommVVZ else "",
+        "kommentar_latex_de": v["kommentar_latex_de"] if kopiere_kommVVZ else "",
+        "kommentar_latex_en": v["kommentar_latex_en"] if kopiere_kommVVZ else "",
+        "verwendbarkeit_modul": v["verwendbarkeit_modul"] if kopiere_verwendbarkeit else [],
+        "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"] if kopiere_verwendbarkeit else [],
+        "verwendbarkeit": v["verwendbarkeit"] if kopiere_verwendbarkeit else [], 
+        "dozent": v["dozent"] if kopiere_personen else [],
+        "assistent": v["assistent"] if kopiere_personen else [],
+        "organisation":  v["organisation"] if kopiere_personen else [],
+        "woechentlicher_termin": v["woechentlicher_termin"] if kopiere_termine else [],
+        "einmaliger_termin": v["einmaliger_termin"] if kopiere_termine else [],
+        "hp_sichtbar": True
+    }
+    w = util.veranstaltung.insert_one(v_new)
+    util.semester.update_one({"sem": kop_sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
+    util.kategorie.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
+    for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
+        util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
+    st.success("Erfolgreich kopiert!")
+    time.sleep(2)
+    st.session_state.edit = w.inserted_id
+    st.session_state.page = "Veranstaltung"
+    
+# Lösche ein Semester
+def delete_semester(id):
+    for v in list(util.veranstaltung.find({"semester": id})):
+        util.person.update_many({"veranstaltung": { "$elemMatch": { "$eq": v["_id"]}}}, { "$pull": { "veranstaltung": v["_id"]}})
+        util.veranstaltung.delete_one({"_id": v["_id"]})
+    
+    util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
+    util.kategorie.delete_many({"semester": id})
+    util.code.delete_many({"semester": id})
+    util.semester.delete_one({"_id": id})
+    st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
 
 # collection_dict has the form {id: name}
 # subset is a subset of collection_dict.keys which needs to be updated
