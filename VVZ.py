@@ -3,7 +3,7 @@ from streamlit_extras.switch_page_button import switch_page
 import datetime 
 import pymongo
 import pandas as pd
-import itertools
+from itertools import chain
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -12,11 +12,13 @@ from misc.config import *
 from misc.util import *
 import misc.tools as tools
 
+
 # make all neccesary variables available to session_state
 setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+if st.session_state.edit != "raumplan":
+    display_navigation()
 
 # Es geht hier vor allem um diese Collection:
 collection = veranstaltung
@@ -29,48 +31,165 @@ def edit(id, ex = "termine"):
     st.session_state.expanded = ex
     st.session_state.edit = id
 
-def name_of_sem_id(semester_id):
-    x = semester.find_one({"_id": semester_id})
-    return x["name_de"]
-
-def name_of_ver_id(ver_id):
-    x = veranstaltung.find_one({"_id": ver_id})
-    return x["name_de"]
+def update_verwendbarkeit(id, mod_list, an_list, verwendbarkeit):
+    veranstaltung.update_one({"_id": id}, { "$set" : { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit }})
 
 semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
-    st.write("expanded = "+ st.session_state.expanded)
-    st.write("page = " + st.session_state.page)
-    st.write("edit = " + str(st.session_state.edit))
-    if st.session_state.edit == "" or st.session_state.page != "Veranstaltung":
+    st.write(f"edit: {st.session_state.edit}")
+    if st.session_state.edit in set(["", "vorschau", "raumplan"]) or st.session_state.page != "Veranstaltung":
         st.write(st.session_state.expanded)
         st.write(st.session_state.page)
         st.header("Veranstaltungen")
-        st.session_state.semester = semesters[0]["_id"]
-        sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = 0, format_func = name_of_sem_id, placeholder = "Wähle ein Semester", label_visibility = "collapsed")
+        sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester), format_func = (lambda a: semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
         st.session_state.semester = sem_id
-
-        submit = False
         if sem_id is not None:
             kat = list(kategorie.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
-            for k in kat:
-                st.write(k["titel_de"])
-                ver = list(veranstaltung.find({"kategorie": k["_id"]},sort=[("rang", pymongo.ASCENDING)]))
-                for v in ver:
-                    col1, col2, col3 = st.columns([1,1,23]) 
-                    with col1:
-                        st.button('↓', key=f'down-{v["_id"]}', on_click = tools.move_down, args = (collection, v,{"kategorie": v["kategorie"]}, ))
-                    with col2:
-                        st.button('↑', key=f'up-{v["_id"]}', on_click = tools.move_up, args = (collection, v, {"kategorie": v["kategorie"]},))
-                    with col3:
-                        d = [(person.find_one({"_id": x}))["name"] for x in v["dozent"]]
-                        s = f"{v['name_de']} ({', '.join(d) if d else ''})"
-                        st.button(s, key=f"edit-{v['_id']}", on_click = edit, args = (v["_id"], ))
+            if st.session_state.edit=="vorschau":
+                col1, col2 = st.columns([1,1])
+                with col1:
+                    st.button("zurück zur Übersicht", on_click = edit, args = ("", ))
+                with col2:
+                    st.button("Raumplan", on_click = edit, args = ("raumplan", ))
+                st.subheader(f"Lehrveranstaltungen im {semester.find_one({'_id': sem_id})['name_de']}")
+                cod = list(code.find({"semester": sem_id, "hp_sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
+                for c in cod:
+                    col1, col2 = st.columns([3,27])
+                    with col1: 
+                        st.write(c["name"])
+                    with col2: 
+                        st.write(c["beschreibung_de"])
+                for k in kat:
+                    st.markdown(k["prefix_de"])
+                    st.markdown(k["titel_de"])
+                    st.markdown(k["untertitel_de"])
+
+                    ver = list(veranstaltung.find({"kategorie": k["_id"], "hp_sichtbar": True},sort=[("rang", pymongo.ASCENDING)]))
+                    for v in ver:
+                        col1, col2, col3 = st.columns([3,20,7])
+                        with col1:
+                            code_list = [code.find_one({"hp_sichtbar": True, "_id": c}) for c in v["code"]]
+                            st.write(", ".join([c["name"] for c in code_list]))
+                        with col2:
+                            titel_mit_link = f"[{v['name_de']}]({v['url']})" if v['url'] != "" else v['name_de']
+                            st.markdown(titel_mit_link)
+                            for t in v['woechentlicher_termin']:
+                                a = f"{t['key']}"
+                                b = wochentag[t["wochentag"]]
+                                c = f"{hour_of_datetime(t['start'])}–{hour_of_datetime(t['ende'])}"
+                                if c == "–":
+                                    c = ""
+                                r = raum.find_one({"_id": t["raum"]})
+                                g = gebaeude.find_one({"_id": r["gebaeude"]})
+                                raum_str = f"{r['name_de']} ([{g['name_de']}]({g['url']}))" if g["url"] else g["name_de"]
+                                if raum_str == "-":
+                                    raum_str = ""
+                                partline = (", ".join([x for x in [b, c, raum_str] if x != ""]))
+                                line = ": ".join([x for x in [a, partline] if x != ""])
+                                st.markdown(line)
+                        with col3:
+                            dozenten_liste = [person.find_one({"_id": c}) for c in v["dozent"]]
+                            st.markdown(", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in dozenten_liste]))
+#                        col1, col2 = st.columns([3,27])
+                        col1, col2, col3 = st.columns([3,20,7])
+
+                        if v["assistent"] != []:
+#                                col3, col4 = st.columns([20,7])
+                            with col2:
+                                st.markdown("Assistenz")
+                            with col3:
+                                assistenten_liste = [person.find_one({"_id": c}) for c in v["assistent"]]
+                                st.markdown(", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in assistenten_liste]))
+                        if v["organisation"] != []:
+#                                col3, col4 = st.columns([20,7])
+                            with col2:
+                                st.markdown("Organisation")
+                            with col3:
+                                organisation_liste = [person.find_one({"_id": c}) for c in v["Organsation"]]
+                                st.markdown(", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in organisation_liste]))
+                            
+                            
+#                            st.markdown(titel_mit_link)
+
+                        st.write(" ")
+                        st.write(" ")
+                    st.markdown(k["suffix_de"])
+                # show vorschau
+            elif st.session_state.edit=="raumplan":
+                col1, col2 = st.columns([1,1])
+                with col1:
+                    st.button("zurück zur Übersicht", on_click = edit, args = ("", ))
+                with col2:
+                    st.button("Vorschau ähnlich www.math", on_click = edit, args = ("vorschau", ))
+                tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
+                slotstart = [8, 10, 12, 14, 16, 18]
+                show = [True if i < 7 else False for i, r in enumerate(hauptraum)]
+                show_dict = {r["_id"]: show[i] for i, r in enumerate(hauptraum)}
+                cols = st.columns([1 for r in hauptraum])
+                for i, r in enumerate(hauptraum):
+                    with cols[i]:
+                        show[i] = st.checkbox(r["kurzname"], value = show[i])
+
+#                with open("misc/styles.css") as f:
+#                    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+                showraum = [r for i, r in enumerate(hauptraum) if show[i]]
+                co = st.columns([1,3,3,3,3,3])
+                for i, tag in enumerate(tage):
+                    with co[i+1]:
+                        st.markdown(tag)
+                        col = st.columns([1 for r in showraum])
+                        for j, r in enumerate(showraum):
+                            with col[j]:
+                                st.markdown(kurzkurzname[r["kurzname"]])
+
+                for s in slotstart:
+                    co = st.columns([1,3,3,3,3,3])
+                    with co[0]:
+                        st.markdown(f"{s}-{s+2}")
+                    for i, tag in enumerate(tage):
+                        with co[i+1]:
+                            col = st.columns([1 for r in showraum])
+                            for j, r in enumerate(showraum):
+                                with col[j]:
+                                    # find termine veranstal
+                                    ve = list(veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
+                                    for x in ve:
+                                        wt = x["woechentlicher_termin"]
+                                        w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] == datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), wt))[0]
+                                        k = wt.index(w)
+                                        st.button(f"**{x['kurzname']}**", on_click=edit, args=(x["_id"],), type = "primary" if len(ve) > 1 else "secondary", help = repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}")
+                # show raumplan
+            else:
+                col1, col2 = st.columns([1,1])
+                with col1:
+                    st.button("Vorschau ähnlich www.math", on_click = edit, args = ("vorschau", ))
+                with col2:
+                    st.button("Raumplan", on_click = edit, args = ("raumplan", ))
+                submit = False
+                for k in kat:
+                    st.write(k["titel_de"])
+                    ver = list(veranstaltung.find({"kategorie": k["_id"]},sort=[("rang", pymongo.ASCENDING)]))
+                    for v in ver:
+                        col1, col2, col3 = st.columns([1,1,23]) 
+                        with col1:
+                            st.button('↓', key=f'down-{v["_id"]}', on_click = tools.move_down, args = (collection, v,{"kategorie": v["kategorie"]}, ))
+                        with col2:
+                            st.button('↑', key=f'up-{v["_id"]}', on_click = tools.move_up, args = (collection, v, {"kategorie": v["kategorie"]},))
+                        with col3:
+                            d = [(person.find_one({"_id": x}))["name"] for x in v["dozent"]]
+                            s = f"{v['name_de']} ({', '.join(d) if d else ''})"
+                            st.button(s, key=f"edit-{v['_id']}", on_click = edit, args = (v["_id"], ))
     else:
         x = veranstaltung.find_one({"_id": st.session_state.edit})
-        st.button('zurück zur Übersicht', key=f'edit-{x["_id"]}', on_click = edit, args = ("", "" ))
+        st.session_state.semester = x["semester"]
+        col1, col2 = st.columns([1,1])
+        with col1:
+            st.button('zur Übersicht', key=f'uebersicht-{x["_id"]}', on_click = edit, args = ("", "" ))
+        with col2:
+            st.button('zum Raumplan', key=f'raumplan-{x["_id"]}', on_click = edit, args = ("raumplan", "" ))
+            
         st.subheader(repr(collection, x["_id"]))
 
         col1, col2 = st.columns([1,1])
@@ -89,8 +208,9 @@ if st.session_state.logged_in:
         with col2:
             with st.popover('Veranstaltung kopieren'):
                 st.write("Kopiere " + repr(collection, x["_id"]))
+                st.write("In welches Semester soll kopiert werden?")
                 sem_ids = [x["_id"] for x in semesters]
-                kop_sem_id = st.selectbox(label="In welches Semester kopieren?", options = sem_ids, index = sem_ids.index(st.session_state.semester), format_func = name_of_sem_id, placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = f"kopiere_veranstaltung_{x['_id']}_sem")
+                kop_sem_id = st.selectbox(label="In welches Semester kopieren?", options = sem_ids, index = sem_ids.index(st.session_state.semester), format_func = (lambda a: semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = f"kopiere_veranstaltung_{x['_id']}_sem")
                 if kop_sem_id != st.session_state.semester:
                     st.write("Kategorie und Code können nicht kopiert werden, da sie semesterabhängig sind. URL wird nicht kopiert.")
                 st.write("Was soll mitkopiert werden?")
@@ -116,12 +236,9 @@ if st.session_state.logged_in:
                 kat = [g["_id"] for g in list(kategorie.find({"semester": x["semester"]}))]
                 index = [g for g in kat].index(x["kategorie"])
                 kategorie = st.selectbox("Kategorie", [x for x in kat], index = index, format_func = (lambda a: repr(kategorie, a)))
-
-                co = list(code.find({"semester": x["semester"]}, sort = [("rang", pymongo.ASCENDING)]))
-                code_dict = {}
-                for c in co:
-                    code_dict[c["_id"]] = f"{c['beschreibung_de']} ({c['name']})"
-                code = st.multiselect("Codes", code_dict.keys(), x["code"], format_func = (lambda a: code_dict[a]), placeholder = "Bitte auswählen")
+                cod = st.multiselect("Codes", [x["_id"] for x in code.find({"$or": [{"semester": st.session_state.semester}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: repr(code, a)), placeholder = "Bitte auswählen")
+                # Sortiere codes nach ihrem Rang 
+                cod = [x["_id"] for x in code.find({"$or": [{"semester": st.session_state.semester}, {"_id": {"$in": cod}}]}, sort = [("rang", pymongo.ASCENDING)])]
                 kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"])
                 kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"])
                 url=st.text_input('URL', x["url"])
@@ -233,18 +350,46 @@ if st.session_state.logged_in:
                 veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"woechentlicher_termin": leerer_termin}})
                 st.rerun()
         with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
-            inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
-            inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"])
-            literatur_de = st.text_area('Literatur (de)', x["literatur_de"])
-            literatur_en = st.text_area('Literatur (en)', x["literatur_en"])
-            vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"])
-            vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"])
-            kommentar_latex_de = st.text_area('Kommentar (Latex, de)', x["kommentar_latex_de"])
-            kommentar_latex_en = st.text_area('Kommentar (Latex, en)', x["kommentar_latex_en"])
+            with st.form(f'Kommentiertes-VVZ-{x["_id"]}'):
+                inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
+                inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"])
+                literatur_de = st.text_area('Literatur (de)', x["literatur_de"])
+                literatur_en = st.text_area('Literatur (en)', x["literatur_en"])
+                vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"])
+                vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"])
+                kommentar_latex_de = st.text_area('Kommentar (Latex, de)', x["kommentar_latex_de"])
+                kommentar_latex_en = st.text_area('Kommentar (Latex, en)', x["kommentar_latex_en"])
+                ver_updated = {
+                    "inhalt_de": inhalt_de,
+                    "inhalt_en": inhalt_en,
+                    "literatur_de": literatur_de,
+                    "literatur_en": literatur_en,
+                    "vorkenntnisse_de": vorkenntnisse_de,
+                    "vorkenntnisse_en": vorkenntnisse_en,
+                    "kommentar_latex_de": kommentar_latex_de,
+                    "kommentar_latex_en": kommentar_latex_en
+                }
+                submit = st.form_submit_button('Speichern', type = 'primary')
+                if submit:
+                    st.session_state.expanded = "kommentiertes_VVZ"
+                    tools.update_confirm(collection, x, ver_updated, reset = False)
 
         ## Verwendbarkeiten
         with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
             st.subheader("Verwendbarkeit")
+            with st.popover("Aus anderer Veranstaltung importieren"):
+                ver_auswahl = list(veranstaltung.find({"$or": [{"kategorie": x["kategorie"]}, {"dozent": {"$in": x["dozent"]}}]}))
+                verwendbarkeit_import = st.selectbox("Veranstaltung", [v["_id"] for v in ver_auswahl], format_func = (lambda a: repr(veranstaltung, a, show_collection=False)))
+                v = veranstaltung.find_one({"_id": verwendbarkeit_import})
+                x_updated = {"verwendbarkeit_modul": v["verwendbarkeit_modul"],
+                             "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"],
+                             "verwendbarkeit": v["verwendbarkeit"]}
+                colu1, colu2 = st.columns([1,1])
+                with colu1:
+                    st.button(label = "Importieren", type = 'primary', on_click = tools.update_confirm, args = (veranstaltung, x, x_updated, False), key = f"import-verwendbarkeit-{x['_id']}")
+                with colu2: 
+                    st.button(label="Abbrechen", on_click = reset, args=("Nicht kopiert!",), key = f"not-imported-{x['_id']}")
+
             mo = list(modul.find({"$or": [{"sichtbar": True}, {"_id": { "$elemMatch": { "$eq": x["verwendbarkeit_modul"]}}}]}, sort = [("rang", pymongo.ASCENDING)]))
             mo_dict = {m["_id"]: repr(modul, m["_id"], show_collection = False) for m in mo }
             mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen")
@@ -253,42 +398,36 @@ if st.session_state.logged_in:
             an_dict = {a["_id"]: repr(anforderung, a["_id"], show_collection = False) for a in ver_an }
             an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen")
 
-            g = pd.DataFrame()
-            cols = st.columns([len(mod_list)] + [1 for x in mod_list])
-            i = 1
-            for m in mod_list:
-                with cols[i]:
+            data = {m : [] for m in mod_list}
+            g = pd.DataFrame(data)
+            cols = st.columns([15] + [15/len(mod_list) for x in mod_list])
+            for i, m in enumerate(mod_list):
+                with cols[i+1]:
+                    co1, co2 = st.columns([1,1])
+                    with co1:
+                        st.button('←', key=f'left-m-{m}', on_click = tools.move_up_list, args = (collection, x["_id"], "verwendbarkeit_modul", m,))
+                    with co2:
+                        st.button('→', key=f'right-m-{m}', on_click = tools.move_down_list, args = (collection, x["_id"], "verwendbarkeit_modul", m,))
                     st.write(mo_dict[m])
-                    i = i+1
             for a in an_list:
-                cols = st.columns([len(mod_list)] + [1 for x in mod_list])
+                cols = st.columns([1,1,13] + [15/len(mod_list) for x in mod_list])
                 with cols[0]:
+                    st.button('↓', key=f'down-a-{a}', on_click = tools.move_down_list, args = (collection, x["_id"], "verwendbarkeit_anforderung", a,))
+                with cols[1]:
+                    st.button('↑', key=f'up-a-{a}', on_click = tools.move_up_list, args = (collection, x["_id"], "verwendbarkeit_anforderung", a,))
+                with cols[2]:
                     st.write(an_dict[a])
-                i = 1
-                for m in mod_list:
-                    with cols[i]:
-                        st.checkbox("",True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}")
-                    i = i+1
-
-            mo = list(modul.find({"sichtbar": True}, sort = [("rang", pymongo.ASCENDING)]))
-            mod_dict = {}
-            for m in mo:
-                mod_dict[m["_id"]] = repr(modul, m["_id"], show_collection = False)
-            
-
-
-#            "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit",            "woechentlicher_termin", "einmaliger_termin",
-
- 
-
-
-        
-
-
+                for i, m in enumerate(mod_list):
+                    with cols[i+3]:
+                        g.loc[a,m] = st.checkbox("",True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}")
+            verwendbarkeit = [{"modul": m, "anforderung": a} for m in mod_list for a in an_list if g.loc[a,m] == True]
+            x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit }
+            submit = st.button('Speichern', type = 'primary', on_click = tools.update_confirm, args = (veranstaltung, x, x_updated, False,), key = f"verwendbarkeit_{x['_id']}")
 
     # st.rerun()
 
 else: 
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+if st.session_state.edit != "raumplan":
+    st.sidebar.button("logout", on_click = logout)

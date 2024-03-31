@@ -4,8 +4,11 @@ import os
 import datetime
 
 # This is the mongodb
+# Create mongodump using
+# mongodump --db vvz --archive=vvz_backup
+
 os.system("mongo vvz --eval 'db.dropDatabase()'")
-os.system("mongorestore --archive='vvz_backup'")
+os.system("mongorestore --archive='vvz_backup_neu'")
 
 cluster = MongoClient("mongodb://127.0.0.1:27017")
 mongo_db = cluster["vvz"]
@@ -47,8 +50,8 @@ for v in ver.find():
     for p in list(set(v["dozent"] + v["assistent"] + v["organisation"])):
         per.update_one({"_id": p}, {"$push": {"veranstaltung": v["_id"]}})
 for p in per.find():
-        per.update_one({"_id": p}, {"$set": {"veranstaltung": list(set(p["veranstaltung"]))}})
-        
+        per.update_one({"_id": p}, {"$set": {"veranstaltung": list(dict.fromkeys(p["veranstaltung"]).keys())}})
+
 # Veranstaltungen brauchen einen Rang und hp_sichtbar
 veranstaltung = list(ver.find({}, sort = [("name_de",1)]))
 i = 0
@@ -107,7 +110,8 @@ for v in veranstaltung:
 #    ver.update_one({"_id": v["_id"], "woechentlicher_termin.raum": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.raum": raum.find_one({"name_de": "-"})["_id"]}})
 #    ver.update_one({"_id": v["_id"], "woechentlicher_termin.wochentag": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.wochentag": "Sonntag"}})
 
-
+# kein wöchtenlicher Termin mit nur "Assistenz"
+ver.update_many({}, {"$pull": {"woechentlicher_termin": {"key": {"$eq": "Assistenz"}}}})
 
 
 # Module brauchen einen Rang
@@ -121,11 +125,14 @@ print("Update von Rang der Modulen")
 # person.semester darf keine Duplikate enthalten
 person = list(per.find({}))
 # person.sichtbar ist nur True wenn im aktuellen Semester
-akt_sem = sem.find_one({"kurzname": "2024SS"})["_id"]
+akt_sem = sem.find({}, sort=[("rang", pymongo.DESCENDING)])[0]["_id"]
 for p in person:
-    per.update_one({"_id": p["_id"]}, {"$set": {"semester": list(set(p["semester"]))}})
+    print(p['name'])
+    l = list(dict.fromkeys(p["semester"]).keys())
+    l.reverse()
+    per.update_one({"_id": p["_id"]}, {"$set": {"semester": (l)}})
     per.update_one({"_id": p["_id"]}, {"$set": {"sichtbar": True if akt_sem in list(set(p["semester"])) else False }})
-  
+
 # studiengang.modul darf keine Duplikate enthalten
 studiengang = list(stu.find({}))
 for s in studiengang:

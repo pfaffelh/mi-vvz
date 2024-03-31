@@ -53,7 +53,19 @@ if st.session_state.logged_in:
                 st.button(abk, key=f"edit-{x['_id']}", on_click = edit, args = (x["_id"], ))
     else:
         x = collection.find_one({"_id": st.session_state.edit})
-        st.button('zurück zur Übersicht', key=f'edit-{x["_id"]}', on_click = edit, args = ("", ))
+        st.button('zurück zur Übersicht', key=f'edit-{x["_id"]}', on_click = edit, args = ("" ))
+        st.subheader(repr(collection, x["_id"]))
+        with st.popover('Raum löschen'):
+            s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
+            if s:
+                st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
+            else:
+                st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
+            colu1, colu2, colu3 = st.columns([1,1,1])
+            with colu1:
+                st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
+            with colu3: 
+                st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         with st.form(f'ID-{x["_id"]}'):
             sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == leer[collection] else False))
             name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == leer[collection] else False))
@@ -67,32 +79,13 @@ if st.session_state.logged_in:
             groesse=st.number_input('Groesse', value = x["groesse"], min_value = 0)
             kommentar=st.text_area('Kommentar', x["kommentar"])
             x_updated = ({"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "gebaeude": gebaeude1, "raum": raum, "groesse": groesse, "sichtbar": sichtbar, "kommentar": kommentar})
-            col1, col2, col3 = st.columns([1,7,1]) 
-            with col1: 
-                submit = st.form_submit_button('Speichern', type = 'primary')
+            submit = st.form_submit_button('Speichern', type = 'primary')
             if submit:
                 tools.update_confirm(collection, x, x_updated, )
                 time.sleep(2)
                 st.session_state.expanded = ""
                 st.session_state.edit = ""
                 st.rerun()                      
-            with col3:
-                deleted = st.form_submit_button("Löschen")
-            if deleted:
-                st.session_state.submitted = True
-                st.session_state.expanded = x["_id"]
-                st.session_state.edit = x["_id"]
-            if st.session_state.submitted and st.session_state.expanded == x["_id"]:
-                with col1: 
-                    st.form_submit_button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]))
-                with col2: 
-                    s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
-                    if s:
-                        st.warning("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
-                    else:
-                        st.warning("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
-                with col3: 
-                    st.form_submit_button(label="Nein", on_click = reset, args=("Nicht gelöscht!",))
 
 #    if submit:
 #        reset()

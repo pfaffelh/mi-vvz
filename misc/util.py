@@ -41,10 +41,49 @@ def change_lang():
 def change_expand_all():
     st.session_state.expand_all = (False if st.session_state.expand_all == True else True)
 
+# Das ist die mongodb; 
+# vvz enthält alle Daten für das Vorlesungsverzeichnis. 
+# user ist aus dem Cluster user und wird nur bei der Authentifizierung benötigt
+try:
+    cluster = pymongo.MongoClient(mongo_location)
+    mongo_db = cluster["vvz"]
+    anforderung = mongo_db["anforderung"]
+    anforderungkategorie = mongo_db["anforderungkategorie"]
+    code = mongo_db["code"]
+    gebaeude = mongo_db["gebaeude"]
+    kategorie = mongo_db["kategorie"]
+    modul = mongo_db["modul"]
+    person = mongo_db["person"]
+    raum = mongo_db["raum"]
+    semester = mongo_db["semester"]
+    studiengang = mongo_db["studiengang"]
+    veranstaltung = mongo_db["veranstaltung"]
+
+    mongo_db_users = cluster["user"]
+    user = mongo_db_users["user"]
+except: 
+    logger.error("Verbindung zur Datenbank nicht möglich!")
+    st.write("**Verbindung zur Datenbank nicht möglich!**  \nKontaktieren Sie den Administrator.")
+
+collection_name = {
+    gebaeude: "Gebäude",
+    raum: "Räume",
+    semester: "Semester",
+    kategorie: "Kategorien",
+    code: "Codes",
+    person: "Personen",
+    studiengang: "Studiengänge",
+    modul: "Module",
+    anforderung: "Anforderungen",
+    anforderungkategorie: "Anforderungskategorien",
+    veranstaltung: "Veranstaltungen"
+}
+
 def setup_session_state():
     # sem ist ein gewähltes Semester
     if "semester" not in st.session_state:
-        st.session_state.semester = None
+        semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+        st.session_state.semester = semesters[0]["_id"]
     # lang ist die Sprache (de, en)
     if "lang" not in st.session_state:
         st.session_state.lang = "de"
@@ -171,43 +210,6 @@ def display_navigation():
     st.sidebar.page_link("pages/11_Dokumentation.py", label="Dokumentation")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
 
-# Das ist die mongodb; 
-# vvz enthält alle Daten für das Vorlesungsverzeichnis. 
-# user ist aus dem Cluster user und wird nur bei der Authentifizierung benötigt
-try:
-    cluster = pymongo.MongoClient(mongo_location)
-    mongo_db = cluster["vvz"]
-    anforderung = mongo_db["anforderung"]
-    anforderungkategorie = mongo_db["anforderungkategorie"]
-    code = mongo_db["code"]
-    gebaeude = mongo_db["gebaeude"]
-    kategorie = mongo_db["kategorie"]
-    modul = mongo_db["modul"]
-    person = mongo_db["person"]
-    raum = mongo_db["raum"]
-    semester = mongo_db["semester"]
-    studiengang = mongo_db["studiengang"]
-    veranstaltung = mongo_db["veranstaltung"]
-
-    mongo_db_users = cluster["user"]
-    user = mongo_db_users["user"]
-except: 
-    logger.error("Verbindung zur Datenbank nicht möglich!")
-    st.write("**Verbindung zur Datenbank nicht möglich!**  \nKontaktieren Sie den Administrator.")
-
-collection_name = {
-    gebaeude: "Gebäude",
-    raum: "Räume",
-    semester: "Semester",
-    kategorie: "Kategorien",
-    code: "Codes",
-    person: "Personen",
-    studiengang: "Studiengänge",
-    modul: "Module",
-    anforderung: "Anforderungen",
-    anforderungkategorie: "Anforderungskategorien",
-    veranstaltung: "Veranstaltungen"
-}
 
 leer = {
     gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
@@ -378,4 +380,59 @@ abhaengigkeit = {
                   {"collection": kategorie, "field": "veranstaltung", "list": True},
                   {"collection": code, "field": "veranstaltung", "list": True},
                   {"collection": person, "field": "veranstaltung", "list": True}]
+}
+
+wochentag = {
+    "Montag": "Mo",
+    "Dienstag": "Di",
+    "Mittwoch": "Mi",
+    "Donnerstag": "Do",
+    "Freitag": "Fr",
+    "Samstag": "Sa",
+    "Sonntag": "So",
+    None: ""
+}
+
+def hour_of_datetime(dt):
+    if dt is None:
+        return ""
+    else:
+        return str(dt.hour)
+
+def name_of_sem_id(semester_id):
+    x = semester.find_one({"_id": semester_id})
+    return x["name_de"]
+
+def name_of_ver_id(ver_id):
+    x = veranstaltung.find_one({"_id": ver_id})
+    return x["name_de"]
+
+rund = raum.find_one({"kurzname": "HsRundbau"})
+weis = raum.find_one({"kurzname": "HsWeismann"})
+hs2 = raum.find_one({"kurzname": "HSII"})
+sr404 = raum.find_one({"kurzname": "SR404"})
+sr125 = raum.find_one({"kurzname": "SR125"})
+sr127 = raum.find_one({"kurzname": "SR127"})
+sr226 = raum.find_one({"kurzname": "SR226"})
+sr119 = raum.find_one({"kurzname": "SR119"})
+sr218 = raum.find_one({"kurzname": "SR218"})
+sr232 = raum.find_one({"kurzname": "R232"})
+sr318 = raum.find_one({"kurzname": "SR318"})
+sr403 = raum.find_one({"kurzname": "SR403"})
+sr414 = raum.find_one({"kurzname": "SR414"})
+hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226, sr119, sr218, sr232, sr318, sr403, sr414]
+
+kurzkurzname = {"HsRundbau": "HsR",
+                "HsWeismann": "HsW",
+                "HSII": "Hs2",
+                "SR404": "404",
+                "SR125": "125",
+                "SR127": "127",
+                "SR226": "226",
+                "SR119": "119",
+                "SR218": "218",
+                "R232": "232",
+                "SR318": "318",
+                "SR403": "403",
+                "SR414": "414"
 }

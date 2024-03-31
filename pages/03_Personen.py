@@ -21,12 +21,6 @@ collection = person
 if st.session_state.page != "Person":
     st.session_state.edit = ""
 
-# Die Semesterliste für die Semester, an denen die Person da ist/war.
-se = list(semester.find({}, sort = [("kurzname", pymongo.DESCENDING)]))
-sem_dict = {}
-for s in se:
-    sem_dict[s["_id"]] = s["kurzname"]
-
 # Ändert die Ansicht. 
 def edit(id):
     st.session_state.page = "Person"
@@ -57,6 +51,18 @@ if st.session_state.logged_in:
     else:
         x = collection.find_one({"_id": st.session_state.edit})
         st.button('zurück zur Übersicht', key=f'edit-{x["_id"]}', on_click = edit, args = ("", ))
+        st.subheader(repr(collection, x["_id"], False))
+        with st.popover('Person löschen'):
+            s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
+            if s:
+                st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
+            else:
+                st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
+            colu1, colu2, colu3 = st.columns([1,1,1])
+            with colu1:
+                st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
+            with colu3: 
+                st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         with st.form(f'ID-{x["_id"]}'):
             sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == leer[collection] else False))
             hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
@@ -67,34 +73,15 @@ if st.session_state.logged_in:
             tel=st.text_input('Telefonnummer', x["tel"])
             email=st.text_input('Email', x["email"])
             st.write("Semester")
-            semester_list = tools.update_list(sem_dict, x["semester"], no_cols = 8, all_choices = True, id = x["_id"])
+            semester_list = st.multiselect("Semester", [x["_id"] for x in semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: repr(semester, a, False)), placeholder = "Bitte auswählen")
             x_updated = ({"name": name, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "tel": tel, "email": email, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "semester": semester_list})
-            col1, col2, col3 = st.columns([1,7,1]) 
-            with col1: 
-                submit = st.form_submit_button('Speichern', type = 'primary')
+            submit = st.form_submit_button('Speichern', type = 'primary')
             if submit:
                 tools.update_confirm(collection, x, x_updated, )
                 time.sleep(2)
                 st.session_state.expanded = ""
                 st.session_state.edit = ""
                 st.rerun()                      
-            with col3: 
-                deleted = st.form_submit_button("Löschen")
-            if deleted:
-                st.session_state.submitted = True
-                st.session_state.expanded = x["_id"]
-                st.session_state.edit = x["_id"]
-            if st.session_state.submitted and st.session_state.expanded == x["_id"]:
-                with col1: 
-                    st.form_submit_button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]))
-                with col2: 
-                    s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
-                    if s:
-                        st.warning("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
-                    else:
-                        st.warning("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
-                with col3: 
-                    st.form_submit_button(label="Nein", on_click = reset, args=("Nicht gelöscht!",))
 
 #    if submit:
 #        reset()

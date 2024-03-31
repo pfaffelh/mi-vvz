@@ -2,6 +2,8 @@ import streamlit as st
 import pymongo
 import time
 import misc.util as util
+from bson import ObjectId
+from collections import OrderedDict
 
 def move_up(collection, x, query = {}):
     query["rang"] = {"$lt": x["rang"]}
@@ -85,12 +87,11 @@ def find_dependent_items(collection, id):
     return res
 
 def delete_item_update_dependent_items(collection, id):
-    print(util.collection_name[collection])
-    try:
-        if id == util.leer[collection]:
-            st.error("Dieses Item kann nicht gelöscht werden!")
+    if collection in util.leer.keys() and id == util.leer[collection]:
+            st.toast("Fehler! Dieses Item kann nicht gelöscht werden!")
             util.reset()
-    except:
+    else:
+        print("enter except")
         s = ("  \n".join(find_dependent_items(collection, id)))
         if s:
             s = f"\n{s}  \ngeändert."     
@@ -99,20 +100,26 @@ def delete_item_update_dependent_items(collection, id):
                 x["collection"].update_many({x["field"]: { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
+        util.logger.info(f"User {st.session_state.user} hat {util.repr(collection, id)} geändert.")
         collection.delete_one({"_id": id})
         util.reset()
         st.success(f"🎉 Erfolgreich gelöscht!  {s}")
 
+def kopiere_veranstaltung_confirm(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
+    w_id = kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit)
+    st.success("Erfolgreich kopiert!")
+    time.sleep(2)
+    st.session_state.edit = w_id
+    st.session_state.page = "Veranstaltung"
+
 def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
-    v = util.veranstaltung.find_one({"_id": id})
-    # Das wird die Kategorie der kopierten Veranstaltung, falls das neue Semester 
+    v = util.veranstaltung.find_one({"_id": ObjectId(id)})
     k = v["kategorie"] if v["semester"] == kop_sem_id else util.kategorie.find_one({"semester": kop_sem_id, "titel_de": "-"})["_id"]
     # Das wird der Rang der kopierten Veranstaltung
     try:
         r = util.veranstaltung.find_one({"semester": kop_sem_id, "kategorie": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
     except:
         r = 0
-
     v_new = {
         "kurzname": v["kurzname"],
         "name_de": v["name_de"],
@@ -138,9 +145,9 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "verwendbarkeit_modul": v["verwendbarkeit_modul"] if kopiere_verwendbarkeit else [],
         "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"] if kopiere_verwendbarkeit else [],
         "verwendbarkeit": v["verwendbarkeit"] if kopiere_verwendbarkeit else [], 
-        "dozent": v["dozent"] if kopiere_personen else [],
-        "assistent": v["assistent"] if kopiere_personen else [],
-        "organisation":  v["organisation"] if kopiere_personen else [],
+        "dozent": [p for p in v["dozent"] if (kop_sem_id in util.person.find_one({"_id": p})["semester"])] if kopiere_personen else [],
+        "assistent": [p for p in v["assistent"] if kop_sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
+        "organisation": [p for p in v["organisation"] if kop_sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
         "woechentlicher_termin": v["woechentlicher_termin"] if kopiere_termine else [],
         "einmaliger_termin": v["einmaliger_termin"] if kopiere_termine else [],
         "hp_sichtbar": True
@@ -150,13 +157,55 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
     util.kategorie.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
         util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
+    return w.inserted_id
+
+# Kopiere ein Semester    
+def kopiere_semester(id, x_updated, df, kopiere_personen):
+    last_sem_id = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["_id"]
+    s = util.semester.insert_one(x_updated)
+    sem_id = s.inserted_id
+    # kopien enthält die ids der originalen und kopierten Datensätze
+    kopie = {id: sem_id}
+
+    # Kopiere Personen aus dem letzten Semester
+    if kopiere_personen:
+        util.person.update_many({"semester": {"$elemMatch": {"$eq": last_sem_id }}}, { "$push": { "semester": sem_id}})
+
+    # Kopiere Kategorien und Codes
+    for k in list(util.kategorie.find({"semester": id})):
+        k_loc = k["_id"]
+        del k["_id"] # andernfalls gibt es einen duplicate key error
+        k_new = util.kategorie.insert_one(k)
+        util.kategorie.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
+        kopie[k_loc] = k_new.inserted_id
+        util.semester.update_one({"_id": sem_id}, {"$push": {"kategorie": k_new.inserted_id}})
+    for k in list(util.code.find({"semester": id})):
+        k_loc = k["_id"]
+        del k["_id"]  # andernfalls gibt es einen duplicate key error
+        k_new = util.code.insert_one(k)
+        util.code.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
+        kopie[k_loc] = k_new.inserted_id
+        util.semester.update_one({"_id": sem_id}, {"$push": {"code": k_new.inserted_id}})
+    # Kopiere Veranstaltungen, übertrage Kategorie und Codes
+    for index, row in df.iterrows():
+        kop_ver_id = kopiere_veranstaltung(ObjectId(row["_id"]), sem_id, row["Personen"], row["Termine"], row["Kommentare"], row["Verwendbarkeit"])
+        kopie[row["_id"]] = kop_ver_id
+        v = util.veranstaltung.find_one({"_id": ObjectId(row["_id"])})
+        util.veranstaltung.update_one({"_id": kop_ver_id}, 
+                                 {"$set": 
+                                  {"kategorie": kopie[v["kategorie"]],
+                                  "code": [kopie[co] for co in v["code"]]}})
+        util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": kop_ver_id}})
     st.success("Erfolgreich kopiert!")
     time.sleep(2)
-    st.session_state.edit = w.inserted_id
+    st.session_state.edit = ""
     st.session_state.page = "Veranstaltung"
-    
+
+# xxx toast einblenden, zu Übersicht springen
+
 # Lösche ein Semester
 def delete_semester(id):
+    x = util.semester.find_one({"_id": id})
     for v in list(util.veranstaltung.find({"semester": id})):
         util.person.update_many({"veranstaltung": { "$elemMatch": { "$eq": v["_id"]}}}, { "$pull": { "veranstaltung": v["_id"]}})
         util.veranstaltung.delete_one({"_id": v["_id"]})
@@ -165,34 +214,21 @@ def delete_semester(id):
     util.kategorie.delete_many({"semester": id})
     util.code.delete_many({"semester": id})
     util.semester.delete_one({"_id": id})
+    util.logger.info(f"User {st.session_state.user} hat Semester {x['name_de']} gelöscht.")
     st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
 
-# collection_dict has the form {id: name}
-# subset is a subset of collection_dict.keys which needs to be updated
-# no_cols is the number of columns for presenting the checkboxes
-# if all_choices == True, there are checkboxes for all cases
-# if all_choices == False, there are checkboxes only for elements of the subset, 
-# but an additional selectbox where new items can be selected.
-# id is from the elements which we change; needed fot the keys of widgets only.
-def update_list(collection_dict, subset, no_cols, all_choices, id):
-    # diese Items können hier gar nicht geändert werden, also werden sie wieder verwendet:
-    field_update_list = [x for x in subset if x not in collection_dict]
-    field_update = {}
-    cols = st.columns([1 for x in range(no_cols)])
-    i = 0
-    su = subset if all_choices == False else collection_dict.keys()
-    for s in su:
-        with cols[i % no_cols]:
-            field_update[s] = st.checkbox(f"{collection_dict[s]}", True if s in subset else False, key = f"sem_{id}_{s}")
-        i = i+1
-    field_update_list = field_update_list + [key for key,value in field_update.items() if value == True]
-
-    if all_choices == False:
-        choice = [""] + list(collection_dict.keys())
-        new_element = st.selectbox("Hinzufügen", choice, index = 0, format_func = (lambda a: collection_dict[a] if a else ""), key = f"sem_{id}_neu")
-        if new_element:
-            field_update_list.append(new_element)
-    # Duplikate löschen:
-    field_update_list = list(set(field_update_list))
-    return field_update_list
-
+# str1 und str2 sind zwei strings, die mit "," getrennte Felder enthalten, etwa
+# str1 = "HS Rundbau, Mo, 8-10"
+# str2 = "HS Rundbau, Mi, 8-10"
+# Ausgabe ist dann
+# HS Rundbau, Mo, Mi, 8-10
+def shortify(str1, str2):
+    str1_list = str.split(str1, ",")
+    str2_list = str.split(str2, ",")
+    if str1_list[0] == str2_list[0]:
+        if str1_list[2] == str2_list[2]:
+            return f"{str1_list[0]}, {str1_list[1]}, {str2_list[1]} {str2_list[2]}"
+        else:
+            return f"{str1_list[0]}, {str1_list[1]} {str1_list[2]}, {str2_list[1]} {str2_list[2]}"
+    else:
+        return None
