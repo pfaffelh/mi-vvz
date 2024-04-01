@@ -121,6 +121,11 @@ for m in modul:
     mod.update_one({"_id": m["_id"]}, {"$set": {"rang": i}})
     i = i+1
 print("Update von Rang der Modulen")
+# Module, die es in keinem Studiengang gibt, löschen:
+mod.delete_many({"studiengang": []})
+# Studiengänge ohne Module löschen:
+stu.delete_many({"modul": []})
+
 
 # person.semester darf keine Duplikate enthalten
 person = list(per.find({}))

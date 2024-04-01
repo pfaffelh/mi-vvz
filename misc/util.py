@@ -420,7 +420,10 @@ sr232 = raum.find_one({"kurzname": "R232"})
 sr318 = raum.find_one({"kurzname": "SR318"})
 sr403 = raum.find_one({"kurzname": "SR403"})
 sr414 = raum.find_one({"kurzname": "SR414"})
-hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226, sr119, sr218, sr232, sr318, sr403, sr414]
+#hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226, sr119, sr218, sr232, sr318, sr403, sr414]
+hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226]
+
+hauptraum_ids = [r["_id"] for r in hauptraum]
 
 kurzkurzname = {"HsRundbau": "HsR",
                 "HsWeismann": "HsW",

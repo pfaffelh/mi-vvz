@@ -17,8 +17,7 @@ import misc.tools as tools
 setup_session_state()
 
 # Navigation in Sidebar anzeigen
-if st.session_state.edit != "raumplan":
-    display_navigation()
+display_navigation()
 
 # Es geht hier vor allem um diese Collection:
 collection = veranstaltung
@@ -38,10 +37,10 @@ semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
-    st.write(f"edit: {st.session_state.edit}")
+    #st.write(f"edit: {st.session_state.edit}")
     if st.session_state.edit in set(["", "vorschau", "raumplan"]) or st.session_state.page != "Veranstaltung":
-        st.write(st.session_state.expanded)
-        st.write(st.session_state.page)
+        #st.write(st.session_state.expanded)
+        #st.write(st.session_state.page)
         st.header("Veranstaltungen")
         sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester), format_func = (lambda a: semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
         st.session_state.semester = sem_id
@@ -123,44 +122,91 @@ if st.session_state.logged_in:
                     st.button("zurück zur Übersicht", on_click = edit, args = ("", ))
                 with col2:
                     st.button("Vorschau ähnlich www.math", on_click = edit, args = ("vorschau", ))
+                st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
                 tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
                 slotstart = [8, 10, 12, 14, 16, 18]
-                show = [True if i < 7 else False for i, r in enumerate(hauptraum)]
-                show_dict = {r["_id"]: show[i] for i, r in enumerate(hauptraum)}
-                cols = st.columns([1 for r in hauptraum])
-                for i, r in enumerate(hauptraum):
-                    with cols[i]:
-                        show[i] = st.checkbox(r["kurzname"], value = show[i])
+
+                raum_dict = {r["_id"]: repr(raum, r["_id"], show_collection = False) for r in raum.find() }
+                raum_list = st.multiselect("Räume", raum_dict.keys(), hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
+                st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
 
 #                with open("misc/styles.css") as f:
 #                    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-                showraum = [r for i, r in enumerate(hauptraum) if show[i]]
-                co = st.columns([1,3,3,3,3,3])
-                for i, tag in enumerate(tage):
-                    with co[i+1]:
-                        st.markdown(tag)
-                        col = st.columns([1 for r in showraum])
-                        for j, r in enumerate(showraum):
-                            with col[j]:
-                                st.markdown(kurzkurzname[r["kurzname"]])
-
-                for s in slotstart:
-                    co = st.columns([1,3,3,3,3,3])
-                    with co[0]:
-                        st.markdown(f"{s}-{s+2}")
-                    for i, tag in enumerate(tage):
-                        with co[i+1]:
-                            col = st.columns([1 for r in showraum])
-                            for j, r in enumerate(showraum):
-                                with col[j]:
-                                    # find termine veranstal
-                                    ve = list(veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
-                                    for x in ve:
-                                        wt = x["woechentlicher_termin"]
-                                        w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] == datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), wt))[0]
-                                        k = wt.index(w)
-                                        st.button(f"**{x['kurzname']}**", on_click=edit, args=(x["_id"],), type = "primary" if len(ve) > 1 else "secondary", help = repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}")
+                #showraum = [r for i, r in enumerate(hauptraum) if show[i]]
+                #co = st.columns([1,3,3,3,3,3])
+                #for i, tag in enumerate(tage):
+                #    with co[i+1]:
+                #        st.markdown(tag)
+                #        col = st.columns([1 for r in showraum])
+                #        for j, r in enumerate(showraum):
+                #            with col[j]:
+                #                st.markdown(kurzkurzname[r["kurzname"]])
                 # show raumplan
+                # for s in slotstart:
+                #     co = st.columns([1,3,3,3,3,3])
+                #     with co[0]:
+                #         st.markdown(f"{s}-{s+2}")
+                #     for i, tag in enumerate(tage):
+                #         with co[i+1]:
+                #             col = st.columns([1 for r in showraum])
+                #             for j, r in enumerate(showraum):
+                #                 with col[j]:
+                #                     # find termine veranstal
+                #                     ve = list(veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
+                #                     for x in ve:
+                #                         wt = x["woechentlicher_termin"]
+                #                         w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] == datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), wt))[0]
+                #                         k = wt.index(w)
+                #                         st.markdown("""
+                #                             <style>
+                #                             [data-testid=column] [data-testid=stVerticalBlock]{
+                #                                 gap: 0rem;
+                #                                 padding: 0rem;
+                #                             }
+                #                             </style>
+                #                             """,unsafe_allow_html=True)
+                #                         st.button(f"**{x['kurzname']}**", on_click=edit, args=(x["_id"],), type = "primary" if len(ve) > 1 else "secondary", help = repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}")
+
+#                st.markdown("<style>.st-emotion-cache-f4k0dr { min-height: 0pt; gap: 0rem; }</style>", unsafe_allow_html=True)
+#                st.markdown("<style>.st-emotion-cache-ocqkz7 { min-height: 0pt; line-height: 1; padding: 0rem; margin-bottom: 0rem; gap: 0rem; }</style>", unsafe_allow_html=True)
+#                st.markdown("<style>.st-emotion-cache-zooq7g { min-height: 0pt; line-height: 1; padding: 0rem; margin-bottom: 0rem; gap: 0rem; }</style>", unsafe_allow_html=True)
+#                st.markdown("<style>p { margin: 0px !important; }</style>", unsafe_allow_html=True)
+#                st.markdown("<style>.st-emotion-cache-jp0p2n  { gap: 0rem; }</style>", unsafe_allow_html=True)
+
+#                st.markdown("<style>.st-emotion-cache-eqffof { margin-bottom: 0rem; }</style>", unsafe_allow_html=True)
+                showraum = [raum.find_one({"_id": id}) for id in raum_list]
+                co = st.columns([1, 1] + [1 for s in slotstart])
+                for i, s in enumerate(slotstart):
+                    with co[i+2]:
+                        st.markdown(f"{s}-{s+2}")
+                for tag in tage:                        
+                    for j, r in enumerate(showraum):
+                        if j==0:
+                            st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+                        co = st.columns([1, 1] + [1 for s in slotstart])
+                        with co[0]:
+                            if j==0:
+                                st.markdown(tag)
+                        with co[1]:
+                            st.markdown(r["kurzname"])
+                        for k, s in enumerate(slotstart):
+#                            co = st.columns([1, 1] + [1 for s in slotstart])
+                            with co[k+2]:
+                                # find termine veranstal
+                                ve = list(veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
+                                for x in ve:
+                                    wt = x["woechentlicher_termin"]
+                                    w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] == datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), wt))[0]
+                                    k = wt.index(w)
+                                    st.markdown("""
+                                        <style>
+                                        [data-testid=column] [data-testid=stVerticalBlock]{
+                                            gap: 0rem;
+                                            padding: 0rem;
+                                        }
+                                        </style>
+                                        """,unsafe_allow_html=True)
+                                    st.button(f"**{x['kurzname']}**", on_click=edit, args=(x["_id"],), type = "primary" if len(ve) > 1 else "secondary", help = repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}", use_container_width=True)
             else:
                 col1, col2 = st.columns([1,1])
                 with col1:
@@ -429,5 +475,4 @@ if st.session_state.logged_in:
 else: 
     switch_page("VVZ")
 
-if st.session_state.edit != "raumplan":
-    st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = logout)
