@@ -243,7 +243,7 @@ if st.session_state.logged_in:
 
 
 
-else: 
+else:
     switch_page("VVZ")
 
 st.sidebar.button("logout", on_click = logout)

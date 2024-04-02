@@ -193,10 +193,15 @@ def can_edit(username):
     return (True if "faq" in u["groups"] else False)
 
 def display_navigation():
-    st.sidebar.image("static/ufr.png")
-    st.sidebar.write("<hr style='height:0px;margin:50px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.markdown("<style>.st-emotion-cache-16txtl3 { padding: 2rem 2rem; }</style>", unsafe_allow_html=True)
+    with st.sidebar:
+        col1, col2, col3 = st.columns([1,8,1])
+        with col2:
+            st.image("static/ufr.png", use_column_width=False)
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("VVZ.py", label="Veranstaltungen")
+    st.sidebar.page_link("pages/01_Raumplan.py", label="Raumplan")
+    st.sidebar.page_link("pages/02_www.py", label="Vorschau www.math...")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/03_Personen.py", label="Personen")
     st.sidebar.page_link("pages/05_Studiengänge.py", label="Studiengänge")

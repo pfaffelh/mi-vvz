@@ -126,7 +126,6 @@ mod.delete_many({"studiengang": []})
 # Studiengänge ohne Module löschen:
 stu.delete_many({"modul": []})
 
-
 # person.semester darf keine Duplikate enthalten
 person = list(per.find({}))
 # person.sichtbar ist nur True wenn im aktuellen Semester

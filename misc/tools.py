@@ -3,7 +3,6 @@ import pymongo
 import time
 import misc.util as util
 from bson import ObjectId
-from collections import OrderedDict
 
 def move_up(collection, x, query = {}):
     query["rang"] = {"$lt": x["rang"]}
@@ -43,6 +42,7 @@ def remove_from_list(collection, id, field, element):
     collection.update_one({"_id": id}, {"$pull": {field: element}})
 
 def update_confirm(collection, x, x_updated, reset = True):
+    util.logger.info(f"User {st.session_state.user} hat in {collection} Item {repr(collection, x['_id'])} geändert.")
     collection.update_one(x, {"$set": x_updated })
     if reset:
         util.reset()
@@ -58,6 +58,7 @@ def new(collection, ini = {}):
     x = collection.insert_one(util.new[collection])
     st.session_state.expanded=x.inserted_id
     st.session_state.edit=x.inserted_id
+    util.logger.info(f"User {st.session_state.user} hat in {collection} ein neues Item angelegt.")
     st.rerun()
 
 # Finde in collection.field die id, und gebe im Datensatz return_field zurück. Falls list=True,
@@ -100,7 +101,7 @@ def delete_item_update_dependent_items(collection, id):
                 x["collection"].update_many({x["field"]: { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
-        util.logger.info(f"User {st.session_state.user} hat {util.repr(collection, id)} geändert.")
+        util.logger.info(f"User {st.session_state.user} hat in {collection} item {util.repr(collection, id)} gelöscht, und abhängige Felder geändert.")
         collection.delete_one({"_id": id})
         util.reset()
         st.success(f"🎉 Erfolgreich gelöscht!  {s}")
@@ -153,6 +154,7 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "hp_sichtbar": True
     }
     w = util.veranstaltung.insert_one(v_new)
+    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {util.repr(util.veranstaltung, id)} nach Semester {repr(util.semester, kop_sem_id)} kopiert.")
     util.semester.update_one({"sem": kop_sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.kategorie.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
@@ -164,9 +166,9 @@ def kopiere_semester(id, x_updated, df, kopiere_personen):
     last_sem_id = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["_id"]
     s = util.semester.insert_one(x_updated)
     sem_id = s.inserted_id
+    util.logger.info(f"User {st.session_state.user} hat Semester {util.repr(util.semester, id)} nach {util.repr(util.semester, sem_id)} kopiert.")
     # kopien enthält die ids der originalen und kopierten Datensätze
     kopie = {id: sem_id}
-
     # Kopiere Personen aus dem letzten Semester
     if kopiere_personen:
         util.person.update_many({"semester": {"$elemMatch": {"$eq": last_sem_id }}}, { "$push": { "semester": sem_id}})
@@ -213,8 +215,8 @@ def delete_semester(id):
     util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
     util.kategorie.delete_many({"semester": id})
     util.code.delete_many({"semester": id})
+    util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} gelöscht.")
     util.semester.delete_one({"_id": id})
-    util.logger.info(f"User {st.session_state.user} hat Semester {x['name_de']} gelöscht.")
     st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
 
 # str1 und str2 sind zwei strings, die mit "," getrennte Felder enthalten, etwa
