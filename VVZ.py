@@ -22,6 +22,7 @@ display_navigation()
 collection = veranstaltung
 if st.session_state.page != "Veranstaltung":
     st.session_state.edit = ""
+st.session_state.page = "Veranstaltung"
 
 # Ändert die Ansicht. 
 def edit(id, ex = "termine"):
@@ -61,6 +62,8 @@ if st.session_state.logged_in:
                         st.button(s, key=f"edit-{v['_id']}", on_click = edit, args = (v["_id"], ))
     else:
         x = veranstaltung.find_one({"_id": st.session_state.edit})
+        st.subheader("Veranstaltungen")
+        st.button('zurück zur Übersicht', key=f'edit-{x["_id"]}', on_click = edit, args = ("", ))
         st.session_state.semester = x["semester"]
         col1, col2 = st.columns([1,1])
             
@@ -132,8 +135,8 @@ if st.session_state.logged_in:
                 }
                 submit = st.form_submit_button('Speichern', type = 'primary')
                 if submit:
-                    st.write(ver_updated)
-                    st.write(x)
+#                    st.write(ver_updated)
+#                    st.write(x)
                     st.session_state.expanded = "grunddaten"
                     tools.update_confirm(collection, x, ver_updated, reset = False)
 
@@ -174,8 +177,6 @@ if st.session_state.logged_in:
                     index = [g["_id"] for g in termin_raum].index(w["raum"])
                     w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
 #                termin_raum_person_list = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
-                def wochentag_zeit_option(wochentag, time):
-                    pass
                 with cols[4]:
                     wochentage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
                     try:
@@ -197,7 +198,8 @@ if st.session_state.logged_in:
                     "key": w_key,
                     "raum": w_raum,
                     "person": [],
-                    "wochentag": w_wochentag,                    
+                    # wochentag muss so gespeichert werden, um das schema nicht zu verletzen.
+                    "wochentag": w_wochentag if w_wochentag is not None else "", 
                     "start": None if w_start == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_start),
                     "ende": None if w_ende == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_ende),
                     "kommentar": w_kommentar

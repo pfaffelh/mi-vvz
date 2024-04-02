@@ -42,7 +42,7 @@ def remove_from_list(collection, id, field, element):
     collection.update_one({"_id": id}, {"$pull": {field: element}})
 
 def update_confirm(collection, x, x_updated, reset = True):
-    util.logger.info(f"User {st.session_state.user} hat in {collection} Item {util.repr(collection, x['_id'])} geändert.")
+    util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} Item {util.repr(collection, x['_id'])} geändert.")
     collection.update_one(x, {"$set": x_updated })
     if reset:
         util.reset()
@@ -58,7 +58,7 @@ def new(collection, ini = {}):
     x = collection.insert_one(util.new[collection])
     st.session_state.expanded=x.inserted_id
     st.session_state.edit=x.inserted_id
-    util.logger.info(f"User {st.session_state.user} hat in {collection} ein neues Item angelegt.")
+    util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} ein neues Item angelegt.")
     st.rerun()
 
 # Finde in collection.field die id, und gebe im Datensatz return_field zurück. Falls list=True,
@@ -101,7 +101,7 @@ def delete_item_update_dependent_items(collection, id):
                 x["collection"].update_many({x["field"]: { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
-        util.logger.info(f"User {st.session_state.user} hat in {collection} item {util.repr(collection, id)} gelöscht, und abhängige Felder geändert.")
+        util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} item {util.repr(collection, id)} gelöscht, und abhängige Felder geändert.")
         collection.delete_one({"_id": id})
         util.reset()
         st.success(f"🎉 Erfolgreich gelöscht!  {s}")

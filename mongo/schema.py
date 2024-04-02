@@ -729,7 +729,7 @@ veranstaltung_validator = {
                             }
                         },
                         "wochentag": {
-                            "enum": ["null", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
+                            "enum": ["", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
                             "description": "Der Wochentag."
                         },
                         "start": {

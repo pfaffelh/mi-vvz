@@ -7,7 +7,7 @@ import datetime
 # Create mongodump using
 # mongodump --db vvz --archive=vvz_backup
 
-os.system("mongosh vvz --eval 'db.dropDatabase()'")
+os.system("mongo vvz --eval 'db.dropDatabase()'")
 os.system("mongorestore --archive='vvz_backup_neu'")
 
 cluster = MongoClient("mongodb://127.0.0.1:27017")
@@ -72,7 +72,7 @@ veranstaltung = list(ver.find({}))
 leerer_termin = {
     "key": "",
     "kommentar": "",
-    "wochentag": None,
+    "wochentag": "",
     "raum": raum.find_one({"name_de": "-"})["_id"],
     "person": [per.find_one({"name": "-"})["_id"]],
     "start": None,
@@ -234,15 +234,15 @@ gebaeude.update_one({"name_de": "Hermann-Herder-Str. 10"}, {"$set": {"sichtbar":
 # Ab hier wird das Schema gecheckt
 print("Check schema")
 import schema
-mongo_db.command("collMod", "semester", validator = schema.semester_validator, validationLevel='strict')
-mongo_db.command("collMod", "gebaeude", validator = schema.gebaeude_validator, validationLevel='strict')
-mongo_db.command("collMod", "raum", validator = schema.raum_validator, validationLevel='strict')
-mongo_db.command("collMod", "person", validator = schema.person_validator, validationLevel='strict')
-mongo_db.command("collMod", "anforderung", validator = schema.anforderung_validator, validationLevel='strict')
-mongo_db.command("collMod", "anforderungkategorie", validator = schema.anforderungkategorie_validator, validationLevel='strict')
-mongo_db.command("collMod", "kategorie", validator = schema.kategorie_validator, validationLevel='strict')
-mongo_db.command("collMod", "code", validator = schema.code_validator, validationLevel='strict')
-mongo_db.command("collMod", "studiengang", validator = schema.studiengang_validator, validationLevel='strict')
-mongo_db.command("collMod", "modul", validator = schema.modul_validator, validationLevel='strict')
-mongo_db.command("collMod", "veranstaltung", validator = schema.veranstaltung_validator, validationLevel='strict')
+mongo_db.command("collMod", "semester", validator = schema.semester_validator, validationLevel='moderate')
+mongo_db.command("collMod", "gebaeude", validator = schema.gebaeude_validator, validationLevel='moderate')
+mongo_db.command("collMod", "raum", validator = schema.raum_validator, validationLevel='moderate')
+mongo_db.command("collMod", "person", validator = schema.person_validator, validationLevel='moderate')
+mongo_db.command("collMod", "anforderung", validator = schema.anforderung_validator, validationLevel='moderate')
+mongo_db.command("collMod", "anforderungkategorie", validator = schema.anforderungkategorie_validator, validationLevel='moderate')
+mongo_db.command("collMod", "kategorie", validator = schema.kategorie_validator, validationLevel='moderate')
+mongo_db.command("collMod", "code", validator = schema.code_validator, validationLevel='moderate')
+mongo_db.command("collMod", "studiengang", validator = schema.studiengang_validator, validationLevel='moderate')
+mongo_db.command("collMod", "modul", validator = schema.modul_validator, validationLevel='moderate')
+mongo_db.command("collMod", "veranstaltung", validator = schema.veranstaltung_validator, validationLevel='moderate')
 
