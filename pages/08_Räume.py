@@ -20,6 +20,7 @@ display_navigation()
 collection = raum
 if st.session_state.page != "Räume":
     st.session_state.edit = ""
+st.session_state.page = "Räume"
 
 # Ändert die Ansicht. 
 def edit(id):

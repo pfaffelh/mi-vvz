@@ -20,6 +20,7 @@ display_navigation()
 collection = modul
 if st.session_state.page != "Modul":
     st.session_state.edit = ""
+st.session_state.page = "Modul"
 
 # Die Semesterliste für die Semester, an denen die Person da ist/war.
 stud = list(studiengang.find({"sichtbar": True}, sort = [("kurzname", pymongo.DESCENDING)]))

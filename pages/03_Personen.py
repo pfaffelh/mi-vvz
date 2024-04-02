@@ -18,9 +18,9 @@ display_navigation()
 
 # Es geht hier vor allem um diese Collection:
 collection = person
-st.session_state.page = "Person"
 if st.session_state.page != "Person":
     st.session_state.edit = ""
+st.session_state.page = "Person"
 
 # Ändert die Ansicht. 
 def edit(id):

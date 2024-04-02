@@ -19,6 +19,7 @@ display_navigation()
 # Es geht hier vor allem um diese Collection:
 collection = veranstaltung
 st.session_state.page = "Raumplan"
+st.session_state.edit = ""
 
 semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]

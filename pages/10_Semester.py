@@ -21,58 +21,7 @@ display_navigation()
 collection = semester
 if st.session_state.page != "Semester":
     st.session_state.edit = ""
-
-def reset_and_confirm(text=None):
-    st.session_state.submitted = False 
-    st.session_state.expanded = ""
-    if text is not None:
-        st.success(text)
-
-def semester_update_confirm(x, x_updated):
-    semester.update_one(x, {"$set": x_updated })
-    reset_and_confirm()
-    logger.info(f"User {st.session_state.user} hat Semester {x['name_de']} geändert.")
-    st.success("Erfolgreich geändert!")
-
-def kategorie_update_confirm(x, x_updated):
-    kategorie.update_one(x, {"$set": x_updated })
-    reset_and_confirm()
-    logger.info(f"User {st.session_state.user} hat Kategorie {x['titel_de']} geändert.")
-    st.success("Erfolgreich geändert!")
-
-def code_update_confirm(x, x_updated):
-    code.update_one(x, {"$set": x_updated })
-    reset_and_confirm()
-    logger.info(f"User {st.session_state.user} hat Code {x['name']} geändert.")
-    st.success("Erfolgreich geändert!")
-
-def kategorie_move_up(x):
-    target = kategorie.find_one( {"semester": st.session_state["semester"], "rang": {"$lt": x["rang"]}}, sort = [("rang",-1)])
-    if target:
-        n= target["rang"]
-        kategorie.update_one(target, {"$set": {"rang": x["rang"]}})    
-        kategorie.update_one(x, {"$set": {"rang": n}})    
-
-def kategorie_move_down(x):
-    target = kategorie.find_one({"semester": st.session_state["semester"], "rang": {"$gt": x["rang"]}}, sort = [("rang",+1)])
-    if target:
-        n= target["rang"]
-        kategorie.update_one(target, {"$set": {"rang": x["rang"]}})    
-        kategorie.update_one(x, {"$set": {"rang": n}})    
-
-def code_move_up(x):
-    target = code.find_one( {"semester": st.session_state["semester"], "rang": {"$lt": x["rang"]}}, sort = [("rang",-1)])
-    if target:
-        n= target["rang"]
-        code.update_one(target, {"$set": {"rang": x["rang"]}})    
-        code.update_one(x, {"$set": {"rang": n}})    
-
-def code_move_down(x):
-    target = code.find_one({"semester": st.session_state["semester"], "rang": {"$gt": x["rang"]}}, sort = [("rang",+1)])
-    if target:
-        n= target["rang"]
-        code.update_one(target, {"$set": {"rang": x["rang"]}})    
-        code.update_one(x, {"$set": {"rang": n}})    
+st.session_state.page = "Semester"
 
 def name_of_id(semester_id):
     x = semester.find_one({"_id": semester_id})
@@ -240,8 +189,6 @@ if st.session_state.logged_in:
                         st.session_state.expanded = ""
                         st.session_state.edit = ""
                         st.rerun()                      
-
-
 
 else:
     switch_page("VVZ")

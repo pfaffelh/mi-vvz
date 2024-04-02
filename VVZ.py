@@ -105,17 +105,17 @@ if st.session_state.logged_in:
                 name_en=st.text_input('Name (en)', x["name_en"])
                 midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
                 midname_en=st.text_input('Mittelkurzer Name (en)', x["midname_en"])
-                kurzname=st.text_input('Kurzname', x["kurzname"])
-                ects=st.text_input('ECTS', x["ects"])
+                kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
+                ects=st.text_input('ECTS', x["ects"], help = "Bitte eine typische Anzahl angeben, die genaue Zahl kann vom verwendeten Modul abhängen.")
                 kat = [g["_id"] for g in list(kategorie.find({"semester": x["semester"]}))]
                 index = [g for g in kat].index(x["kategorie"])
                 kategorie = st.selectbox("Kategorie", [x for x in kat], index = index, format_func = (lambda a: repr(kategorie, a)))
-                cod = st.multiselect("Codes", [x["_id"] for x in code.find({"$or": [{"semester": st.session_state.semester}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: repr(code, a)), placeholder = "Bitte auswählen")
+                cod = st.multiselect("Codes", [x["_id"] for x in code.find({"$or": [{"semester": st.session_state.semester}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: repr(code, a)), placeholder = "Bitte auswählen", help = "Es können nur Codes aus dem ausgewählten Semester verwendet werden.")
                 # Sortiere codes nach ihrem Rang 
                 cod = [x["_id"] for x in code.find({"$or": [{"semester": st.session_state.semester}, {"_id": {"$in": cod}}]}, sort = [("rang", pymongo.ASCENDING)])]
-                kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"])
-                kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"])
-                url=st.text_input('URL', x["url"])
+                kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = "Dieser Kommentar erscheint auf www.math...")
+                kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = "Dieser Kommentar erscheint auf www.math...")
+                url=st.text_input('URL', x["url"], help = "Gemeint ist die URL, auf der Inhalte zur Veranstaltung hinterlegt sind, etwa Skript, Übungsblätter etc.")
                 ver_updated = {
                     "hp_sichtbar": hp_sichtbar,
                     "name_de": name_de,
@@ -125,13 +125,15 @@ if st.session_state.logged_in:
                     "kurzname": kurzname,
                     "ects": ects,
                     "kategorie": kategorie,
-                    "code": code,
+                    "code": cod,
                     "url": url,
                     "kommentar_html_de": kommentar_html_de,
                     "kommentar_html_en": kommentar_html_en
                 }
                 submit = st.form_submit_button('Speichern', type = 'primary')
                 if submit:
+                    st.write(ver_updated)
+                    st.write(x)
                     st.session_state.expanded = "grunddaten"
                     tools.update_confirm(collection, x, ver_updated, reset = False)
 
@@ -251,7 +253,7 @@ if st.session_state.logged_in:
         ## Verwendbarkeiten
         with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
             st.subheader("Verwendbarkeit")
-            with st.popover("Aus anderer Veranstaltung importieren"):
+            with st.popover("Aus anderer Veranstaltung importieren", help = "Es wird eine Auswahlliste angezeigt, bestehend aus Veranstaltungen der selben Kategorie, und Veranstaltungen derselben Dozent*innen."):
                 ver_auswahl = list(veranstaltung.find({"$or": [{"kategorie": x["kategorie"]}, {"dozent": {"$in": x["dozent"]}}]}))
                 verwendbarkeit_import = st.selectbox("Veranstaltung", [v["_id"] for v in ver_auswahl], format_func = (lambda a: repr(veranstaltung, a, show_collection=False)))
                 v = veranstaltung.find_one({"_id": verwendbarkeit_import})

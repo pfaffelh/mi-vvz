@@ -20,6 +20,7 @@ display_navigation()
 collection = gebaeude
 if st.session_state.page != "Gebäude":
     st.session_state.edit = ""
+st.session_state.page = "Gebäude"
 
 # Ändert die Ansicht. 
 def edit(id):

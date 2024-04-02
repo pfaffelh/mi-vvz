@@ -42,7 +42,7 @@ def remove_from_list(collection, id, field, element):
     collection.update_one({"_id": id}, {"$pull": {field: element}})
 
 def update_confirm(collection, x, x_updated, reset = True):
-    util.logger.info(f"User {st.session_state.user} hat in {collection} Item {repr(collection, x['_id'])} geändert.")
+    util.logger.info(f"User {st.session_state.user} hat in {collection} Item {util.repr(collection, x['_id'])} geändert.")
     collection.update_one(x, {"$set": x_updated })
     if reset:
         util.reset()
@@ -154,7 +154,7 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "hp_sichtbar": True
     }
     w = util.veranstaltung.insert_one(v_new)
-    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {util.repr(util.veranstaltung, id)} nach Semester {repr(util.semester, kop_sem_id)} kopiert.")
+    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {util.repr(util.veranstaltung, id)} nach Semester {util.repr(util.semester, kop_sem_id)} kopiert.")
     util.semester.update_one({"sem": kop_sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.kategorie.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
@@ -215,7 +215,7 @@ def delete_semester(id):
     util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
     util.kategorie.delete_many({"semester": id})
     util.code.delete_many({"semester": id})
-    util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} gelöscht.")
+    util.logger.info(f"User {st.session_state.user} hat Semester {util.repr(util.semester, id)} gelöscht.")
     util.semester.delete_one({"_id": id})
     st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
 

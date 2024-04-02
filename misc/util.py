@@ -1,7 +1,6 @@
 import streamlit as st
 from misc.config import *
 import ldap
-from streamlit_extras.app_logo import add_logo
 import pymongo
 
 # Initialize logging
@@ -20,9 +19,6 @@ def configure_logging(file_path, level=logging.INFO):
     return logger
 
 logger = configure_logging(log_file)
-
-def logo():
-    add_logo("static/ufr.png", height=600)
 
 def login():
     st.session_state.logged_in = True
