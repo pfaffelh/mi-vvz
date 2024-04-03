@@ -1,8 +1,10 @@
 import streamlit as st
 import pymongo
 import time
+import ldap
 import misc.util as util
 from bson import ObjectId
+from misc.config import *
 
 def move_up(collection, x, query = {}):
     query["rang"] = {"$lt": x["rang"]}
@@ -42,10 +44,10 @@ def remove_from_list(collection, id, field, element):
     collection.update_one({"_id": id}, {"$pull": {field: element}})
 
 def update_confirm(collection, x, x_updated, reset = True):
-    util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} Item {util.repr(collection, x['_id'])} geändert.")
+    util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
     collection.update_one(x, {"$set": x_updated })
     if reset:
-        util.reset()
+        reset_vars("")
     st.toast("🎉 Erfolgreich geändert!")
 
 def new(collection, ini = {}):
@@ -81,16 +83,16 @@ def find_dependent_items(collection, id):
     for x in util.abhaengigkeit[collection]:
         if x["list"]:
             for y in list(x["collection"].find({x["field"]: { "$elemMatch": { "$eq": id }}})):
-                res.append(util.repr(x["collection"], y["_id"]))
+                res.append(repr(x["collection"], y["_id"]))
         else:
             for y in list(x["collection"].find({x["field"]: id})):
-                res.append(util.repr(x["collection"], y["_id"]))
+                res.append(repr(x["collection"], y["_id"]))
     return res
 
 def delete_item_update_dependent_items(collection, id):
     if collection in util.leer.keys() and id == util.leer[collection]:
             st.toast("Fehler! Dieses Item kann nicht gelöscht werden!")
-            util.reset()
+            reset_vars("")
     else:
         print("enter except")
         s = ("  \n".join(find_dependent_items(collection, id)))
@@ -101,9 +103,9 @@ def delete_item_update_dependent_items(collection, id):
                 x["collection"].update_many({x["field"]: { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
-        util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} item {util.repr(collection, id)} gelöscht, und abhängige Felder geändert.")
+        util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} item {repr(collection, id)} gelöscht, und abhängige Felder geändert.")
         collection.delete_one({"_id": id})
-        util.reset()
+        reset_vars("")
         st.success(f"🎉 Erfolgreich gelöscht!  {s}")
 
 def kopiere_veranstaltung_confirm(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
@@ -154,7 +156,7 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "hp_sichtbar": True
     }
     w = util.veranstaltung.insert_one(v_new)
-    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {util.repr(util.veranstaltung, id)} nach Semester {util.repr(util.semester, kop_sem_id)} kopiert.")
+    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, kop_sem_id)} kopiert.")
     util.semester.update_one({"sem": kop_sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.kategorie.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
@@ -166,7 +168,7 @@ def kopiere_semester(id, x_updated, df, kopiere_personen):
     last_sem_id = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["_id"]
     s = util.semester.insert_one(x_updated)
     sem_id = s.inserted_id
-    util.logger.info(f"User {st.session_state.user} hat Semester {util.repr(util.semester, id)} nach {util.repr(util.semester, sem_id)} kopiert.")
+    util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} nach {repr(util.semester, sem_id)} kopiert.")
     # kopien enthält die ids der originalen und kopierten Datensätze
     kopie = {id: sem_id}
     # Kopiere Personen aus dem letzten Semester
@@ -215,7 +217,7 @@ def delete_semester(id):
     util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
     util.kategorie.delete_many({"semester": id})
     util.code.delete_many({"semester": id})
-    util.logger.info(f"User {st.session_state.user} hat Semester {util.repr(util.semester, id)} gelöscht.")
+    util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} gelöscht.")
     util.semester.delete_one({"_id": id})
     st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
 
@@ -234,3 +236,126 @@ def shortify(str1, str2):
             return f"{str1_list[0]}, {str1_list[1]} {str1_list[2]}, {str2_list[1]} {str2_list[2]}"
     else:
         return None
+
+# Die Authentifizierung gegen den Uni-LDAP-Server
+def authenticate(username, password):
+    ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
+    user_dn = "uid={},{}".format(username, base_dn)
+    try:
+        l = ldap.initialize(server)
+        l.protocol_version = ldap.VERSION3
+        l.simple_bind_s(user_dn, password)
+        return True
+    except ldap.INVALID_CREDENTIALS:
+        return False
+    except ldap.LDAPError as error:
+        util.logger.warning(f"LDAP-Error: {error}")
+        return False
+
+def can_edit(username):
+    u = util.user.find_one({"rz": username})
+    faq_id = util.group.find_one({"name": "faq"})["_id"]
+    return (True if faq_id in u["groups"] else False)
+
+def logout():
+    st.session_state.logged_in = False
+    util.logger.info(f"User {st.session_state.user} hat sich ausgeloggt.")
+
+
+def reset_vars(text=""):
+    st.session_state.edit = ""
+    if text != "":
+        st.success(text)
+
+def display_navigation():
+    st.markdown("<style>.st-emotion-cache-16txtl3 { padding: 2rem 2rem; }</style>", unsafe_allow_html=True)
+    with st.sidebar:
+        col1, col2, col3 = st.columns([1,8,1])
+        with col2:
+            st.image("static/ufr.png", use_column_width=False)
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("VVZ.py", label="Veranstaltungen")
+    st.sidebar.page_link("pages/01_Raumplan.py", label="Raumplan")
+    st.sidebar.page_link("pages/02_www.py", label="Vorschau www.math...")
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("pages/03_Personen.py", label="Personen")
+    st.sidebar.page_link("pages/05_Studiengänge.py", label="Studiengänge")
+    st.sidebar.page_link("pages/06_Module.py", label="Module")
+    st.sidebar.page_link("pages/07_Anforderungen.py", label="Anforderungen")
+    st.sidebar.page_link("pages/08_Räume.py", label="Räume")
+    st.sidebar.page_link("pages/09_Gebäude.py", label="Gebäude")
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("pages/10_Semester.py", label="Semester")
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("pages/11_Dokumentation.py", label="Dokumentation")
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+
+
+def repr(collection, id, show_collection = True):
+    x = collection.find_one({"_id": id})
+    if collection == util.gebaeude:
+        res = x['name_de']
+        if show_collection:
+            res = "Gebäude: " + res
+    elif collection == util.raum:
+        res = x['name_de']
+        if show_collection:
+            res = "Raum: " + res
+    elif collection == util.semester:
+        res = x['kurzname']
+        if show_collection:
+            res = "Semester: " + res
+    elif collection == util.kategorie:
+        sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
+        res = f"{x['titel_de']} ({sem})"
+        if show_collection:
+            res = "Kategorie: " + res
+    elif collection == util.code:
+        sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
+        res = f"{x['beschreibung_de']} ({sem})"    
+        if show_collection:
+            res = "Code: " + res
+    elif collection == util.person:
+        res = f"{x['name']}, {x['name_prefix']}"
+        if show_collection:
+            res = "Person: " + res
+    elif collection == util.studiengang:
+        res = f"{x['name']}"
+        if show_collection:
+            res = "Studiengang: " + res
+    elif collection == util.modul:
+        s = ", ".join([util.studiengang.find_one({"_id" : id1})["kurzname"] for id1 in x["studiengang"]])
+        res = f"{x['name_de']} ({s})"
+        if show_collection:
+            res = "Modul: " + res
+    elif collection == util.anforderung:
+        res = x['name_de']
+        if show_collection:
+            res = "Anforderung: " + res
+    elif collection == util.anforderungkategorie:
+        res = x['name_de']
+        if show_collection:
+            res = "Anforderungskategorie: " + res
+    elif collection == util.veranstaltung:
+        s = ", ".join([util.person.find_one({"_id" : id1})["name"] for id1 in x["dozent"]])
+        sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
+        res = f"{x['name_de']} ({s}, {sem})"
+        if show_collection:
+            res = "Veranstaltung: " + res
+    return res
+
+def hour_of_datetime(dt):
+    if dt is None:
+        return ""
+    else:
+        return str(dt.hour)
+
+def name_of_sem_id(semester_id):
+    x = util.semester.find_one({"_id": semester_id})
+    return x["name_de"]
+
+def name_of_ver_id(ver_id):
+    x = util.veranstaltung.find_one({"_id": ver_id})
+    return x["name_de"]
+
+

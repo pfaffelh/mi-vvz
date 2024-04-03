@@ -7,23 +7,23 @@ import pymongo
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 from misc.config import *
-from misc.util import *
+import misc.util as util
 import misc.tools as tools
 
 # make all neccesary variables available to session_state
-setup_session_state()
+# setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+tools.display_navigation()
 
 # Es geht hier vor allem um diese Collection:
-collection = studiengang
+collection = util.studiengang
 if st.session_state.page != "Studiengang":
     st.session_state.edit = ""
 st.session_state.page = "Studiengang"
 
 # Die Semesterliste für die Semester, an denen die Person da ist/war.
-mo = list(modul.find({"sichtbar": True}, sort = [("kurzname", pymongo.DESCENDING)]))
+mo = list(util.modul.find({"sichtbar": True}, sort = [("kurzname", pymongo.DESCENDING)]))
 mod_dict = {}
 for m in mo:
     mod_dict[m["_id"]] = f"{m['name_de']} ({m['kurzname']})"
@@ -69,13 +69,13 @@ if st.session_state.logged_in:
             with colu1:
                 st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
             with colu3: 
-                st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         with st.form(f'ID-{x["_id"]}'):
-            sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == leer[collection] else False))
-            name=st.text_input('Name', x["name"], disabled = (True if x["_id"] == leer[collection] else False))
+            sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
+            name=st.text_input('Name', x["name"], disabled = (True if x["_id"] == util.leer[collection] else False))
             kurzname=st.text_input('Kurzname', x["kurzname"])
             kommentar=st.text_input('Kommentar', x["kommentar"])
-            modul_list = st.multiselect("Module", [x["_id"] for x in modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: repr(modul, a, False)), placeholder = "Bitte auswählen")
+            modul_list = st.multiselect("Module", [x["_id"] for x in util.modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: repr(util.modul, a, False)), placeholder = "Bitte auswählen")
             x_updated = ({"name": name, "kurzname": kurzname, "sichtbar": sichtbar, "kommentar": kommentar, "modul": modul_list})
             submit = st.form_submit_button('Speichern', type = 'primary')
             if submit:
@@ -92,4 +92,4 @@ if st.session_state.logged_in:
 else: 
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = tools.logout)

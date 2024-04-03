@@ -7,37 +7,37 @@ import pymongo
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 from misc.config import *
-from misc.util import *
+import misc.util as util
 import misc.tools as tools
 
 # make all neccesary variables available to session_state
-setup_session_state()
+# setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+tools.display_navigation()
 
 # Es geht hier vor allem um diese Collection:
-collection = veranstaltung
+collection = util.veranstaltung
 st.session_state.page = "Raumplan"
 st.session_state.edit = ""
 
-semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 slotstart = [8, 10, 12, 14, 16, 18]
-raum_dict = {r["_id"]: repr(raum, r["_id"], show_collection = False) for r in raum.find() }
+raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in util.raum.find() }
 
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
     #with open("misc/styles.css") as f:
     #    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
     st.header("Raumplan")
-    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester), format_func = (lambda a: semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
+    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.current_semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
     st.session_state.semester = sem_id
     if sem_id is not None:
-        kat = list(kategorie.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
-        raum_list = st.multiselect("Räume", raum_dict.keys(), hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
+        kat = list(util.kategorie.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
+        raum_list = st.multiselect("Räume", raum_dict.keys(), util.hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
         st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-        showraum = [raum.find_one({"_id": id}) for id in raum_list]
+        showraum = [util.raum.find_one({"_id": id}) for id in raum_list]
         co = st.columns([1, 1] + [1 for s in slotstart])
         for i, s in enumerate(slotstart):
             with co[i+2]:
@@ -55,7 +55,7 @@ if st.session_state.logged_in:
                 for k, s in enumerate(slotstart):
                     with co[k+2]:
                         # finde alle woechentliche_termine für den angezeigten Slot
-                        ve = list(veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
+                        ve = list(util.veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
                         for x in ve:
                             wt = x["woechentlicher_termin"]
                             w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] == datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), wt))[0]
@@ -68,7 +68,7 @@ if st.session_state.logged_in:
                                 }
                                 </style>
                                 """,unsafe_allow_html=True)
-                            submit = st.button(f"**{x['kurzname']}**", type = "primary" if len(ve) > 1 else "secondary", help = repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}", use_container_width=True)
+                            submit = st.button(f"**{x['kurzname']}**", type = "primary" if len(ve) > 1 else "secondary", help = tools.repr(util.veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}", use_container_width=True)
                             if submit:
                                 st.session_state.edit = x["_id"]
                                 st.session_state.page = "Veranstaltung"
@@ -108,7 +108,7 @@ if st.session_state.logged_in:
         #                             }
         #                             </style>
         #                             """,unsafe_allow_html=True)
-        #                         st.button(f"**{x['kurzname']}**", on_click=edit, args=(x["_id"],), type = "primary" if len(ve) > 1 else "secondary", help = repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}")
+        #                         st.button(f"**{x['kurzname']}**", on_click=edit, args=(x["_id"],), type = "primary" if len(ve) > 1 else "secondary", help = tools.repr(veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}")
 
 #                st.markdown("<style>.st-emotion-cache-f4k0dr { min-height: 0pt; gap: 0rem; }</style>", unsafe_allow_html=True)
 #                st.markdown("<style>.st-emotion-cache-ocqkz7 { min-height: 0pt; line-height: 1; padding: 0rem; margin-bottom: 0rem; gap: 0rem; }</style>", unsafe_allow_html=True)
@@ -122,4 +122,4 @@ if st.session_state.logged_in:
 else: 
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = tools.logout)

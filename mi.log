@@ -173,3 +173,50 @@
 2024-04-02 23:23:56,359 - INFO - MI-VVZ - User  hat in Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'vvz'), 'veranstaltung') Item Veranstaltung: Analysis II (Dondl, 2024SS) geändert.
 2024-04-02 23:24:56,044 - INFO - MI-VVZ - User  hat in Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'vvz'), 'veranstaltung') Item Veranstaltung: Analysis II (Dondl, 2024SS) geändert.
 2024-04-02 23:25:15,388 - INFO - MI-VVZ - User  hat in Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'vvz'), 'veranstaltung') Item Veranstaltung: Analysis II (Dondl, 2024SS) geändert.
+2024-04-03 21:37:25,532 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:37:28,766 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:37:29,670 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:37:30,830 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:37:31,598 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:38:51,812 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:40:20,616 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:42:22,905 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:43:06,454 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:43:08,083 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:43:12,469 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:43:20,582 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:45:10,408 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:45:13,455 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:45:16,294 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:45:19,116 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:45:28,611 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:45:59,384 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:46:31,412 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:47:45,756 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:48:24,328 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:48:59,945 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:50:20,815 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:50:22,750 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:50:23,723 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:51:00,436 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:55:22,173 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:55:50,474 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:56:30,357 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:56:48,811 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-03 21:57:27,520 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-03 21:57:30,236 - INFO - MI-VVZ - User pp131 hat sich ausgeloggt.
+2024-04-03 23:14:09,629 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-03 23:14:55,033 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-03 23:17:12,386 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-03 23:35:05,694 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-04 00:08:30,559 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Veranstaltungen Item Veranstaltung: Analysis II (Dondl, 2024SS) geändert.
+2024-04-04 00:08:34,436 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Veranstaltungen Item Veranstaltung: Analysis II (Dondl, 2024SS) geändert.
+2024-04-04 00:08:53,143 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Veranstaltungen Item Veranstaltung: Analysis II (Dondl, 2024SS) geändert.
+2024-04-04 00:09:56,157 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen ein neues Item angelegt.
+2024-04-04 00:10:00,531 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen item Person: Neue Person,  gelöscht, und abhängige Felder geändert.
+2024-04-04 00:11:54,842 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-04 00:12:06,289 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Person: Soergel, W. geändert.
+2024-04-04 00:13:43,027 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Person: Soergel, W. geändert.
+2024-04-04 00:13:48,298 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Person: Soergel, W. geändert.
+2024-04-04 00:14:08,621 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Person: Soergel, W. geändert.
+2024-04-04 00:16:33,439 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Person: Soergel, W. geändert.

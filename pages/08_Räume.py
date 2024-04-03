@@ -7,17 +7,17 @@ import pymongo
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 from misc.config import *
-from misc.util import *
+import misc.util as util
 import misc.tools as tools
 
 # make all neccesary variables available to session_state
-setup_session_state()
+# setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+tools.display_navigation()
 
 # Es geht hier vor allem um diese Collection:
-collection = raum
+collection = util.raum
 if st.session_state.page != "Räume":
     st.session_state.edit = ""
 st.session_state.page = "Räume"
@@ -27,7 +27,7 @@ def edit(id):
     st.session_state.page = "Räume"
     st.session_state.edit = id
 
-geb = list(gebaeude.find({"sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
+geb = list(util.gebaeude.find({"sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
 gebaeude_sichtbar = [ x["_id"]  for x in geb ]
 
 # Ab hier wird die Webseite erzeugt
@@ -66,16 +66,16 @@ if st.session_state.logged_in:
             with colu1:
                 st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
             with colu3: 
-                st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         with st.form(f'ID-{x["_id"]}'):
-            sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == leer[collection] else False))
-            name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == leer[collection] else False))
+            sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
+            name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == util.leer[collection] else False))
             name_en=st.text_input('Name (en)', x["name_en"])
             kurzname=st.text_input('Kurzname', x["kurzname"])
             if x["gebaeude"] not in gebaeude_sichtbar:
                 gebaeude_sichtbar.insert(0, x["gebaeude"])
             index = [g for g in gebaeude_sichtbar].index(x["gebaeude"])
-            gebaeude1 = st.selectbox("Gebäude", [x for x in gebaeude_sichtbar], index = index, format_func = (lambda a: repr(gebaeude, a)))
+            gebaeude1 = st.selectbox("Gebäude", [x for x in gebaeude_sichtbar], index = index, format_func = (lambda a: repr(util.gebaeude, a)))
             raum=st.text_input('Raum', x["raum"])
             groesse=st.number_input('Groesse', value = x["groesse"], min_value = 0)
             kommentar=st.text_area('Kommentar', x["kommentar"])
@@ -95,7 +95,7 @@ if st.session_state.logged_in:
 else: 
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = tools.logout)
 
 
 

@@ -8,30 +8,30 @@ import pandas as pd
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 from misc.config import *
-from misc.util import *
+import misc.util as util
 import misc.tools as tools
 
 # make all neccesary variables available to session_state
-setup_session_state()
+# setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+tools.display_navigation()
 
 # Es geht hier vor allem um diese Collection:
-collection = semester
+collection = util.semester
 if st.session_state.page != "Semester":
     st.session_state.edit = ""
 st.session_state.page = "Semester"
 
 def name_of_id(semester_id):
-    x = semester.find_one({"_id": semester_id})
+    x = util.semester.find_one({"_id": semester_id})
     res = x["name_de"]
     if x["hp_sichtbar"]:
         res = f"{res.strip()} 😎"
     return res
 
-semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
-collection = semester
+semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+collection = util.semester
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Semester-Grundeinstellungen")
@@ -40,7 +40,7 @@ if st.session_state.logged_in:
 
     st.session_state.semester = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = 0, format_func = name_of_id, placeholder = "Wähle ein Semester", label_visibility = "collapsed")
     submit = False
-    x = semester.find_one({"_id": st.session_state.semester})
+    x = util.semester.find_one({"_id": st.session_state.semester})
 
     with st.popover('Semester löschen'):
         s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
@@ -52,14 +52,14 @@ if st.session_state.logged_in:
         with colu1:
             st.button(label = "Ja", type = 'primary', on_click = tools.delete_semester, args = (x["_id"],), key = f"delete-{x['_id']}")
         with colu3: 
-            st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+            st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
     with st.expander('Semester kopieren'):
-        st.write("Kopiere " + semester.find_one(x)["name_de"])
+        st.write("Kopiere " + util.semester.find_one(x)["name_de"])
         new_name_de = st.text_input('Name der Kopie (de)', "")
         new_name_en = st.text_input('Name der Kopie (en)', "")
         new_kurzname = st.text_input('Kurzname der Kopie', "")
         new_hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar", value = False, key=f'kopie-hp_sichtbar')
-        last_sem_kurzname = list(semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["kurzname"]
+        last_sem_kurzname = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["kurzname"]
         kopiere_personen = st.checkbox(f"Alle im {last_sem_kurzname} beteiligten Personen ins kopierte Semester übernehmen?", value = True, key=f'kopie-person')
         x_updated = {"name_de": new_name_de, 
                      "name_en": new_name_en, 
@@ -71,12 +71,12 @@ if st.session_state.logged_in:
                      "rang": list(collection.find(sort = [("rang", pymongo.DESCENDING)]))[0]["rang"]+1
                      }
         st.write("Kategorien und Codes von Veranstaltungen werden übernommen, URLs nicht.")
-        kat_list = list(kategorie.find({"semester": x["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
+        kat_list = list(util.kategorie.find({"semester": x["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
         ver_list = []
         for k in kat_list:
-            ver_list.extend(list(veranstaltung.find({"kategorie": k["_id"]}, sort = [("rang", pymongo.ASCENDING)])))
-        kop_ver_list = st.multiselect("Zu kopierende Veranstaltungen", [v["_id"] for v in ver_list], [v["_id"] for v in ver_list], format_func = (lambda a: repr(veranstaltung, a, False)))
-        g = [{"_id": v, "Name": repr(veranstaltung, v, False), "Personen": False, "Termine": False, "Kommentare": False, "Verwendbarkeit": True} for v in kop_ver_list]
+            ver_list.extend(list(util.veranstaltung.find({"kategorie": k["_id"]}, sort = [("rang", pymongo.ASCENDING)])))
+        kop_ver_list = st.multiselect("Zu kopierende Veranstaltungen", [v["_id"] for v in ver_list], [v["_id"] for v in ver_list], format_func = (lambda a: repr(util.veranstaltung, a, False)))
+        g = [{"_id": v, "Name": repr(util.veranstaltung, v, False), "Personen": False, "Termine": False, "Kommentare": False, "Verwendbarkeit": True} for v in kop_ver_list]
         df = pd.DataFrame.from_records(g)
         df_new = st.data_editor(
             df, height = None, column_config = {"_id": None}, disabled=["Name"], hide_index = True)
@@ -95,7 +95,7 @@ if st.session_state.logged_in:
             st.session_state.edit = ""
             st.rerun()                      
     st.write("### Kategorien")
-    collection = kategorie
+    collection = util.kategorie
 
     st.write("Mit 😎 markierte Kategorien sind auf der Homepage sichtbar.")
     st.write(" ")
@@ -123,7 +123,7 @@ if st.session_state.logged_in:
                     with colu1:
                         st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
                     with colu3: 
-                        st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                        st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
@@ -146,7 +146,7 @@ if st.session_state.logged_in:
                         st.rerun()                      
 
     st.write("### Codes")
-    collection = code
+    collection = util.code
     st.write("Mit 😎 markierte Codes sind auf der Homepage sichtbar.")
     st.write(" ")
     if st.button('**Neuen Code hinzufügen**'):
@@ -174,7 +174,7 @@ if st.session_state.logged_in:
                     with colu1:
                         st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
                     with colu3: 
-                        st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                        st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
                     name=st.text_input('Name', x["name"], key=f'name-{x["_id"]}')
@@ -193,4 +193,4 @@ if st.session_state.logged_in:
 else:
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = tools.logout)

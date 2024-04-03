@@ -5,14 +5,14 @@ from streamlit_extras.switch_page_button import switch_page
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 from misc.config import *
-from misc.util import *
+import misc.util as util
 import misc.tools as tools
 
 # make all neccesary variables available to session_state
-setup_session_state()
+# setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+tools.display_navigation()
 
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
@@ -105,4 +105,4 @@ if st.session_state.logged_in:
 else: 
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = tools.logout)

@@ -7,17 +7,17 @@ import pymongo
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 from misc.config import *
-from misc.util import *
+import misc.util as util
 import misc.tools as tools
 
 # make all neccesary variables available to session_state
-setup_session_state()
+# setup_session_state()
 
 # Navigation in Sidebar anzeigen
-display_navigation()
+tools.display_navigation()
 
 # Es geht hier vor allem um diese Collection:
-collection = anforderung
+collection = util.anforderung
 if st.session_state.page != "Anforderung":
     st.session_state.edit = ""
 st.session_state.page = "Anforderung"
@@ -46,13 +46,13 @@ if st.session_state.logged_in:
             with co2:
                 st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
             with co3:
-                an = anforderungkategorie.find_one({"_id": x["anforderungskategorie"]})["name_de"]
+                an = util.anforderungkategorie.find_one({"_id": x["anforderungskategorie"]})["name_de"]
                 abk = f"{x['name_de'].strip()} ({an.strip()})"
                 abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
                 st.button(abk, key=f"edit-{x['_id']}", on_click = edit, args = (x["_id"], ))
 
         st.subheader("Anforderungskategorien")
-        collection = anforderungkategorie
+        collection = util.anforderungkategorie
         st.write("Mit 😎 markierte Anforderungkategorien sind in Auswahlmenüs sichtbar.")
         st.write(" ")
         if st.button('**Neue Anforderungskategorie hinzufügen**'):
@@ -80,7 +80,7 @@ if st.session_state.logged_in:
                         with colu1:
                             st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
                         with colu3: 
-                            st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                            st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
                     with st.form(f'ID-{x["_id"]}'):
                         sichtbar = st.checkbox("In Auswahlmenüs sichtbar", value = x["sichtbar"], key=f'ID-{x["_id"]}-sichtbar')
                         name_de=st.text_input('Name (de)', x["name_de"], key=f'name_de-{x["_id"]}')
@@ -109,14 +109,14 @@ if st.session_state.logged_in:
             with colu1:
                 st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
             with colu3: 
-                st.button(label="Nein", on_click = reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         with st.form(f'ID-{x["_id"]}'):
-            sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == leer[collection] else False))
+            sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
             name_de=st.text_input('Name (de)', x["name_de"])
             name_en=st.text_input('Name (en)', x["name_en"])
-            anfkat = [x["_id"] for x in list(anforderungkategorie.find())]
+            anfkat = [x["_id"] for x in list(util.anforderungkategorie.find())]
             index = anfkat.index(x["anforderungskategorie"])
-            anforderungskategorie = st.selectbox("Anforderungskategorie", [x for x in anfkat], index = index, format_func = (lambda a: repr(anforderungkategorie, a, show_collection=False)))
+            anforderungskategorie = st.selectbox("Anforderungskategorie", [x for x in anfkat], index = index, format_func = (lambda a: repr(util.anforderungkategorie, a, show_collection=False)))
             kommentar=st.text_input('Kommentar', x["kommentar"])
             x_updated = ({"name_de": name_de, "name_en": name_en, "anforderungskategorie": anforderungskategorie, "sichtbar": sichtbar, "kommentar": kommentar})
             submit = st.form_submit_button('Speichern', type = 'primary')
@@ -129,4 +129,4 @@ if st.session_state.logged_in:
 else: 
     switch_page("VVZ")
 
-st.sidebar.button("logout", on_click = logout)
+st.sidebar.button("logout", on_click = tools.logout)
