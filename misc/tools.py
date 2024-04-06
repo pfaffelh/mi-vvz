@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_extras.switch_page_button import switch_page 
 import pymongo
 import time
 import ldap
@@ -50,18 +51,18 @@ def update_confirm(collection, x, x_updated, reset = True):
         reset_vars("")
     st.toast("🎉 Erfolgreich geändert!")
 
-def new(collection, ini = {}):
+def new(collection, ini = {}, switch = True):
     z = list(collection.find(sort = [("rang", pymongo.ASCENDING)]))
     rang = z[0]["rang"]-1
-    st.write(util.new[collection])
     util.new[collection]["rang"] = rang    
     for key, value in ini.items():
         util.new[collection][key] = value
     x = collection.insert_one(util.new[collection])
-    st.session_state.expanded=x.inserted_id
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} ein neues Item angelegt.")
-    st.rerun()
+    if switch:
+        switch_page(f"{util.collection_name[collection].lower()} edit")
+
 
 # Finde in collection.field die id, und gebe im Datensatz return_field zurück. Falls list=True,
 # dann ist collection.field ein array.
@@ -89,12 +90,11 @@ def find_dependent_items(collection, id):
                 res.append(repr(x["collection"], y["_id"]))
     return res
 
-def delete_item_update_dependent_items(collection, id):
+def delete_item_update_dependent_items(collection, id ,switch = True):
     if collection in util.leer.keys() and id == util.leer[collection]:
             st.toast("Fehler! Dieses Item kann nicht gelöscht werden!")
             reset_vars("")
     else:
-        print("enter except")
         s = ("  \n".join(find_dependent_items(collection, id)))
         if s:
             s = f"\n{s}  \ngeändert."     
@@ -102,25 +102,29 @@ def delete_item_update_dependent_items(collection, id):
             if x["list"]:
                 x["collection"].update_many({x["field"]: { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
+                st.write(util.collection_name[x["collection"]])
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
         util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} item {repr(collection, id)} gelöscht, und abhängige Felder geändert.")
         collection.delete_one({"_id": id})
         reset_vars("")
         st.success(f"🎉 Erfolgreich gelöscht!  {s}")
+        time.sleep(4)
+        if switch:
+            switch_page(util.collection_name[collection].lower())
 
 def kopiere_veranstaltung_confirm(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
     w_id = kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit)
     st.success("Erfolgreich kopiert!")
     time.sleep(2)
+    st.session_state.semester_id = kop_sem_id
     st.session_state.edit = w_id
-    st.session_state.page = "Veranstaltung"
-
+    
 def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
     v = util.veranstaltung.find_one({"_id": ObjectId(id)})
-    k = v["kategorie"] if v["semester"] == kop_sem_id else util.kategorie.find_one({"semester": kop_sem_id, "titel_de": "-"})["_id"]
+    k = v["rubrik"] if v["semester"] == kop_sem_id else util.rubrik.find_one({"semester": kop_sem_id, "titel_de": "-"})["_id"]
     # Das wird der Rang der kopierten Veranstaltung
     try:
-        r = util.veranstaltung.find_one({"semester": kop_sem_id, "kategorie": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
+        r = util.veranstaltung.find_one({"semester": kop_sem_id, "rubrik": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
     except:
         r = 0
     v_new = {
@@ -132,7 +136,7 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "ects": v["ects"],
         "url": "",
         "semester": kop_sem_id,
-        "kategorie": k,
+        "rubrik": k,
         "code": v["code"] if v["semester"] == kop_sem_id else [],
         "rang": r,
         "kommentar_html_de": v["kommentar_html_de"],
@@ -158,7 +162,7 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
     w = util.veranstaltung.insert_one(v_new)
     util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, kop_sem_id)} kopiert.")
     util.semester.update_one({"sem": kop_sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
-    util.kategorie.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
+    util.rubrik.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
         util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
     return w.inserted_id
@@ -175,14 +179,14 @@ def kopiere_semester(id, x_updated, df, kopiere_personen):
     if kopiere_personen:
         util.person.update_many({"semester": {"$elemMatch": {"$eq": last_sem_id }}}, { "$push": { "semester": sem_id}})
 
-    # Kopiere Kategorien und Codes
-    for k in list(util.kategorie.find({"semester": id})):
+    # Kopiere Rubriken und Codes
+    for k in list(util.rubrik.find({"semester": id})):
         k_loc = k["_id"]
         del k["_id"] # andernfalls gibt es einen duplicate key error
-        k_new = util.kategorie.insert_one(k)
-        util.kategorie.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
+        k_new = util.rubrik.insert_one(k)
+        util.rubrik.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
         kopie[k_loc] = k_new.inserted_id
-        util.semester.update_one({"_id": sem_id}, {"$push": {"kategorie": k_new.inserted_id}})
+        util.semester.update_one({"_id": sem_id}, {"$push": {"rubrik": k_new.inserted_id}})
     for k in list(util.code.find({"semester": id})):
         k_loc = k["_id"]
         del k["_id"]  # andernfalls gibt es einen duplicate key error
@@ -190,14 +194,14 @@ def kopiere_semester(id, x_updated, df, kopiere_personen):
         util.code.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
         kopie[k_loc] = k_new.inserted_id
         util.semester.update_one({"_id": sem_id}, {"$push": {"code": k_new.inserted_id}})
-    # Kopiere Veranstaltungen, übertrage Kategorie und Codes
+    # Kopiere Veranstaltungen, übertrage rubrik und Codes
     for index, row in df.iterrows():
         kop_ver_id = kopiere_veranstaltung(ObjectId(row["_id"]), sem_id, row["Personen"], row["Termine"], row["Kommentare"], row["Verwendbarkeit"])
         kopie[row["_id"]] = kop_ver_id
         v = util.veranstaltung.find_one({"_id": ObjectId(row["_id"])})
         util.veranstaltung.update_one({"_id": kop_ver_id}, 
                                  {"$set": 
-                                  {"kategorie": kopie[v["kategorie"]],
+                                  {"rubrik": kopie[v["rubrik"]],
                                   "code": [kopie[co] for co in v["code"]]}})
         util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": kop_ver_id}})
     st.success("Erfolgreich kopiert!")
@@ -215,27 +219,11 @@ def delete_semester(id):
         util.veranstaltung.delete_one({"_id": v["_id"]})
     
     util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
-    util.kategorie.delete_many({"semester": id})
+    util.rubrik.delete_many({"semester": id})
     util.code.delete_many({"semester": id})
     util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} gelöscht.")
     util.semester.delete_one({"_id": id})
     st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
-
-# str1 und str2 sind zwei strings, die mit "," getrennte Felder enthalten, etwa
-# str1 = "HS Rundbau, Mo, 8-10"
-# str2 = "HS Rundbau, Mi, 8-10"
-# Ausgabe ist dann
-# HS Rundbau, Mo, Mi, 8-10
-def shortify(str1, str2):
-    str1_list = str.split(str1, ",")
-    str2_list = str.split(str2, ",")
-    if str1_list[0] == str2_list[0]:
-        if str1_list[2] == str2_list[2]:
-            return f"{str1_list[0]}, {str1_list[1]}, {str2_list[1]} {str2_list[2]}"
-        else:
-            return f"{str1_list[0]}, {str1_list[1]} {str1_list[2]}, {str2_list[1]} {str2_list[2]}"
-    else:
-        return None
 
 # Die Authentifizierung gegen den Uni-LDAP-Server
 def authenticate(username, password):
@@ -261,7 +249,6 @@ def logout():
     st.session_state.logged_in = False
     util.logger.info(f"User {st.session_state.user} hat sich ausgeloggt.")
 
-
 def reset_vars(text=""):
     st.session_state.edit = ""
     if text != "":
@@ -270,11 +257,12 @@ def reset_vars(text=""):
 def display_navigation():
     st.markdown("<style>.st-emotion-cache-16txtl3 { padding: 2rem 2rem; }</style>", unsafe_allow_html=True)
     with st.sidebar:
-        col1, col2, col3 = st.columns([1,8,1])
-        with col2:
-            st.image("static/ufr.png", use_column_width=False)
+        st.image("static/ufr.png", use_column_width=True)
+        semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+        st.session_state.semester_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "master_semester_choice")
+
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-    st.sidebar.page_link("VVZ.py", label="Veranstaltungen")
+    st.sidebar.page_link("pages/00_Veranstaltungen.py", label="Veranstaltungen")
     st.sidebar.page_link("pages/01_Raumplan.py", label="Raumplan")
     st.sidebar.page_link("pages/02_www.py", label="Vorschau www.math...")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
@@ -290,72 +278,56 @@ def display_navigation():
     st.sidebar.page_link("pages/11_Dokumentation.py", label="Dokumentation")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
 
-
-def repr(collection, id, show_collection = True):
+# short Version ohne abhängige Variablen
+def repr(collection, id, show_collection = True, short = False):
     x = collection.find_one({"_id": id})
     if collection == util.gebaeude:
         res = x['name_de']
-        if show_collection:
-            res = "Gebäude: " + res
     elif collection == util.raum:
         res = x['name_de']
-        if show_collection:
-            res = "Raum: " + res
     elif collection == util.semester:
-        res = x['kurzname']
-        if show_collection:
-            res = "Semester: " + res
-    elif collection == util.kategorie:
+        res = x['kurzname'] if short else x["name_de"]
+    elif collection == util.rubrik:
         sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
-        res = f"{x['titel_de']} ({sem})"
-        if show_collection:
-            res = "Kategorie: " + res
+        res = x['titel_de'] if short else f"{x['titel_de']} ({sem})"
     elif collection == util.code:
         sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
-        res = f"{x['beschreibung_de']} ({sem})"    
-        if show_collection:
-            res = "Code: " + res
+        res = x['beschreibung_de'] if short else f"{x['beschreibung_de']} ({sem})"    
     elif collection == util.person:
-        res = f"{x['name']}, {x['name_prefix']}"
-        if show_collection:
-            res = "Person: " + res
+        res = f"{x['name']}, {x['name_prefix']}" if short else f"{x['name']}, {x['vorname']}"
     elif collection == util.studiengang:
         res = f"{x['name']}"
-        if show_collection:
-            res = "Studiengang: " + res
     elif collection == util.modul:
         s = ", ".join([util.studiengang.find_one({"_id" : id1})["kurzname"] for id1 in x["studiengang"]])
-        res = f"{x['name_de']} ({s})"
-        if show_collection:
-            res = "Modul: " + res
+        res = x['name_de'] if short else f"{x['name_de']} ({s})"
     elif collection == util.anforderung:
         res = x['name_de']
-        if show_collection:
-            res = "Anforderung: " + res
     elif collection == util.anforderungkategorie:
         res = x['name_de']
-        if show_collection:
-            res = "Anforderungskategorie: " + res
     elif collection == util.veranstaltung:
         s = ", ".join([util.person.find_one({"_id" : id1})["name"] for id1 in x["dozent"]])
         sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
-        res = f"{x['name_de']} ({s}, {sem})"
-        if show_collection:
-            res = "Veranstaltung: " + res
+        res = x['name_de'] if short else f"{x['name_de']} ({s}, {sem})"
+    if show_collection:
+        res = f"{util.collection_name[collection]}: {res}"
     return res
 
 def hour_of_datetime(dt):
-    if dt is None:
-        return ""
+    return "" if dt is None else str(dt.hour)
+
+# str1 und str2 sind zwei strings, die mit "," getrennte Felder enthalten, etwa
+# str1 = "HS Rundbau, Mo, 8-10"
+# str2 = "HS Rundbau, Mi, 8-10"
+# Ausgabe ist dann
+# HS Rundbau, Mo, Mi, 8-10
+def shortify(str1, str2):
+    str1_list = str.split(str1, ",")
+    str2_list = str.split(str2, ",")
+    if str1_list[0] == str2_list[0]:
+        if str1_list[2] == str2_list[2]:
+            return f"{str1_list[0]}, {str1_list[1]}, {str2_list[1]} {str2_list[2]}"
+        else:
+            return f"{str1_list[0]}, {str1_list[1]} {str1_list[2]}, {str2_list[1]} {str2_list[2]}"
     else:
-        return str(dt.hour)
-
-def name_of_sem_id(semester_id):
-    x = util.semester.find_one({"_id": semester_id})
-    return x["name_de"]
-
-def name_of_ver_id(ver_id):
-    x = util.veranstaltung.find_one({"_id": ver_id})
-    return x["name_de"]
-
+        return None
 

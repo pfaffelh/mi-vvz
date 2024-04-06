@@ -26,7 +26,7 @@ if st.session_state.logged_in:
             st.markdown("#### Grunddaten")
             st.markdown("Hier sind _Name_ (de und en), _midname_ (ein mittelkurzer Name) und _kurzname_ (ein Kurzname, der z.B. im Raumplan verwendet wird), _ECTS_ (die typische Anzahl an ECTS-Punkten für die Veranstaltung), _Kommentar für die Homepage_, und eine _URL_ gemeint, außerdem: ")
             st.markdown("📅  Semester", help = "Das Semester, in dem die Veranstaltung stattfindet.")
-            st.markdown("🖉 Kategorie", help = "Die eindeutige Kategorie dieser Veranstaltung.")
+            st.markdown("🖉 Rubrik", help = "Die eindeutige Rubrik dieser Veranstaltung.")
             st.markdown("∞ Code", help = "Eine Liste von Codes, die für die Veranstaltung zutreffen.")
         with col2:
             st.markdown("#### Personen, Termine")
@@ -48,14 +48,14 @@ if st.session_state.logged_in:
         st.divider()
         col1, col2, col3 = st.columns([1,1,1])
         with col1:
-            st.markdown("### 🖉 Kategorie")
-            st.markdown("(einer Veranstaltung.) Es gibt Felder (jeweils auf deutsch (de) und englisch (en) mit der Reihenfolge in der Anzeige einer Kategorie:  \n* Prefix  \n* Titel  \n* Untertitel  \n* Suffix")
+            st.markdown("### 🖉 Rubrik")
+            st.markdown("(einer Veranstaltung.) Es gibt Felder (jeweils auf deutsch (de) und englisch (en) mit der Reihenfolge in der Anzeige einer Rubrik:  \n* Prefix  \n* Titel  \n* Untertitel  \n* Suffix")
             st.markdown("Weiter gibt es die Variablen (Erklärung siehe bei Semester) _Rang_ und _hp_sichtbar_ sowie _Kommentar_ für den internen Gebrauch.")
-            st.markdown(" 📅 Semester", help = "Das eindeutige Semester, in dem es diese Kategorie gibt")
-            st.markdown("[🎈 Veranstaltung]", help = "Eine Liste von Veranstaltungen, die zu dieser Kategorie gehören.")
+            st.markdown(" 📅 Semester", help = "Das eindeutige Semester, in dem es diese Rubrik gibt")
+            st.markdown("[🎈 Veranstaltung]", help = "Eine Liste von Veranstaltungen, die zu dieser Rubrik gehören.")
         with col2: 
             st.markdown("### ∞ Code")
-            st.markdown("(einer Veranstaltung.) Hier ist _Name_ ein Kürzel, der _Beschreibung_ abkürzen soll. (Letzteres gibt es in de und en.) Wieder gibt es _Rang_, _hp_sichtbar_ und _kommentar_. Wie bei _Kategorie_ gibt es:")
+            st.markdown("(einer Veranstaltung.) Hier ist _Name_ ein Kürzel, der _Beschreibung_ abkürzen soll. (Letzteres gibt es in de und en.) Wieder gibt es _Rang_, _hp_sichtbar_ und _kommentar_. Wie bei _Rubrik_ gibt es:")
             st.markdown("📅 Semester", help =  "Das eindeutige Semester, in dem es diesen Code gibt")
             st.markdown("[🎈 Veranstaltung]", help = "Eine Liste von Veranstaltungen des entsprechenden Semesters, die diesen Code tragen.")
         with col3:
@@ -64,7 +64,7 @@ if st.session_state.logged_in:
             st.markdown("Ein _Kurzname_ (z.B. 2024SS), wird in vielen Anzeichen verwendet, und auch zum Sortieren der Semester.")
             st.markdown("Ein _Rang_ ergibt die Reihenfolge in einer geordneten Liste von Semestern.")
             st.markdown("_hp_sichtbar_ gibt an, ob das Semester auf der Homepage angezeigt werden soll. _False_, falls dieses Semester schon zu lange her ist.")
-            st.markdown("[🖉 Kategorie]", help="Gibt eine Liste der _identifier_ der Kategorien an (z.B. 1a. Grundvorlesungen), die es in diesem Semester gibt.")
+            st.markdown("[🖉 Rubrik]", help="Gibt eine Liste der _identifier_ der Rubriken an (z.B. 1a. Grundvorlesungen), die es in diesem Semester gibt.")
             st.markdown("[∞ Code]", help="Gibt eine Liste der _identifier_ der Codes an (z.B. B: Pflicht im BSc), die es in diesem Semester gibt.")
             st.markdown("[🎈 Veranstaltung]", help="Gibt eine Liste der _identifier_ der Veranstaltungen an, die es in diesem Semester gibt.")
         st.divider()

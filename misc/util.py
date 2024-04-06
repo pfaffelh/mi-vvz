@@ -36,7 +36,7 @@ def setup_session_state():
         st.session_state.anforderungkategorie = mongo_db["anforderungkategorie"]
         st.session_state.code = mongo_db["code"]
         st.session_state.gebaeude = mongo_db["gebaeude"]
-        st.session_state.kategorie = mongo_db["kategorie"]
+        st.session_state.rubrik = mongo_db["rubrik"]
         st.session_state.modul = mongo_db["modul"]
         st.session_state.person = mongo_db["person"]
         st.session_state.raum = mongo_db["raum"]
@@ -54,7 +54,7 @@ def setup_session_state():
     anforderungkategorie = st.session_state.anforderungkategorie
     code = st.session_state.code
     gebaeude = st.session_state.gebaeude
-    kategorie = st.session_state.kategorie
+    rubrik = st.session_state.rubrik
     modul = st.session_state.modul
     person = st.session_state.person
     raum = st.session_state.raum
@@ -62,11 +62,13 @@ def setup_session_state():
     studiengang = st.session_state.studiengang
     veranstaltung = st.session_state.veranstaltung
 
-
     # sem ist ein gewähltes Semester
     if "current_semester_id" not in st.session_state:
         semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
         st.session_state.current_semester_id = semesters[0]["_id"]
+    if "semester_id" not in st.session_state:
+        semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+        st.session_state.semester_id = semesters[0]["_id"]
     # expanded zeigt an, welches Element ausgeklappt sein soll
     if "expanded" not in st.session_state:
         st.session_state.expanded = ""
@@ -86,7 +88,7 @@ def setup_session_state():
         gebaeude: "Gebäude",
         raum: "Räume",
         semester: "Semester",
-        kategorie: "Kategorien",
+        rubrik: "Rubrik",
         code: "Codes",
         person: "Personen",
         studiengang: "Studiengänge",
@@ -102,7 +104,7 @@ def setup_session_state():
         person: person.find_one({"name": "-"})["_id"],
         studiengang: studiengang.find_one({"name": "-"})["_id"],
         modul: modul.find_one({"name_de": "-"})["_id"],
-        kategorie: "",
+        rubrik: "",
         anforderung: "",
         code: "",    
         anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"]
@@ -135,7 +137,7 @@ def setup_session_state():
                 "email": "", 
                 "sichtbar": True, 
                 "hp_sichtbar": True, 
-                "semester": [], 
+                "semester": [st.session_state.semester_id], 
                 "veranstaltung": [] 
         },
         studiengang: {"name": "Neuer Studiengang",
@@ -151,7 +153,7 @@ def setup_session_state():
                 "sichtbar": True,
                 "studiengang": [] 
         },
-        kategorie: {"titel_de": "Neue Kategorie",
+        rubrik: {"titel_de": "Neue Rubrik",
                 "titel_en": "",
                 "untertitel_de": "", 
                 "untertitel_en": "", 
@@ -208,10 +210,10 @@ def setup_session_state():
                     {"collection": veranstaltung, "field": "woechentlicher_termin.raum", "list": False}],
         semester: [{"collection": veranstaltung, "field": "semester", "list": False},
                     {"collection": person, "field": "semester", "list": True},
-                    {"collection": kategorie, "field": "semester", "list": False}, 
+                    {"collection": rubrik, "field": "semester", "list": False}, 
                     {"collection": code, "field": "semester", "list": False}, ],
-        kategorie:[{"collection": semester, "field": "kategorie", "list": True}, 
-                    {"collection": veranstaltung, "field": "kategorie", "list": False}],
+        rubrik: [{"collection": semester, "field": "rubrik", "list": True}, 
+                    {"collection": veranstaltung, "field": "rubrik", "list": False}],
         code:     [{"collection": semester, "field": "code", "list": True}, 
                     {"collection": veranstaltung, "field": "code", "list": True}],
         person  : [{"collection": veranstaltung, "field": "dozent", "list": True}, 
@@ -227,7 +229,7 @@ def setup_session_state():
         anforderung:[{"collection": veranstaltung, "field": "verwendbarkeit_anforderung", "list": True},
                     {"collection": veranstaltung, "field": "verwendbarkeit.anforderung", "list": False}],
         veranstaltung:[{"collection": semester, "field": "veranstaltung", "list": True},
-                    {"collection": kategorie, "field": "veranstaltung", "list": True},
+                    {"collection": rubrik, "field": "veranstaltung", "list": True},
                     {"collection": code, "field": "veranstaltung", "list": True},
                     {"collection": person, "field": "veranstaltung", "list": True}]
     }
@@ -240,7 +242,7 @@ def setup_session_state():
         "Freitag": "Fr",
         "Samstag": "Sa",
         "Sonntag": "So",
-        None: ""
+        "": ""
     }
 
 setup_session_state()
@@ -250,7 +252,7 @@ anforderung = st.session_state.anforderung
 anforderungkategorie = st.session_state.anforderungkategorie
 code = st.session_state.code
 gebaeude = st.session_state.gebaeude
-kategorie = st.session_state.kategorie
+rubrik = st.session_state.rubrik
 modul = st.session_state.modul
 person = st.session_state.person
 raum = st.session_state.raum

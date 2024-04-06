@@ -26,8 +26,22 @@ anfkat = mongo_db["anforderungkategorie"]
 ver = mongo_db["veranstaltung"]
 import schema
 mongo_db.command('collMod','veranstaltung', validator=schema.veranstaltung_validator, validationLevel='off')
+mongo_db.command('collMod','semester', validator=schema.semester_validator, validationLevel='off')
 
 # Ab hier wird die Datenbank verändert
+print("Ab hier wird verändert")
+kat.rename("rubrik")
+rub = mongo_db["rubrik"]
+for s in sem.find():
+    sem.update_one({"_id": s["_id"]}, {"$set": {"rubrik": s["kategorie"]}})
+ #   sem.update_one({"_id": s["_id"]}, {"$unset": {"kategorie": ""}})
+
+for v in ver.find():
+    ver.update_one({"_id": v["_id"]}, {"$set": {"rubrik": v["kategorie"]}})
+#    ver.update_one({"_id": v["_id"]}, {"$unset": {"kategorie": ""}})
+
+#sem.update_many({}, { "$rename": { "kategorie": "rubrik" }})
+#ver.update_many({}, { "$rename": { "kategorie": "rubrik" }})
 
 # leere Person hinzufügen
 z = per.find()
@@ -65,7 +79,6 @@ veranstaltung = list(ver.find({}))
 for v in veranstaltung:
     ver.update_one({"_id": v["_id"]}, {"$set": {"verwendbarkeit_modul": list(dict.fromkeys(v["verwendbarkeit_modul"]).keys())}})
     ver.update_one({"_id": v["_id"]}, {"$set": {"verwendbarkeit_anforderung": list(dict.fromkeys(v["verwendbarkeit_anforderung"]).keys())}})
-
 # veranstaltung.woechentlicher_termin.raum muss besetzt sein
 veranstaltung = list(ver.find({}))
 # leerer wöchentlicher Termin:
@@ -74,17 +87,19 @@ leerer_termin = {
     "kommentar": "",
     "wochentag": "",
     "raum": raum.find_one({"name_de": "-"})["_id"],
-    "person": [per.find_one({"name": "-"})["_id"]],
+    "person": [],
     "start": None,
     "ende": None
 }
 leerer_termin2 = {
     "key": "",
     "kommentar": "",
-    "raum": [raum.find_one({"name_de": "-"})["_id"]],
-    "person": [per.find_one({"name": "-"})["_id"]],
-    "start": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0),
-    "ende": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0) 
+    "raum": [],
+    "person": [],
+    "startdatum": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0),
+    "startzeit": None,
+    "endedatum": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0),
+    "endzeit": None
 }
 
 for v in veranstaltung:
@@ -102,7 +117,14 @@ for v in veranstaltung:
     for w in wt:
         termin = leerer_termin2
         for key, value in w.items():
-            termin[key] = value
+            if key == "start":
+                termin["startdatum"] = value
+                termin["startzeit"] = value
+            elif key == "ende":
+                termin["enddatum"] = value
+                termin["endzeit"] = value
+            else:
+                termin[key] = value
         ver.update_one({"_id": v["_id"]}, {"$push": {"einmaliger_termin": termin}})
 #        ver.update_one({"_id": v["_id"], "woechentlicher_termin.start": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.start": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0)}})
 #ver.update_one({"_id": v["_id"], "woechentlicher_termin.start": { "$exists": False }}, {"$set": {"woechentlicher_termin.0.start": datetime.datetime(year = 1970, month = 1, day = 1, hour = 0, minute = 0)}})
@@ -186,9 +208,9 @@ anfkat.insert_one( {
 # leere Kategorie in jedem Semester hinzufügen
 all_sem = list(sem.find())
 for s in [x["_id"] for x in all_sem]:
-    z = kat.find({"semester": s})
+    z = rub.find({"semester": s})
     rang = (sorted(z, key=lambda x: x['rang'], reverse = True)[0])["rang"]+1
-    kat.insert_one( {   
+    rub.insert_one( {   
         "hp_sichtbar": False, 
         "titel_de": "-", 
         "titel_en": "", 
@@ -231,6 +253,14 @@ gebaeude.update_one({"name_de": "Ernst-Zermelo-Straße 1"}, {"$set": {"sichtbar"
 gebaeude.update_one({"name_de": "Hermann-Herder-Str. 10"}, {"$set": {"sichtbar": True}})
 
 
+for v in ver.find():
+    ver.update_one({"_id": v["_id"]}, {"$unset": {"kategorie": ""}})
+
+for s in sem.find():
+   sem.update_one({"_id": s["_id"]}, {"$unset": {"kategorie": ""}})
+
+
+
 # Ab hier wird das Schema gecheckt
 print("Check schema")
 import schema
@@ -240,7 +270,7 @@ mongo_db.command("collMod", "raum", validator = schema.raum_validator, validatio
 mongo_db.command("collMod", "person", validator = schema.person_validator, validationLevel='moderate')
 mongo_db.command("collMod", "anforderung", validator = schema.anforderung_validator, validationLevel='moderate')
 mongo_db.command("collMod", "anforderungkategorie", validator = schema.anforderungkategorie_validator, validationLevel='moderate')
-mongo_db.command("collMod", "kategorie", validator = schema.kategorie_validator, validationLevel='moderate')
+mongo_db.command("collMod", "rubrik", validator = schema.rubrik_validator, validationLevel='moderate')
 mongo_db.command("collMod", "code", validator = schema.code_validator, validationLevel='moderate')
 mongo_db.command("collMod", "studiengang", validator = schema.studiengang_validator, validationLevel='moderate')
 mongo_db.command("collMod", "modul", validator = schema.modul_validator, validationLevel='moderate')

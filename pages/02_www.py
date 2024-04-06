@@ -26,10 +26,10 @@ semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
 if st.session_state.logged_in:
     st.header("Veranstaltungen")
-    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
+    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
     st.session_state.semester = sem_id
     if sem_id is not None:
-        kat = list(util.kategorie.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
+        kat = list(util.rubrik.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
         st.subheader(f"Lehrveranstaltungen im {util.semester.find_one({'_id': sem_id})['name_de']}")
         cod = list(util.code.find({"semester": sem_id, "hp_sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
         for c in cod:
@@ -42,8 +42,8 @@ if st.session_state.logged_in:
             st.markdown(k["prefix_de"])
             st.markdown(k["titel_de"])
             st.markdown(k["untertitel_de"])
-            # Finde alle Veranstaltungen in der entsprechenden Kategorie
-            ver = list(util.veranstaltung.find({"kategorie": k["_id"], "hp_sichtbar": True},sort=[("rang", pymongo.ASCENDING)]))
+            # Finde alle Veranstaltungen in der entsprechenden rubrik
+            ver = list(util.veranstaltung.find({"rubrik": k["_id"], "hp_sichtbar": True},sort=[("rang", pymongo.ASCENDING)]))
             for v in ver:
                 col1, col2, col3 = st.columns([3,20,7])
                 with col1:

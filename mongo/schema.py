@@ -9,7 +9,7 @@ mongo_db = cluster["vvz"]
 # gebauede
 # raum
 # semester 
-# kategorie
+# rubrik
 # person
 # code 
 # studiengang
@@ -17,9 +17,6 @@ mongo_db = cluster["vvz"]
 # anforderung
 # anforderungkategorie
 # veranstaltung
-
-
-
 
 # gebaeude: Beschreibung eines Gebäudes
 gebaeude_validator = {
@@ -214,7 +211,7 @@ semester_validator = {
         "bsonType": "object",
         "title": "Beschreibung eines Semesters",
         "description": "Enthält auch alle courses.",
-        "required": ["name_de", "name_en", "kurzname", "rang", "kategorie", "code", "veranstaltung"],
+        "required": ["name_de", "name_en", "kurzname", "rang", "rubrik", "code", "veranstaltung", "hp_sichtbar"],
         "properties": {
             "name_de": {
                 "bsonType": "string",
@@ -236,11 +233,11 @@ semester_validator = {
                 "bsonType": "bool",
                 "description": "bestimmt, ob das Semester auf der Homepage angezeigt werden soll."
             },
-            "kategorie": {
+            "rubrik": {
                 "bsonType": "array",
                 "items": {
                     "bsonType": "objectId",
-                    "description": "must be an _id from the course_category collection"
+                    "description": "must be an _id from the rubrik collection"
                 }
             },
             "code": {
@@ -261,28 +258,28 @@ semester_validator = {
     }
 }
 
-# kategorie: Klassifizierung von Veranstaltungen, zB "Vorlesungen"
-kategorie_validator = {
+# rubrik: Klassifizierung von Veranstaltungen, zB "Vorlesungen"
+rubrik_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "title": "Beschreibung der Kategorie einer Veranstaltung, zB Proseminar.",
+        "title": "Beschreibung der rubrik einer Veranstaltung, zB Proseminar.",
         "required": ["titel_de", "titel_en", "untertitel_de", "untertitel_en", "rang", "semester", "prefix_de", "prefix_en", "suffix_de", "suffix_en", "veranstaltung", "kommentar"],
         "properties": {
             "titel_de": {
                 "bsonType": "string",
-                "description": "Langname der Kategorie -- required"
+                "description": "Langname der rubrik -- required"
             },
             "titel_en": {
                 "bsonType": "string",
-                "description": "Langname der Kategorie -- required"
+                "description": "Langname der rubrik -- required"
             },
             "untertitel_de": {
                 "bsonType": "string",
-                "description": "Langname der Kategorie -- required"
+                "description": "Langname der rubrik -- required"
             },
             "untertitel_en": {
                 "bsonType": "string",
-                "description": "Langname der Kategorie -- required"
+                "description": "Langname der rubrik -- required"
             },
             "semester": {
                 "bsonType": "objectId",
@@ -290,23 +287,23 @@ kategorie_validator = {
             },
             "hp_sichtbar": {
                 "bsonType": "bool",
-                "description": "Bestimmt, ob die Kategorie auf der Homepage sichtbar ist."
+                "description": "Bestimmt, ob die rubrik auf der Homepage sichtbar ist."
             },
             "prefix_de": {
                 "bsonType": "string",
-                "description": "Gibt an, was bei Anzeigen vor dieser Kategorie angezeigt wird. Wenn etwa vor '1a. Einführende Vorlesungen' noch 'Vorlesungen' angezeigt werden soll, steht hier 'Vorlesungen'."
+                "description": "Gibt an, was bei Anzeigen vor dieser rubrik angezeigt wird. Wenn etwa vor '1a. Einführende Vorlesungen' noch 'Vorlesungen' angezeigt werden soll, steht hier 'Vorlesungen'."
             },
             "prefix_en": {
                 "bsonType": "string",
-                "description": "Gibt an, was bei Anzeigen vor dieser Kategorie angezeigt wird. Wenn etwa vor '1a. Einführende Vorlesungen' noch 'Vorlesungen' angezeigt werden soll, steht hier 'Vorlesungen'."
+                "description": "Gibt an, was bei Anzeigen vor dieser rubrik angezeigt wird. Wenn etwa vor '1a. Einführende Vorlesungen' noch 'Vorlesungen' angezeigt werden soll, steht hier 'Vorlesungen'."
             },
             "suffix_de": {
                 "bsonType": "string",
-                "description": "Gibt an, was bei Anzeigen nach derÜberschrift dieser Kategorie angezeigt wird. Wenn etwa nach '1a. Einführende Vorlesungen' noch ein erklärender Text stehen soll, steht dieser hier."
+                "description": "Gibt an, was bei Anzeigen nach derÜberschrift dieser rubrik angezeigt wird. Wenn etwa nach '1a. Einführende Vorlesungen' noch ein erklärender Text stehen soll, steht dieser hier."
             },
             "suffix_en": {
                 "bsonType": "string",
-                "description": "Gibt an, was bei Anzeigen vor dieser Kategorie angezeigt wird. Wenn etwa vor '1a. Einführende Vorlesungen' noch 'Vorlesungen' angezeigt werden soll, steht hier 'Vorlesungen'."
+                "description": "Gibt an, was bei Anzeigen vor dieser rubrik angezeigt wird. Wenn etwa vor '1a. Einführende Vorlesungen' noch 'Vorlesungen' angezeigt werden soll, steht hier 'Vorlesungen'."
             },
             "rang": {
                 "bsonType": "int",
@@ -332,20 +329,20 @@ kategorie_validator = {
 # person_category_validator = {
 #     "$jsonSchema": {
 #         "bsonType": "object",
-#         "title": "Beschreibung der Kategorie einer Person, zB Dozent.",
+#         "title": "Beschreibung der rubrik einer Person, zB Dozent.",
 #         "required": ["name", "id", "shortname"],
 #         "properties": {
 #             "name": {
 #                 "bsonType": "string",
-#                 "description": "Langname der Kategorie -- required"
+#                 "description": "Langname der rubrik -- required"
 #             },
 #             "id": {
 #                 "bsonType": "string",
-#                 "description": "Identifier der Kategorie."
+#                 "description": "Identifier der rubrik."
 #             },
 #             "shortname": {
 #                 "bsonType": "string",
-#                 "description": "Kurzname der Kategorie."
+#                 "description": "Kurzname der rubrik."
 #             },
 #             "rang": {
 #                 "bsonType": "int",
@@ -376,7 +373,7 @@ code_validator = {
             },
             "hp_sichtbar": {
                 "bsonType": "bool",
-                "description": "Bestimmt, ob die Kategorie auf der Homepage sichtbar ist."
+                "description": "Bestimmt, ob der Code auf der Homepage sichtbar ist."
             },
             "beschreibung_de": {
                 "bsonType": "string",
@@ -559,7 +556,7 @@ veranstaltung_validator = {
         "bsonType": "object",
         "title": "Beschreibung einer Veranstaltung",
         "description": "Hier werden alle Daten einer Veranstaltung hinterlegt, die sowohl für das Modulhandbuch, als auch für die Webpage benötigt werden.",
-        "required": ["name_de", "name_en", "midname_de", "midname_en", "kurzname", "kategorie", "code", "rang", "semester", "ects", "url", "inhalt_de", "inhalt_en", "literatur_de", "literatur_en", "vorkenntnisse_de", "vorkenntnisse_en", "kommentar_latex_de", "kommentar_latex_en", "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit", "dozent", "assistent", "organisation", "woechentlicher_termin", "einmaliger_termin", "kommentar_html_de", "kommentar_html_en", "hp_sichtbar"],
+        "required": ["name_de", "name_en", "midname_de", "midname_en", "kurzname", "rubrik", "code", "rang", "semester", "ects", "url", "inhalt_de", "inhalt_en", "literatur_de", "literatur_en", "vorkenntnisse_de", "vorkenntnisse_en", "kommentar_latex_de", "kommentar_latex_en", "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit", "dozent", "assistent", "organisation", "woechentlicher_termin", "einmaliger_termin", "kommentar_html_de", "kommentar_html_en", "hp_sichtbar"],
         "properties": {
             "hp_sichtbar": {
                 "bsonType": "bool",
@@ -585,9 +582,9 @@ veranstaltung_validator = {
                 "bsonType": "string",
                 "description": "Kürzel der Veranstaltung"
             },
-            "kategorie": {
+            "rubrik": {
                 "bsonType": "objectId",
-                "description": "Kategorie-id der Veranstaltung"
+                "description": "rubrik-id der Veranstaltung"
             },
             "code": {
                 "bsonType": "array",
@@ -753,7 +750,7 @@ veranstaltung_validator = {
                 "items": {
                     "bsonType": "object",
                     "description": "Beschreibung des Termins.",
-                    "required": ["key", "raum", "person", "start", "ende", "kommentar"],
+                    "required": ["key", "raum", "person", "startdatum", "enddatum", "startzeit", "endzeit", "kommentar"],
                     "properties": {
                         "key": {
                             "bsonType": "string",
@@ -775,13 +772,21 @@ veranstaltung_validator = {
                                 "description": "Eine Person, die an dem Termin teilnimmt."
                             }
                         },
-                        "start": {
-                            "bsonType": "date",
-                            "description": "Datum und Uhrzeit des Termins."
+                        "startdatum": {
+                            "bsonType": ["null", "date"],
+                            "description": "Datum des Termins."
                         },
-                        "ende": {
-                            "bsonType": "date",
-                            "description": "Datum und Uhrzeit des Terminendes."
+                        "enddatum": {
+                            "bsonType": ["null", "date"],
+                            "description": "Datum des Terminendes."
+                        },
+                        "startzeit": {
+                            "bsonType": ["null", "date"],
+                            "description": "Uhrzeit des Termins."
+                        },
+                        "endzeit": {
+                            "bsonType": ["null", "date"],
+                            "description": "Uhrzeit des Terminendes."
                         },
                          "kommentar": {
                             "bsonType": "string",

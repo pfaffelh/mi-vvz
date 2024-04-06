@@ -30,19 +30,15 @@ def name_of_id(semester_id):
         res = f"{res.strip()} 😎"
     return res
 
-semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 collection = util.semester
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Semester-Grundeinstellungen")
     st.write("Mit 😎 gekennzeichnete Semester sind auf www.studium.math... sichtbar.")
     st.write(" ")
+    x = util.semester.find_one({"_id": st.session_state.semester_id})
 
-    st.session_state.semester = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = 0, format_func = name_of_id, placeholder = "Wähle ein Semester", label_visibility = "collapsed")
-    submit = False
-    x = util.semester.find_one({"_id": st.session_state.semester})
-
-    with st.popover('Semester löschen'):
+    with st.popover(f'{tools.repr(collection, st.session_state.semester_id, False, False)} löschen', help = "Dieses Semester wird in der Tat aus der Datenbank gelöscht!"):
         s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
         if s:
             st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
@@ -50,10 +46,17 @@ if st.session_state.logged_in:
             st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
         colu1, colu2, colu3 = st.columns([1,1,1])
         with colu1:
-            st.button(label = "Ja", type = 'primary', on_click = tools.delete_semester, args = (x["_id"],), key = f"delete-{x['_id']}")
+            submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+        if submit:
+            tools.delete_semester(st.session_state.semester_id)
+            time.sleep(2)
+            semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+            st.session_state.semester_id = semesters[0]["_id"]
+            st.session_state.edit = ""
+            st.rerun()
         with colu3: 
-            st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
-    with st.expander('Semester kopieren'):
+            st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+    with st.expander(f'{tools.repr(collection, st.session_state.semester_id, False, False)} kopieren'):
         st.write("Kopiere " + util.semester.find_one(x)["name_de"])
         new_name_de = st.text_input('Name der Kopie (de)', "")
         new_name_en = st.text_input('Name der Kopie (en)', "")
@@ -65,18 +68,18 @@ if st.session_state.logged_in:
                      "name_en": new_name_en, 
                      "kurzname": new_kurzname, 
                      "hp_sichtbar": new_hp_sichtbar, 
-                     "kategorie": [], 
+                     "rubrik": [], 
                      "code": [], 
                      "veranstaltung": [], 
                      "rang": list(collection.find(sort = [("rang", pymongo.DESCENDING)]))[0]["rang"]+1
                      }
-        st.write("Kategorien und Codes von Veranstaltungen werden übernommen, URLs nicht.")
-        kat_list = list(util.kategorie.find({"semester": x["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
+        st.write("Rubriken und Codes von Veranstaltungen werden übernommen, URLs nicht.")
+        kat_list = list(util.rubrik.find({"semester": x["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
         ver_list = []
         for k in kat_list:
-            ver_list.extend(list(util.veranstaltung.find({"kategorie": k["_id"]}, sort = [("rang", pymongo.ASCENDING)])))
-        kop_ver_list = st.multiselect("Zu kopierende Veranstaltungen", [v["_id"] for v in ver_list], [v["_id"] for v in ver_list], format_func = (lambda a: repr(util.veranstaltung, a, False)))
-        g = [{"_id": v, "Name": repr(util.veranstaltung, v, False), "Personen": False, "Termine": False, "Kommentare": False, "Verwendbarkeit": True} for v in kop_ver_list]
+            ver_list.extend(list(util.veranstaltung.find({"rubrik": k["_id"]}, sort = [("rang", pymongo.ASCENDING)])))
+        kop_ver_list = st.multiselect("Zu kopierende Veranstaltungen", [v["_id"] for v in ver_list], [v["_id"] for v in ver_list], format_func = (lambda a: tools.repr(util.veranstaltung, a, False)))
+        g = [{"_id": v, "Name": tools.repr(util.veranstaltung, v, False), "Personen": False, "Termine": False, "Kommentare": False, "Verwendbarkeit": True} for v in kop_ver_list]
         df = pd.DataFrame.from_records(g)
         df_new = st.data_editor(
             df, height = None, column_config = {"_id": None}, disabled=["Name"], hide_index = True)
@@ -91,18 +94,17 @@ if st.session_state.logged_in:
         if submit:
             tools.update_confirm(collection, x, x_updated, )
             time.sleep(2)
-            st.session_state.expanded = ""
             st.session_state.edit = ""
-            st.rerun()                      
-    st.write("### Kategorien")
-    collection = util.kategorie
+            st.rerun()
+    st.write("### Rubrik")
+    collection = util.rubrik
 
-    st.write("Mit 😎 markierte Kategorien sind auf der Homepage sichtbar.")
+    st.write("Mit 😎 markierte Rubriken sind auf der Homepage sichtbar.")
     st.write(" ")
-    if st.button('**Neue Kategorie hinzufügen**'):
-        tools.new(collection, ini = { "semester": st.session_state.semester })
+    if st.button('**Neue Rubrik hinzufügen**'):
+        tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
 
-    y = list(collection.find({ "semester": st.session_state.semester }, sort=[("rang", pymongo.ASCENDING)]))
+    y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
@@ -112,8 +114,8 @@ if st.session_state.logged_in:
         with co3:   
             abk = f"{x['titel_de'].strip()}"
             abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
-            with st.expander(abk, (True if x["_id"] == st.session_state.expanded else False)):
-                with st.popover('Kategorie löschen'):
+            with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
+                with st.popover('Rubrik löschen'):
                     s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
                     if s:
                         st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
@@ -121,9 +123,12 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                    if submit:
+                        tools.delete_item_update_dependent_items(collection, x["_id"], False)
+                        st.rerun()
                     with colu3: 
-                        st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                        st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
@@ -141,7 +146,6 @@ if st.session_state.logged_in:
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
                         time.sleep(2)
-                        st.session_state.expanded = ""
                         st.session_state.edit = ""
                         st.rerun()                      
 
@@ -150,9 +154,9 @@ if st.session_state.logged_in:
     st.write("Mit 😎 markierte Codes sind auf der Homepage sichtbar.")
     st.write(" ")
     if st.button('**Neuen Code hinzufügen**'):
-        tools.new(collection, ini = { "semester": st.session_state.semester })
+        tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
 
-    y = list(collection.find({ "semester": st.session_state.semester }, sort=[("rang", pymongo.ASCENDING)]))
+    y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
@@ -162,8 +166,8 @@ if st.session_state.logged_in:
         with co3:   
             abk = f"{x['beschreibung_de'].strip()}, {x['name'].strip()}"
             abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
-            with st.expander(abk, (True if x["_id"] == st.session_state.expanded else False)):
-                st.subheader(repr(collection, x["_id"]))
+            with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
+                st.subheader(tools.repr(collection, x["_id"]))
                 with st.popover('Code löschen'):
                     s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
                     if s:
@@ -172,9 +176,12 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        st.button(label = "Ja", type = 'primary', on_click = tools.delete_item_update_dependent_items, args = (collection, x["_id"]), key = f"delete-{x['_id']}")
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                    if submit:
+                        tools.delete_item_update_dependent_items(collection, x["_id"], False)
+                        st.rerun()
                     with colu3: 
-                        st.button(label="Nein", on_click = tools.reset, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                        st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
                     name=st.text_input('Name', x["name"], key=f'name-{x["_id"]}')
@@ -186,7 +193,6 @@ if st.session_state.logged_in:
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
                         time.sleep(2)
-                        st.session_state.expanded = ""
                         st.session_state.edit = ""
                         st.rerun()                      
 

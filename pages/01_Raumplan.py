@@ -31,10 +31,10 @@ if st.session_state.logged_in:
     #with open("misc/styles.css") as f:
     #    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
     st.header("Raumplan")
-    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.current_semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
-    st.session_state.semester = sem_id
-    if sem_id is not None:
-        kat = list(util.kategorie.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
+#    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.current_semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
+#    st.session_state.semester = sem_id
+    if st.session_state.semester_id is not None:
+        kat = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))
         raum_list = st.multiselect("Räume", raum_dict.keys(), util.hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
         st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
         showraum = [util.raum.find_one({"_id": id}) for id in raum_list]
@@ -55,10 +55,10 @@ if st.session_state.logged_in:
                 for k, s in enumerate(slotstart):
                     with co[k+2]:
                         # finde alle woechentliche_termine für den angezeigten Slot
-                        ve = list(util.veranstaltung.find({"semester": sem_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$eq": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}}}))
+                        ve = list(util.veranstaltung.find({"semester": st.session_state.semester_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$gte": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), "$lt": datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0)}}}}))
                         for x in ve:
                             wt = x["woechentlicher_termin"]
-                            w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] == datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), wt))[0]
+                            w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] >= datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0) and w["start"] < datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0), wt))[0]
                             k = wt.index(w)
                             st.markdown("""
                                 <style>
@@ -73,7 +73,7 @@ if st.session_state.logged_in:
                                 st.session_state.edit = x["_id"]
                                 st.session_state.page = "Veranstaltung"
                                 st.session_state.expanded = "termine"
-                                switch_page("VVZ")
+                                switch_page("veranstaltungen edit")
 
         #showraum = [r for i, r in enumerate(hauptraum) if show[i]]
         #co = st.columns([1,3,3,3,3,3])
