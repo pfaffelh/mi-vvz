@@ -242,8 +242,9 @@ def authenticate(username, password):
 
 def can_edit(username):
     u = util.user.find_one({"rz": username})
-    faq_id = util.group.find_one({"name": "faq"})["_id"]
-    return (True if faq_id in u["groups"] else False)
+    st.write(u)
+    vvz_id = util.group.find_one({"name": "vvz"})["name"]
+    return (True if vvz_id in u["groups"] else False)
 
 def logout():
     st.session_state.logged_in = False

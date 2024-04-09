@@ -6,7 +6,7 @@ base_dn = "ou=people,dc=uni-freiburg,dc=de"
 
 # Hier ist die MongoDBsocket.gethostname()
 if socket.gethostname() == "www2":
-    mongo_location = "mongodb://localhost:27017"
+    mongo_location = "mongodb://10.5.12.162:27017"
 else:
     mongo_location = "mongodb://127.0.0.1:27017"
 
