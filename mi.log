@@ -19,3 +19,9 @@
 2024-04-09 11:56:55,891 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Veranstaltungen Item Veranstaltungen: Wahrscheinlichkeitstheorie (Pfaffelhuber, 2024SS) geändert.
 2024-04-09 12:12:51,088 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen ein neues Item angelegt.
 2024-04-09 12:14:14,519 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['127.0.0.1:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen item Personen: Neue Person,  gelöscht, und abhängige Felder geändert.
+2024-04-09 21:04:36,631 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-09 21:06:54,219 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-09 21:40:39,673 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2024-04-09 21:44:25,488 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-09 21:46:35,131 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2024-04-09 21:57:30,562 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Veranstaltungen Item Veranstaltungen: Lineare Algebra II (Rohde, 2024SS) geändert.

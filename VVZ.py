@@ -21,7 +21,6 @@ with placeholder.form("login"):
 
 if submit:
     if tools.authenticate(kennung, password): 
-        st.write(kennung)
         if tools.can_edit(kennung):
             # If the form is submitted and the email and password are correct,
             # clear the form/container and display a success message
