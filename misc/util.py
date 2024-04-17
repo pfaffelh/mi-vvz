@@ -245,17 +245,6 @@ def setup_session_state():
         "": ""
     }
 
-# Change color of multiselect choise-boxes
-st.markdown(
-    """
-<style>
-span[data-baseweb="tag"] {
-  background-color: orange !important;
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
 
 setup_session_state()
 user = st.session_state.user
