@@ -228,6 +228,7 @@ def delete_semester(id):
 # Die Authentifizierung gegen den Uni-LDAP-Server
 def authenticate(username, password):
     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
+    ldap.set_option(ldap.OPT_NETWORK_TIMEOUT, 2.0)
     user_dn = "uid={},{}".format(username, base_dn)
     try:
         l = ldap.initialize(server)
