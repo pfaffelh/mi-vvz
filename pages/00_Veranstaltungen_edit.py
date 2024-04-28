@@ -7,8 +7,14 @@ import pandas as pd
 from itertools import chain
 from bson import ObjectId
 
+
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+
+# load css styles
+from misc.css_styles import init_css
+init_css()
+
 
 from misc.config import *
 import misc.util as util
@@ -26,7 +32,7 @@ semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 if st.session_state.logged_in:
     x = util.veranstaltung.find_one({"_id": st.session_state.edit})
     st.subheader(tools.repr(collection, x["_id"]))
-    col1, col2 = st.columns([1,1])
+    col1, col2, col3 = st.columns([1, 1, 1])
     with col1:
         with st.popover('Veranstaltung löschen'):
             s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
@@ -66,6 +72,11 @@ if st.session_state.logged_in:
                     st.rerun()
             with colu2: 
                 st.button(label="Abbrechen", on_click = st.success, args=("Nicht kopiert!",), key = f"not-copied-{x['_id']}")
+    with col3:
+        st.markdown('<span id="align-right"><\span>', unsafe_allow_html=True)
+
+        if st.button("Abbrechen"):
+            switch_page("Veranstaltungen")
 
     with st.expander("Grunddaten", expanded = True if st.session_state.expanded == "grunddaten" else False):
         with st.form(f'Grunddaten-{x["_id"]}'):

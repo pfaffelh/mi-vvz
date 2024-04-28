@@ -11,6 +11,10 @@ from misc.config import *
 import misc.util as util
 import misc.tools as tools
 
+# load css styles
+from misc.css_styles import init_css
+init_css()
+
 # make all neccesary variables available to session_state
 # setup_session_state()
 

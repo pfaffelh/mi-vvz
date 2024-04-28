@@ -81,7 +81,7 @@ if st.session_state.logged_in:
                     with col2:
                         st.markdown("Organisation")
                     with col3:
-                        organisation_liste = [util.person.find_one({"_id": c}) for c in v["Organsation"]]
+                        organisation_liste = [util.person.find_one({"_id": c}) for c in v["organisation"]]
                         st.markdown(", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in organisation_liste]))
                     
                 st.write(" ")

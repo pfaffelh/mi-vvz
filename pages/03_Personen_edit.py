@@ -11,6 +11,10 @@ import misc.util as util
 from misc.util import logger
 import misc.tools as tools
 
+# load css styles
+from misc.css_styles import init_css
+init_css()
+
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
@@ -22,19 +26,26 @@ if st.session_state.logged_in:
     st.header("Personen")
     x = collection.find_one({"_id": st.session_state.edit})
     st.subheader(tools.repr(collection, x["_id"], False))
-    with st.popover('Person löschen'):
-        s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
-        if s:
-            st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
-        else:
-            st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
-        colu1, colu2, colu3 = st.columns([1,1,1])
-        with colu1:
-            submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
-        if submit: 
-            tools.delete_item_update_dependent_items(collection, x["_id"])
-        with colu3: 
-            st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        with st.popover('Person löschen'):
+            s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
+            if s:
+                st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
+            else:
+                st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
+            colu1, colu2, colu3 = st.columns([1,1,1])
+            with colu1:
+                submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+            if submit: 
+                tools.delete_item_update_dependent_items(collection, x["_id"])
+            with colu3: 
+                st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+    with col2:
+        st.markdown('<span id="align-right"><\span>', unsafe_allow_html=True)
+        if st.button("Abbrechen"):
+            switch_page("Personen")
+
     with st.form(f'ID-{x["_id"]}'):
         sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
         hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])

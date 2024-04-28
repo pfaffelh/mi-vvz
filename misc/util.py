@@ -245,6 +245,7 @@ def setup_session_state():
         "": ""
     }
 
+
 setup_session_state()
 user = st.session_state.user
 group = st.session_state.group

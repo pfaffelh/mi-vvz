@@ -8,7 +8,7 @@ import datetime
 # mongodump --db vvz --archive=vvz_backup
 
 os.system("mongo vvz --eval 'db.dropDatabase()'")
-os.system("mongorestore --archive='vvz_backup_neu'")
+os.system("mongorestore --archive='vvz_backup_neu'")  # Should be executed from mi-vvz/mongo/
 
 cluster = MongoClient("mongodb://127.0.0.1:27017")
 mongo_db = cluster["vvz"]
