@@ -58,7 +58,7 @@ if st.session_state.logged_in:
             st.write("Was soll mitkopiert werden?")
             kopiere_personen = st.checkbox("Personen", value = True, key = f"kopiere_veranstaltung_{x['_id']}_per")
             kopiere_termine = st.checkbox("Termine/Räume", value = False, key = f"kopiere_veranstaltung_{x['_id']}_ter")
-            kopiere_kommVVZ = st.checkbox("Kommentariertes VVZ", value = True, key = f"kopiere_veranstaltung_{x['_id']}_komm")
+            kopiere_kommVVZ = st.checkbox("Kommentiertes VVZ", value = True, key = f"kopiere_veranstaltung_{x['_id']}_komm")
             kopiere_verwendbarkeit = st.checkbox("Verwendbarkeit", value = True, key = f"kopiere_veranstaltung_{x['_id']}_ver")
             colu1, colu2 = st.columns([1,1])
             with colu1:
