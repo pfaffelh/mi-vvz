@@ -43,7 +43,7 @@ if st.session_state.logged_in:
                 st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
     with col2:
         st.markdown('<span id="align-right"><\span>', unsafe_allow_html=True)
-        if st.button("Abbrechen"):
+        if st.button("Zurück ohne Speichern"):
             switch_page("Anforderungen")
 
     with st.form(f'ID-{x["_id"]}'):

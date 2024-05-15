@@ -75,7 +75,7 @@ if st.session_state.logged_in:
     with col3:
         st.markdown('<span id="align-right"><\span>', unsafe_allow_html=True)
 
-        if st.button("Abbrechen"):
+        if st.button("Zurück ohne Speichern"):
             switch_page("Veranstaltungen")
 
     with st.expander("Grunddaten", expanded = True if st.session_state.expanded == "grunddaten" else False):
