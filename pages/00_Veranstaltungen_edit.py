@@ -161,9 +161,11 @@ if st.session_state.logged_in:
                     wochentag_index = None
                 w_wochentag = st.selectbox("Tag", wochentage, wochentag_index, key = f"termin_{i}_wochentag", placeholder = "Bitte auswählen")
             with cols[4]:
-                w_start = st.time_input("Start", w["start"], key =f"termin_{i}_start")
+                start_display = w["start"] if w["start"] else datetime.time(9, 00)
+                w_start = st.time_input("Start", start_display, key =f"termin_{i}_start", step=3600)
             with cols[5]:
-                w_ende = st.time_input("Ende", w["ende"], key =f"termin_{i}_ende")
+                ende_display = w["ende"] if w["ende"] else datetime.time(9, 00)
+                w_ende = st.time_input("Ende", ende_display, key =f"termin_{i}_ende", step=3600)
             with cols[6]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
