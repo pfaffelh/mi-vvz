@@ -154,22 +154,22 @@ if st.session_state.logged_in:
             with cols[2]:
                 w_key = (st.text_input("Art des Termins", w["key"], key = f"termin_{i}_art"))
             with cols[3]:
-                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
-                termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
-                index = [g["_id"] for g in termin_raum].index(w["raum"])
-                w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
-                #                termin_raum_person_list = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
-            with cols[4]:
                 wochentage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
                 try:
                     wochentag_index = wochentage.index(w["wochentag"])
                 except:
                     wochentag_index = None
                 w_wochentag = st.selectbox("Tag", wochentage, wochentag_index, key = f"termin_{i}_wochentag", placeholder = "Bitte auswählen")
-            with cols[5]:
+            with cols[4]:
                 w_start = st.time_input("Start", w["start"], key =f"termin_{i}_start")
-            with cols[6]:
+            with cols[5]:
                 w_ende = st.time_input("Ende", w["ende"], key =f"termin_{i}_ende")
+            with cols[6]:
+                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
+                termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
+                index = [g["_id"] for g in termin_raum].index(w["raum"])
+                w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
+                #                termin_raum_person_list = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
             with cols[7]:
                 w_kommentar = st.text_input("Kommentar", w["kommentar"], key =f"termin_{i}_kommentar")
             with cols[8]:
