@@ -31,6 +31,9 @@ if st.session_state.logged_in:
 
     col1, col2 = st.columns([1, 1])
     with col1:
+        if st.button("Zurück ohne Speichern"):
+            switch_page("Räume")
+    with col2:
         with st.popover('Raum löschen'):
             s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
             if s:
@@ -44,10 +47,7 @@ if st.session_state.logged_in:
                 tools.delete_item_update_dependent_items(collection, x["_id"])
             with colu3: 
                 st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
-    with col2:
-        st.markdown('<span id="align-right"><\span>', unsafe_allow_html=True)
-        if st.button("Zurück ohne Speichern"):
-            switch_page("Räume")
+        
 
     with st.form(f'ID-{x["_id"]}'):
         sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
