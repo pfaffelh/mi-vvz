@@ -11,6 +11,10 @@ from bson import ObjectId
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
+# check if session_state is initialized if not change to main page
+if 'logged_in' not in st.session_state:
+    switch_page("VVZ")
+
 # load css styles
 from misc.css_styles import init_css
 init_css()

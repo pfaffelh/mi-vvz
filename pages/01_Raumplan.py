@@ -17,6 +17,10 @@ init_css()
 # make all neccesary variables available to session_state
 # setup_session_state()
 
+# check if session_state is initialized if not change to main page
+if 'logged_in' not in st.session_state:
+    switch_page("VVZ")
+
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
