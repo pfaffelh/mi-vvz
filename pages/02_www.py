@@ -50,13 +50,13 @@ if st.session_state.logged_in:
                     code_list = [util.code.find_one({"hp_sichtbar": True, "_id": c}) for c in v["code"]]
                     st.write(", ".join([c["name"] for c in code_list]))
                 with col2:
-                    titel_mit_link = f"[{v['name_de']}]({v['url']})" if v['url'] != "" else v['name_de']
+                    titel_mit_link = f"##### [{v['name_de']}]({v['url']})" if v['url'] != "" else f"##### {v['name_de']}"
                     st.markdown(titel_mit_link)
                     for t in v['woechentlicher_termin']:
-                        a = f"{t['key']}"
+                        a = f"*{t['key']}*" if t["key"] else ""
                         b = util.wochentag[t["wochentag"]]
-                        c = f"{tools.hour_of_datetime(t['start'])}–{tools.hour_of_datetime(t['ende'])}"
-                        if c == "–":
+                        c = f"{tools.hour_of_datetime(t['start'])} – {tools.hour_of_datetime(t['ende'])}"
+                        if c == " – ":
                             c = ""
                         r = util.raum.find_one({"_id": t["raum"]})
                         g = util.gebaeude.find_one({"_id": r["gebaeude"]})
