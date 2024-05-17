@@ -387,6 +387,7 @@ if st.session_state.logged_in:
 
     if save_all:
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
+        switch_page("Veranstaltungen")
 
 else: 
     switch_page("VVZ")
