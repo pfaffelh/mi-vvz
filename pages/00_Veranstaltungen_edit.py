@@ -30,19 +30,26 @@ tools.display_navigation()
 # Es geht hier vor allem um diese Collection:
 collection = util.veranstaltung
 
+# dictionary saving keys from all expanders
+ver_updated_all = dict()
+save_all = False
+
 semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
     x = util.veranstaltung.find_one({"_id": st.session_state.edit})
     st.subheader(tools.repr(collection, x["_id"]))
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
     with col1:
         if st.button("Zurück ohne Speichern"):
             switch_page("Veranstaltungen")
-
     with col2:
+        if st.button("Alles Speichern", type = 'primary'):
+            save_all = True # the actual saving needs to be done after the expanders
+
+    with col3:
         with st.popover('Veranstaltung kopieren'):
             st.write("Kopiere " + tools.repr(collection, x["_id"]))
             st.write("In welches Semester soll kopiert werden?")
@@ -68,7 +75,7 @@ if st.session_state.logged_in:
             with colu2: 
                 st.button(label="Abbrechen", on_click = st.success, args=("Nicht kopiert!",), key = f"not-copied-{x['_id']}")
 
-    with col3:
+    with col4:
         with st.popover('Veranstaltung löschen'):
             s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
             if s:
@@ -84,44 +91,47 @@ if st.session_state.logged_in:
                 st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
     with st.expander("Grunddaten", expanded = True if st.session_state.expanded == "grunddaten" else False):
-        with st.form(f'Grunddaten-{x["_id"]}'):
-            hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
-            name_de=st.text_input('Name (de)', x["name_de"])
-            name_en=st.text_input('Name (en)', x["name_en"])
-            midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
-            midname_en=st.text_input('Mittelkurzer Name (en)', x["midname_en"])
-            kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
-            ects=st.text_input('ECTS', x["ects"], help = "Bitte eine typische Anzahl angeben, die genaue Zahl kann vom verwendeten Modul abhängen.")
-            kat = [g["_id"] for g in list(util.rubrik.find({"semester": x["semester"]}))]
-            index = [g for g in kat].index(x["rubrik"])
-            kat = st.selectbox("Rubrik", [x for x in kat], index = index, format_func = (lambda a: tools.repr(util.rubrik, a)))
-            code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({"$or": [{"semester": st.session_state.semester_id}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: tools.repr(util.code, a)), placeholder = "Bitte auswählen", help = "Es können nur Codes aus dem ausgewählten Semester verwendet werden.")
-            # Sortiere codes nach ihrem Rang 
-            co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
-            code_list = [c["_id"] for c in co]
-            kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = "Dieser Kommentar erscheint auf www.math...")
-            kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = "Dieser Kommentar erscheint auf www.math...")
-            url=st.text_input('URL', x["url"], help = "Gemeint ist die URL, auf der Inhalte zur Veranstaltung hinterlegt sind, etwa Skript, Übungsblätter etc.")
+        #with st.form(f'Grunddaten-{x["_id"]}'):
+        hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
+        name_de=st.text_input('Name (de)', x["name_de"])
+        name_en=st.text_input('Name (en)', x["name_en"])
+        midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
+        midname_en=st.text_input('Mittelkurzer Name (en)', x["midname_en"])
+        kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
+        ects=st.text_input('ECTS', x["ects"], help = "Bitte eine typische Anzahl angeben, die genaue Zahl kann vom verwendeten Modul abhängen.")
+        kat = [g["_id"] for g in list(util.rubrik.find({"semester": x["semester"]}))]
+        index = [g for g in kat].index(x["rubrik"])
+        kat = st.selectbox("Rubrik", [x for x in kat], index = index, format_func = (lambda a: tools.repr(util.rubrik, a)))
+        code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({"$or": [{"semester": st.session_state.semester_id}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: tools.repr(util.code, a)), placeholder = "Bitte auswählen", help = "Es können nur Codes aus dem ausgewählten Semester verwendet werden.")
+        # Sortiere codes nach ihrem Rang 
+        co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        code_list = [c["_id"] for c in co]
+        kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = "Dieser Kommentar erscheint auf www.math...")
+        kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = "Dieser Kommentar erscheint auf www.math...")
+        url=st.text_input('URL', x["url"], help = "Gemeint ist die URL, auf der Inhalte zur Veranstaltung hinterlegt sind, etwa Skript, Übungsblätter etc.")
 #            suffix=st.text_input('Suffix', x["suffix"], help = "Erscheint als Text auf der www.math... nach der Darstellung der Veranstaltung. Kann allgemeine Hinweise zur Veranstaltung enthalten.")
-            ver_updated = {
-                "hp_sichtbar": hp_sichtbar,
-                "name_de": name_de,
-                "name_en": name_en,
-                "midname_de": midname_de,
-                "midname_en": midname_en,
-                "kurzname": kurzname,
-                "ects": ects,
-                "rubrik": kat,
-                "code": code_list,
-                "url": url,
-#                "suffix": suffix,
-                "kommentar_html_de": kommentar_html_de,
-                "kommentar_html_en": kommentar_html_en
-            }
-            submit = st.form_submit_button('Speichern (Grunddaten)', type = 'primary')
-            if submit:
-                st.session_state.expanded = "grunddaten"
-                tools.update_confirm(collection, x, ver_updated, reset = False)
+        ver_updated = {
+            "hp_sichtbar": hp_sichtbar,
+            "name_de": name_de,
+            "name_en": name_en,
+            "midname_de": midname_de,
+            "midname_en": midname_en,
+            "kurzname": kurzname,
+            "ects": ects,
+            "rubrik": kat,
+            "code": code_list,
+            "url": url,
+#            "suffix": suffix,
+            "kommentar_html_de": kommentar_html_de,
+            "kommentar_html_en": kommentar_html_en
+        }
+        ver_updated_all.update(ver_updated)
+
+        #submit = st.form_submit_button('Speichern (Grunddaten)', type = 'primary')
+        submit = st.button('Speichern (Grunddaten)', type = 'primary')
+        if submit:
+            st.session_state.expanded = "grunddaten"
+            tools.update_confirm(collection, x, ver_updated, reset = False)
 
     with st.expander("Personen, Termine etc", expanded = True if st.session_state.expanded == "termine" else False):
         ## Personen, dh Dozent*innen, Assistent*innen und weitere Organisation
@@ -198,6 +208,8 @@ if st.session_state.logged_in:
             "organisation": org_list,
             "woechentlicher_termin": woechentlicher_termin
         }
+        ver_updated_all.update(ver_updated)
+
         neuer_termin = st.button('Neuer Termin', key = "neuer_wöchentlicher_termin")
         if neuer_termin:
             st.session_state.expanded = "termine"
@@ -270,6 +282,8 @@ if st.session_state.logged_in:
             "woechentlicher_termin": woechentlicher_termin,
             "einmaliger_termin": einmaliger_termin
         }
+        ver_updated_all.update(ver_updated)
+
         neuer_termin = st.button('Neuer Termin', key = "neuer_einmaliger_termin")
         submit = st.button('Speichern (Personen, Termine) ', type = 'primary', key = "speichern_einmaliger_termin")
         if neuer_termin or submit:
@@ -290,29 +304,30 @@ if st.session_state.logged_in:
             st.rerun()
 
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
-        with st.form(f'Kommentiertes-VVZ-{x["_id"]}'):
-            inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
-            inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"])
-            literatur_de = st.text_area('Literatur (de)', x["literatur_de"])
-            literatur_en = st.text_area('Literatur (en)', x["literatur_en"])
-            vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"])
-            vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"])
-            kommentar_latex_de = st.text_area('Kommentar (Latex, de)', x["kommentar_latex_de"])
-            kommentar_latex_en = st.text_area('Kommentar (Latex, en)', x["kommentar_latex_en"])
-            ver_updated = {
-                "inhalt_de": inhalt_de,
-                "inhalt_en": inhalt_en,
-                "literatur_de": literatur_de,
-                "literatur_en": literatur_en,
-                "vorkenntnisse_de": vorkenntnisse_de,
-                "vorkenntnisse_en": vorkenntnisse_en,
-                "kommentar_latex_de": kommentar_latex_de,
-                "kommentar_latex_en": kommentar_latex_en
-            }
-            submit = st.form_submit_button('Speichern (Kommentiertes Vorlesungsverzeichnis)', type = 'primary')
-            if submit:
-                st.session_state.expanded = "kommentiertes_VVZ"
-                tools.update_confirm(collection, x, ver_updated, reset = False)
+        inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
+        inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"])
+        literatur_de = st.text_area('Literatur (de)', x["literatur_de"])
+        literatur_en = st.text_area('Literatur (en)', x["literatur_en"])
+        vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"])
+        vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"])
+        kommentar_latex_de = st.text_area('Kommentar (Latex, de)', x["kommentar_latex_de"])
+        kommentar_latex_en = st.text_area('Kommentar (Latex, en)', x["kommentar_latex_en"])
+        ver_updated = {
+            "inhalt_de": inhalt_de,
+            "inhalt_en": inhalt_en,
+            "literatur_de": literatur_de,
+            "literatur_en": literatur_en,
+            "vorkenntnisse_de": vorkenntnisse_de,
+            "vorkenntnisse_en": vorkenntnisse_en,
+            "kommentar_latex_de": kommentar_latex_de,
+            "kommentar_latex_en": kommentar_latex_en
+        }
+        ver_updated_all.update(ver_updated)
+
+        submit = st.button('Speichern (Kommentiertes Vorlesungsverzeichnis)', type = 'primary')
+        if submit:
+            st.session_state.expanded = "kommentiertes_VVZ"
+            tools.update_confirm(collection, x, ver_updated, reset = False)
 
     ## Verwendbarkeiten
     with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
@@ -324,6 +339,8 @@ if st.session_state.logged_in:
             x_updated = {"verwendbarkeit_modul": v["verwendbarkeit_modul"],
                             "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"],
                             "verwendbarkeit": v["verwendbarkeit"]}
+            ver_updated_all.update(ver_updated)
+
             colu1, colu2 = st.columns([1,1])
             with colu1:
                 st.button(label = "Importieren", type = 'primary', on_click = tools.update_confirm, args = (util.veranstaltung, x, x_updated, False), key = f"import-verwendbarkeit-{x['_id']}")
@@ -361,10 +378,15 @@ if st.session_state.logged_in:
                     g.loc[str(a),str(m)] = st.checkbox(f"{m}_{a}",True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}", label_visibility="hidden")
         verwendbarkeit = [{"modul": m, "anforderung": a} for m in mod_list for a in an_list if g.loc[str(a),str(m)] == True]
         x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit }
+        ver_updated_all.update(x_updated)
+
         submit = st.button('Speichern (Verwendbarkeit)', type = 'primary', key = f"verwendbarkeit_{x['_id']}")
         if submit:
             st.session_state.expanded = "verwendbarkeit"
             tools.update_confirm(util.veranstaltung, x, x_updated, False,)
+
+    if save_all:
+        tools.update_confirm(collection, x, ver_updated_all, reset = False)
 
 else: 
     switch_page("VVZ")
