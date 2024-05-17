@@ -118,7 +118,7 @@ if st.session_state.logged_in:
                 "kommentar_html_de": kommentar_html_de,
                 "kommentar_html_en": kommentar_html_en
             }
-            submit = st.form_submit_button('Speichern', type = 'primary')
+            submit = st.form_submit_button('Speichern (Grunddaten)', type = 'primary')
             if submit:
                 st.session_state.expanded = "grunddaten"
                 tools.update_confirm(collection, x, ver_updated, reset = False)
@@ -271,7 +271,7 @@ if st.session_state.logged_in:
             "einmaliger_termin": einmaliger_termin
         }
         neuer_termin = st.button('Neuer Termin', key = "neuer_einmaliger_termin")
-        submit = st.button('Speichern', type = 'primary', key = "speichern_einmaliger_termin")
+        submit = st.button('Speichern (Personen, Termine) ', type = 'primary', key = "speichern_einmaliger_termin")
         if neuer_termin or submit:
             st.session_state.expanded = "termine"
             tools.update_confirm(collection, x, ver_updated, reset = False)
@@ -309,7 +309,7 @@ if st.session_state.logged_in:
                 "kommentar_latex_de": kommentar_latex_de,
                 "kommentar_latex_en": kommentar_latex_en
             }
-            submit = st.form_submit_button('Speichern', type = 'primary')
+            submit = st.form_submit_button('Speichern (Kommentiertes Vorlesungsverzeichnis)', type = 'primary')
             if submit:
                 st.session_state.expanded = "kommentiertes_VVZ"
                 tools.update_confirm(collection, x, ver_updated, reset = False)
@@ -361,7 +361,7 @@ if st.session_state.logged_in:
                     g.loc[str(a),str(m)] = st.checkbox(f"{m}_{a}",True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}", label_visibility="hidden")
         verwendbarkeit = [{"modul": m, "anforderung": a} for m in mod_list for a in an_list if g.loc[str(a),str(m)] == True]
         x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit }
-        submit = st.button('Speichern', type = 'primary', key = f"verwendbarkeit_{x['_id']}")
+        submit = st.button('Speichern (Verwendbarkeit)', type = 'primary', key = f"verwendbarkeit_{x['_id']}")
         if submit:
             st.session_state.expanded = "verwendbarkeit"
             tools.update_confirm(util.veranstaltung, x, x_updated, False,)
