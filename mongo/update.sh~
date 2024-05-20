@@ -1,0 +1,4 @@
+#!/bin/bash
+
+python port/port.py
+python import.py

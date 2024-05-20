@@ -3,12 +3,15 @@ import pymongo
 import os
 import datetime
 
-# This is the mongodb
-# Create mongodump using
-# mongodump --db vvz --archive=vvz_backup
+# Create mongodump 
+os.system(f"mongodump --db vvz --archive=vvz_backup_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}")
 
+# Delete complete database
 os.system("mongo vvz --eval 'db.dropDatabase()'")
-os.system("mongorestore --archive='vvz_backup_neu'")  # Should be executed from mi-vvz/mongo/
+
+# Restore complete database
+# Should be executed from mi-vvz/mongo/
+os.system(f"mongorestore --archive='vvz_backup_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}'")  
 
 cluster = MongoClient("mongodb://127.0.0.1:27017")
 mongo_db = cluster["vvz"]

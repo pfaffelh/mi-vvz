@@ -1,0 +1,114 @@
+import pymongo
+from pymongo import MongoClient
+import sqlite3
+from sqlite3 import Error
+import pandas as pd
+import logging
+logging.basicConfig(level=logging.DEBUG, format = "%(asctime)s - %(levelname)s - schema - %(message)s")
+
+import tools
+
+# This is the mongodb
+cluster = MongoClient("mongodb://127.0.0.1:27017")
+mongo_db = cluster["vvz"]
+logging.info("Connected to MongoDB")
+logging.info("Database contains collections: ")
+logging.info(str(mongo_db.list_collection_names()))
+
+# Sqlite-files from previous vvz-version
+files = ["2018ss.db", "2018ws.db", "2019ss.db", "2019ws.db", "2020ss.db", "2020ws.db", "2021ss.db", "2021ws.db", "2022ss.db", "2022ws.db", "2023ss.db", "2023ws.db", "2024ss.db"]
+files.reverse()
+#files = ["2019ss.db", "2019ws.db", "2020ss.db", "2020ws.db", "2021ss.db", "2021ws.db", "2022ss.db", "2022ws.db", "2023ss.db", "2023ws.db"]
+#files = ["2024ss.db"]
+
+import semester
+semester.port(mongo_db)
+
+import gebaeudeRaum
+gebaeudeRaum.port(mongo_db, files)
+
+import code
+code.port(mongo_db, files)
+
+import kategorie
+kategorie.port(mongo_db, files)
+
+import studiengang
+studiengang.port(mongo_db, files)
+
+import modul
+modul.port(mongo_db, files)
+
+import anforderung
+anforderung.port(mongo_db, files)
+
+import person
+person.port(mongo_db, files)
+
+import veranstaltung
+veranstaltung.port(mongo_db, files)
+
+
+
+
+# semester ok
+# person ok
+# course_category ok
+# person_category ok
+# code ok
+# program ok
+# building ok
+# location ok
+# module ok
+# requirement
+# usability
+# course
+
+sem = mongo_db["semester"]
+sem.update_many ({ }, { "$unset": { "id1": "" } })
+
+raum = mongo_db["raum"]
+raum.update_many ( { }, { "$unset": { "id1": "" } } )
+
+cod = mongo_db["code"]
+cod.update_many ( { }, { "$unset": { "id": "" } } )
+
+kat = mongo_db["kategorie"]
+kat.update_many ( { }, { "$unset": { "id": "" } } )
+
+mod = mongo_db["modul"]
+mod.update_many ( { }, { "$unset": { "id": "" } } )
+mod.update_many ( { }, { "$unset": { "name": "" } } )
+
+per = mongo_db["person"]
+per.update_many ( { }, { "$unset": { "id": "" } } )
+per.update_many ( { }, { "$unset": { "shortname": "" } } )
+
+pro = mongo_db["program"]
+pro.update_many ( { }, { "$unset": { "id": "" } } )
+pro.update_many ( { }, { "$unset": { "shortname": "" } } )
+
+anf = mongo_db["anforderung"]
+anf.update_many ( { }, { "$unset": { "id": "" } } )
+anf.update_many ( { }, { "$unset": { "name": "" } } )
+anf.update_many ( { }, { "$unset": { "type": "" } } )
+anf.update_many ( { }, { "$unset": { "desc": "" } } )
+
+ver = mongo_db["veranstaltung"]
+ver.update_many ( { }, { "$unset": { "href": "" } } )
+
+import schema
+mongo_db.command("collMod", "semester", validator = schema.semester_validator)
+mongo_db.command("collMod", "gebaeude", validator = schema.gebaeude_validator)
+mongo_db.command("collMod", "raum", validator = schema.raum_validator)
+mongo_db.command("collMod", "person", validator = schema.person_validator)
+mongo_db.command("collMod", "anforderung", validator = schema.anforderung_validator)
+mongo_db.command("collMod", "anforderungkategorie", validator = schema.anforderungkategorie_validator)
+mongo_db.command("collMod", "kategorie", validator = schema.kategorie_validator)
+mongo_db.command("collMod", "code", validator = schema.code_validator)
+mongo_db.command("collMod", "studiengang", validator = schema.studiengang_validator)
+mongo_db.command("collMod", "modul", validator = schema.modul_validator)
+mongo_db.command("collMod", "veranstaltung", validator = schema.veranstaltung_validator)
+
+
+

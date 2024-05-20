@@ -1,0 +1,38 @@
+import pandas as pd
+import sqlite3
+import logging
+from bson.objectid import ObjectId
+import schema
+
+def port(mongo_db, files):
+  #  mongo_db.command("collMod", "code", validator = schema.code_validator)
+    code = mongo_db["code"]
+    code.delete_many({})
+    for file in files:
+        semester_shortname = str.split(file, ".")[0].lower()
+        sem = mongo_db["semester"]
+        print(file)
+        sem_id = sem.find_one({"id1": semester_shortname})['_id']
+        conn = sqlite3.connect(file)
+        logging.info("Connected to " + file)
+        # Get all data from sqlite3 and put into mongo_db
+        df = pd.read_sql_query("SELECT * from Code", conn)
+        df['rang'] = df['id'].astype('Int32')
+        df['semester'] = [sem_id for x in df['id']]
+        df['name'] = df['code']
+        # df['id'] = [sem_id + "-" + x for x in df['name']]
+        # drop some columns which are not needed
+        df.drop(['code'], axis='columns', inplace = True)
+        df.rename(columns = {"description": "beschreibung_de"}, inplace = True)
+        posts = df.to_dict('records')
+        logging.debug("Here are the posts:")
+        for post in posts:
+            post["beschreibung_en"] = ""
+            post["kommentar"] = ""
+            post["veranstaltung"] = []
+            post["hp_sichtbar"] = True
+            logging.debug(post)
+            a = code.insert_one(post)
+            sem.update_one({'_id': sem_id}, {'$push': {'code': a.inserted_id}})
+        logging.info("Inserted in collection code")
+        logging.debug("Updated semester " + semester_shortname)

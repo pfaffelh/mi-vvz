@@ -1,0 +1,5 @@
+## Nötige Änderungen der Datenbank
+
+* Wöchentliche Termine brauchen eine Liste an Personen
+* Jede Veranstaltung braucht eine True-False-Variable, mit der angezeigt wird, ob ein Kommentar erstellt wird.
+
