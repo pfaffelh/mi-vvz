@@ -407,7 +407,7 @@ codekategorie_validator = {
     "$jsonSchema": {
         "bsonType": "object",
         "title": "Beschreibung der Kategorie eines Codes (zB Sprache), die für die Beschreibung einer Veranstaltung verwendet wird.",
-        "required": ["name_de", "name_en", "hp_sichtbar", "beschreibung_de", "beschreibung_en", "rang", "code", "kommentar"],
+        "required": ["name_de", "name_en", "hp_sichtbar", "beschreibung_de", "beschreibung_en", "rang", "semester", "code", "kommentar"],
         "properties": {
             "name_de": {
                 "bsonType": "string",
@@ -432,6 +432,10 @@ codekategorie_validator = {
             "rang": {
                 "bsonType": "int",
                 "description": "Rang, nach dem (aufsteigend) sortiert wird."
+            },
+            "semester": {
+                "bsonType": "objectId",
+                "description": "Die _id für das Semester, für das diese Codekategorie gilt -- required"
             },
             "code": {
                 "bsonType": "array",

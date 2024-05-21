@@ -53,13 +53,20 @@ if st.session_state.logged_in:
     with st.form(f'ID-{x["_id"]}'):
         sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
         hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
-        name=st.text_input('Name (de)', x["name"], disabled = (True if x["_id"] == util.leer[collection] else False))
-        vorname=st.text_input('Vorname', x["vorname"])
-        name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
-        titel=st.text_input('Titel', x["titel"])
-        tel=st.text_input('Telefonnummer', x["tel"])
-        email=st.text_input('Email', x["email"])
-        st.write("Semester")
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+        with col1:
+            name=st.text_input('Name (de)', x["name"], disabled = (True if x["_id"] == util.leer[collection] else False))
+        with col2:
+            vorname=st.text_input('Vorname', x["vorname"])
+        with col3:
+            name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
+        with col4:
+            titel=st.text_input('Titel', x["titel"])
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            email=st.text_input('Email', x["email"])
+        with col2:
+            tel=st.text_input('Telefonnummer', x["tel"])
         semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
         semester_list = [s["_id"] for s in se]

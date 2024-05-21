@@ -180,6 +180,7 @@ stu.insert_one( {
     "kurzname": "-",
     "rang": rang,
     "modul": [], 
+    "semester": [], 
     "kommentar": "", 
     "sichtbar": False
 })

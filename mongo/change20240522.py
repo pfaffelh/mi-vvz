@@ -92,8 +92,9 @@ ter.insert_one(newter)
 # Delete hp_sichtbar from code (goes to codekategorie)
 cod.update_many({}, {"$unset": {"hp_sichtbar":""}})
 codkat = mongo_db["codekategorie"]
-a = codkat.insert_one({"name_de": "Allgemein", "name_en" : "general", "hp_sichtbar" : True, "beschreibung_de": "", "beschreibung_en": "", "rang": 1, "code": [], "kommentar": ""})
-cod.update_many({}, {"$set": {"codekategorie": a.inserted_id}})
+for s in sem.find():
+    a = codkat.insert_one({"name_de": "Allgemein", "name_en" : "general", "hp_sichtbar" : True, "beschreibung_de": "", "beschreibung_en": "", "rang": 1, "code": [], "kommentar": "", "semester": s["_id"]})
+    cod.update_many({"semester": s["_id"]}, {"$set": {"codekategorie": a.inserted_id}})
 for c in list(cod.find()):
     codkat.update_one({}, { "$push": { "code" : c["_id"]}})
 

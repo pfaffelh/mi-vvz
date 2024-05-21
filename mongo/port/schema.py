@@ -412,7 +412,7 @@ studiengang_validator = {
         "bsonType": "object",
         "title": "Beschreibung von Studiengängen",
         "description": "Enthält vor allem eine Liste von Modulen, die zu absolvieren sind.",
-        "required": ["name", "kurzname", "rang", "modul", "kommentar", "sichtbar"],
+        "required": ["name", "kurzname", "rang", "modul", "kommentar", "sichtbar", "semester"],
         "properties": {
             "name": {
                 "bsonType": "string",
@@ -433,6 +433,13 @@ studiengang_validator = {
             "kommentar": {
                 "bsonType": "string",
                 "description": "Wird nur angezeigt, wenn True"
+            },
+            "semester": {
+                "bsonType": "array",
+                "items": {
+                    "bsonType": "objectId",
+                    "description": "eine Semester-id."
+                }
             },
             "modul": {
                 "bsonType": "array",

@@ -56,7 +56,10 @@ if st.session_state.logged_in:
         modul_list = st.multiselect("Module", [x["_id"] for x in util.modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: tools.repr(util.modul, a, False)), placeholder = "Bitte auswählen")
         mo = list(util.modul.find({"_id": {"$in": modul_list}}, sort=[("rang", pymongo.ASCENDING)]))
         modul_list = [m["_id"] for m in mo]
-        x_updated = ({"name": name, "kurzname": kurzname, "sichtbar": sichtbar, "kommentar": kommentar, "modul": modul_list})
+        semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+        se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        semester_list = [s["_id"] for s in se]
+        x_updated = ({"name": name, "kurzname": kurzname, "sichtbar": sichtbar, "kommentar": kommentar, "modul": modul_list, "semester": semester_list})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             tools.update_confirm(collection, x, x_updated, )

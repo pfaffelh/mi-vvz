@@ -27,13 +27,19 @@ def port(mongo_db, files):
             x["rang"] = i
             i = i+1
             mod.insert_one(x)
+
+            
     
 
         # Let us use the table ProgramModule
-        df = pd.read_sql_query(f"SELECT * from ProgramModule", conn)
+        df = pd.read_sql_query(f"SELECT * from ProgramModule INNER JOIN Program ON Program.id = ProgramModule.program_id", conn)
         for index, row in df.iterrows():
-            studiengang = pro.find_one({'kurzname': row['program_id']})['_id']
+            studiengang = pro.find_one({'name': row['name']})['_id']
             modul = mod.find_one({'kurzname': row['module_id']})['_id']
             pro.update_one({'_id': studiengang}, {'$push': {'modul': modul}})
             mod.update_one({'_id': modul}, {'$push': {'studiengang': studiengang}})
 
+        for p in list(pro.find()):
+            pro.update_one({"_id": p["_id"]}, {"$set": {"modul": list(set(p['modul']))}})
+        for m in list(mod.find()):
+            mod.update_one({"_id": m["_id"]}, {"$set": {"studiengang": list(set(m['studiengang']))}})

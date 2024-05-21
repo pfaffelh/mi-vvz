@@ -104,6 +104,7 @@ if st.session_state.logged_in:
             time.sleep(2)
             st.session_state.edit = ""
             st.rerun()
+
     st.write("### Rubrik")
     collection = util.rubrik
 
@@ -119,9 +120,9 @@ if st.session_state.logged_in:
             st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
         with co2:
             st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
-        with co3:   
-            abk = f"{x['titel_de'].strip()}"
-            abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
+        with co3:
+            abk = x['titel_de'].replace(".", ":")
+            abk = f"{abk} 😎" if x["hp_sichtbar"] else f"{abk}"
             with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
                 with st.popover('Rubrik löschen'):
                     s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
@@ -157,10 +158,58 @@ if st.session_state.logged_in:
                         st.session_state.edit = ""
                         st.rerun()                      
 
+    st.write("### Kategorie von Codes")
+    st.write('Dies ist z.B. "Sprache". Dann kann in den Codes dieser Codekategorie so etwas stehen wie "Vorlesung in englischer Sprache". Ein anderes Beispiel ist eine Codekategorie "Evaluation". Hier könnte eine Code angeben, ob die entsprechende Veranstaltung evaluiert werden soll.' )
+    collection = util.codekategorie
+    st.write(" ")
+    if st.button('**Neue Codekategorie hinzufügen**'):
+        tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
+
+    y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
+
+    for x in y:
+        co1, co2, co3 = st.columns([1,1,23]) 
+        with co1: 
+            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
+        with co2:
+            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
+        with co3:   
+            abk = f"{x['name_de'].strip()}"
+            abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
+            with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
+                with st.popover('Codekategorie löschen'):
+                    s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
+                    if s:
+                        st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
+                    else:
+                        st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
+                    colu1, colu2, colu3 = st.columns([1,1,1])
+                    with colu1:
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                    if submit:
+                        tools.delete_item_update_dependent_items(collection, x["_id"], False)
+                        st.rerun()
+                    with colu3: 
+                        st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+
+                with st.form(f'ID-{x["_id"]}'):
+                    hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
+                    name_de=st.text_input('Titel (de)', x["name_de"], key=f'titel-de-{x["_id"]}')
+                    name_en=st.text_input('Titel (en)', x["name_en"], key=f'titel-en-{x["_id"]}')
+                    beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}')
+                    beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
+                    kommentar=st.text_area('Kommentar', x["kommentar"])
+                    code = []
+                    x_updated = {"hp_sichtbar": hp_sichtbar, "name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
+                    submit = st.form_submit_button('Speichern', type = 'primary')
+                    if submit:
+                        tools.update_confirm(collection, x, x_updated, )
+                        time.sleep(2)
+                        st.session_state.edit = ""
+                        st.rerun()                      
+
     st.write("### Codes")
     collection = util.code
-    st.write("Mit 😎 markierte Codes sind auf der Homepage sichtbar.")
-    st.write(" ")
     if st.button('**Neuen Code hinzufügen**'):
         tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
 
@@ -173,7 +222,6 @@ if st.session_state.logged_in:
             st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
         with co3:   
             abk = f"{x['beschreibung_de'].strip()}, {x['name'].strip()}"
-            abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
             with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
                 st.subheader(tools.repr(collection, x["_id"]))
                 with st.popover('Code löschen'):
@@ -191,18 +239,23 @@ if st.session_state.logged_in:
                     with colu3: 
                         st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
                 with st.form(f'ID-{x["_id"]}'):
-                    hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
+                    codekategorie_list = list(util.codekategorie.find({"semester": st.session_state.semester_id}, sort = [("rang", pymongo.ASCENDING)]))
+                    codekategorie_dict = {r["_id"]: tools.repr(util.codekategorie, r["_id"], show_collection = False) for r in codekategorie_list}
+                    index = [g["_id"] for g in codekategorie_list].index(x["codekategorie"])
+                    codekategorie = st.selectbox("Codekategorie", codekategorie_dict.keys(), index, format_func = (lambda a: codekategorie_dict[a]), key = f"codekategorie_{x}")
                     name=st.text_input('Name', x["name"], key=f'name-{x["_id"]}')
                     beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}')
                     beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
-                    x_updated = {"hp_sichtbar": hp_sichtbar, "name": name, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar": kommentar}
+                    x_updated = {"codekategorie": codekategorie, "name": name, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
                         time.sleep(2)
                         st.session_state.edit = ""
                         st.rerun()                      
+
+
 
 else:
     switch_page("VVZ")

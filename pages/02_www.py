@@ -28,14 +28,19 @@ st.session_state.page = "Vorschau"
 
 semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
+
 if st.session_state.logged_in:
     st.header("Veranstaltungen")
-    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
-    st.session_state.semester = sem_id
+    sem_id = st.session_state.semester_id
+    alle_codes = st.checkbox("Alle Codes anzeigen", True)
+    if alle_codes:
+        codekategorie_list = [x["_id"] for x in list(util.codekategorie.find({"semester": sem_id}))]
+    else:
+        codekategorie_list = [x["_id"] for x in list(util.codekategorie.find({"semester": sem_id, "hp_sichtbar": True}))]
     if sem_id is not None:
         kat = list(util.rubrik.find({"semester": sem_id}, sort=[("rang", pymongo.ASCENDING)]))
         st.subheader(f"Lehrveranstaltungen im {util.semester.find_one({'_id': sem_id})['name_de']}")
-        cod = list(util.code.find({"semester": sem_id, "hp_sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
+        cod = list(util.code.find({"semester": sem_id, "codekategorie": {"$in": codekategorie_list}}, sort=[("rang", pymongo.ASCENDING)]))
         for c in cod:
             col1, col2 = st.columns([3,27])
             with col1: 
@@ -51,13 +56,16 @@ if st.session_state.logged_in:
             for v in ver:
                 col1, col2, col3 = st.columns([3,20,7])
                 with col1:
-                    code_list = [util.code.find_one({"hp_sichtbar": True, "_id": c}) for c in v["code"]]
-                    st.write(", ".join([c["name"] for c in code_list]))
+                    code_list = [util.code.find_one({"_id": c, "codekategorie": {"$in": codekategorie_list}}) for c in v["code"]]
+                    code_list = [x for x in code_list if x is not None]
+                    if len(code_list)>0:
+                        st.write(", ".join([c["name"] for c in code_list]))
                 with col2:
                     titel_mit_link = f"##### [{v['name_de']}]({v['url']})" if v['url'] != "" else f"##### {v['name_de']}"
                     st.markdown(titel_mit_link)
                     for t in v['woechentlicher_termin']:
-                        a = f"*{t['key']}*" if t["key"] else ""
+                        art = util.terminart.find_one({"_id": t["key"]})["name_de"]
+                        a = f"*{art}*" if t["key"] else ""
                         b = util.wochentag[t["wochentag"]]
                         c = f"{tools.hour_of_datetime(t['start'])} – {tools.hour_of_datetime(t['ende'])}"
                         if c == " – ":
