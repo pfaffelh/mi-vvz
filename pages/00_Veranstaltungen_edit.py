@@ -166,7 +166,10 @@ if st.session_state.logged_in:
                 st.write("")
                 st.button('↑', key=f'up-w-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "woechentlicher_termin", w,))
             with cols[2]:
-                w_key = (st.text_input("Art des Termins", w["key"], key = f"termin_{i}_art"))
+                terminart_list = list(util.terminart.find({}, sort = [("rang", pymongo.ASCENDING)]))
+                terminart_dict = {r["_id"]: tools.repr(util.terminart, r["_id"], show_collection = False) for r in terminart_list}
+                index = [g["_id"] for g in terminart_list].index(w["key"])
+                w_key = st.selectbox("Art des Termins", terminart_dict.keys(), index, format_func = (lambda a: terminart_dict[a]), key = f"wt_{i}")
             with cols[3]:
                 wochentage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
                 try:
@@ -240,7 +243,9 @@ if st.session_state.logged_in:
                 st.write("")
                 st.button('↑', key=f'up-e-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "einmaliger_termin", w,))
             with cols[2]:
-                w_key = (st.text_input("Art des Termins", w["key"], key = f"einmaliger_termin_{i}_art"))
+                ta = [g["_id"] for g in list(st.session_state.terminart.find(sort=[("rang", pymongo.ASCENDING)]))]
+                index = ta.index(w["key"])
+                w_key = st.selectbox("", ta, index = index, format_func = (lambda a: tools.repr(st.session_state.terminart, a)), key = f"et_{i}")
             with cols[3]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in termin_raum }

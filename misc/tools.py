@@ -273,10 +273,12 @@ def display_navigation():
     st.sidebar.page_link("pages/07_Anforderungen.py", label="Anforderungen")
     st.sidebar.page_link("pages/08_Räume.py", label="Räume")
     st.sidebar.page_link("pages/09_Gebäude.py", label="Gebäude")
+    st.sidebar.page_link("pages/10_Terminart.py", label="Art von Terminen")
+    st.sidebar.page_link("pages/11_Codekategorie.py", label="Kategorien von Codes")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-    st.sidebar.page_link("pages/10_Semester.py", label="Semester")
+    st.sidebar.page_link("pages/12_Semester.py", label="Semester")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-    st.sidebar.page_link("pages/11_Dokumentation.py", label="Dokumentation")
+    st.sidebar.page_link("pages/13_Dokumentation.py", label="Dokumentation")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
 
 # short Version ohne abhängige Variablen
@@ -305,10 +307,14 @@ def repr(collection, id, show_collection = True, short = False):
         res = x['name_de']
     elif collection == util.anforderungkategorie:
         res = x['name_de']
+    elif collection == util.codekategorie:
+        res = x['name_de']
     elif collection == util.veranstaltung:
         s = ", ".join([util.person.find_one({"_id" : id1})["name"] for id1 in x["dozent"]])
         sem = util.semester.find_one({"_id": x["semester"]})["kurzname"]
         res = x['name_de'] if short else f"{x['name_de']} ({s}, {sem})"
+    elif collection == st.session_state.terminart:
+        res = f"{x['name_de']}"
     if show_collection:
         res = f"{util.collection_name[collection]}: {res}"
     return res

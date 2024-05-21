@@ -35,6 +35,7 @@ def setup_session_state():
         st.session_state.anforderung = mongo_db["anforderung"]
         st.session_state.anforderungkategorie = mongo_db["anforderungkategorie"]
         st.session_state.code = mongo_db["code"]
+        st.session_state.codekategorie = mongo_db["codekategorie"]
         st.session_state.gebaeude = mongo_db["gebaeude"]
         st.session_state.rubrik = mongo_db["rubrik"]
         st.session_state.modul = mongo_db["modul"]
@@ -42,6 +43,7 @@ def setup_session_state():
         st.session_state.raum = mongo_db["raum"]
         st.session_state.semester = mongo_db["semester"]
         st.session_state.studiengang = mongo_db["studiengang"]
+        st.session_state.terminart = mongo_db["terminart"]
         st.session_state.veranstaltung = mongo_db["veranstaltung"]
 
     except: 
@@ -53,6 +55,7 @@ def setup_session_state():
     anforderung = st.session_state.anforderung
     anforderungkategorie = st.session_state.anforderungkategorie
     code = st.session_state.code
+    codekategorie = st.session_state.codekategorie
     gebaeude = st.session_state.gebaeude
     rubrik = st.session_state.rubrik
     modul = st.session_state.modul
@@ -60,6 +63,7 @@ def setup_session_state():
     raum = st.session_state.raum
     semester = st.session_state.semester
     studiengang = st.session_state.studiengang
+    terminart = st.session_state.terminart
     veranstaltung = st.session_state.veranstaltung
 
     # sem ist ein gewähltes Semester
@@ -85,29 +89,33 @@ def setup_session_state():
         st.session_state.page = ""
 
     st.session_state.collection_name = {
-        gebaeude: "Gebäude",
-        raum: "Räume",
-        semester: "Semester",
-        rubrik: "Rubrik",
-        code: "Codes",
-        person: "Personen",
-        studiengang: "Studiengänge",
-        modul: "Module",
         anforderung: "Anforderungen",
         anforderungkategorie: "Anforderungskategorien",
+        code: "Codes",
+        codekategorie: "Codekategorie",
+        gebaeude: "Gebäude",
+        modul: "Module",
+        person: "Personen",
+        raum: "Räume",
+        rubrik: "Rubrik",
+        semester: "Semester",
+        studiengang: "Studiengänge",
+        terminart: "Terminart",
         veranstaltung: "Veranstaltungen"
     }
 
     st.session_state.leer = {
-        gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
-        raum: raum.find_one({"name_de": "-"})["_id"],
-        person: person.find_one({"name": "-"})["_id"],
-        studiengang: studiengang.find_one({"name": "-"})["_id"],
-        modul: modul.find_one({"name_de": "-"})["_id"],
-        rubrik: "",
         anforderung: "",
-        code: "",    
-        anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"]
+        anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"],
+        code: "",
+        codekategorie: codekategorie.find_one({"name_de": "Allgemein"})["_id"],
+        gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
+        modul: modul.find_one({"name_de": "-"})["_id"],
+        person: person.find_one({"name": "-"})["_id"],
+        raum: raum.find_one({"name_de": "-"})["_id"],
+        studiengang: studiengang.find_one({"name": "-"})["_id"],
+        rubrik: "",
+        terminart: terminart.find_one({"name_de": "-"})["_id"],
     }
     leer = st.session_state.leer
 
@@ -168,10 +176,24 @@ def setup_session_state():
         code:  {"name": "",
                 "beschreibung_de": "Neuer Code",
                 "beschreibung_en": "", 
-                "hp_sichtbar": True,
+                "codekategorie": leer[codekategorie],
                 "veranstaltung": [] ,
                 "kommentar": "", 
                 "semester": semester_id
+        },
+        codekategorie:  {
+                "name_de": "Neu",
+                "name_en": "",
+                "beschreibung_de": "",
+                "beschreibung_en": "", 
+                "hp_sichtbar": True,
+                "code": [] ,
+                "kommentar": ""
+        },
+        terminart: {"name_de": "Neu",
+                    "name_en": "",
+                    "hp_sichtbar": True,
+                    "komm_sichtbar": True
         },
         anforderung: {"name_de": "Neu",
                     "name_en": "",
@@ -216,6 +238,7 @@ def setup_session_state():
                     {"collection": veranstaltung, "field": "rubrik", "list": False}],
         code:     [{"collection": semester, "field": "code", "list": True}, 
                     {"collection": veranstaltung, "field": "code", "list": True}],
+        codekategorie: [{"collection": code, "field": "codekategorie", "list": False}],
         person  : [{"collection": veranstaltung, "field": "dozent", "list": True}, 
                     {"collection": veranstaltung, "field": "assistent", "list": True}, 
                     {"collection": veranstaltung, "field": "organisation", "list": True}, 
@@ -228,6 +251,8 @@ def setup_session_state():
         anforderungkategorie: [{"collection": anforderung, "field": "anforderungskategorie", "list": False}],
         anforderung:[{"collection": veranstaltung, "field": "verwendbarkeit_anforderung", "list": True},
                     {"collection": veranstaltung, "field": "verwendbarkeit.anforderung", "list": False}],
+        terminart:[{"collection": veranstaltung, "field": "woechentlicher_termin.key", "list": False},
+                    {"collection": veranstaltung, "field": "einmaliger_termin.key", "list": False}],
         veranstaltung:[{"collection": semester, "field": "veranstaltung", "list": True},
                     {"collection": rubrik, "field": "veranstaltung", "list": True},
                     {"collection": code, "field": "veranstaltung", "list": True},
@@ -252,6 +277,7 @@ group = st.session_state.group
 anforderung = st.session_state.anforderung
 anforderungkategorie = st.session_state.anforderungkategorie
 code = st.session_state.code
+codekategorie = st.session_state.codekategorie
 gebaeude = st.session_state.gebaeude
 rubrik = st.session_state.rubrik
 modul = st.session_state.modul
@@ -259,6 +285,7 @@ person = st.session_state.person
 raum = st.session_state.raum
 semester = st.session_state.semester
 studiengang = st.session_state.studiengang
+terminart = st.session_state.terminart
 veranstaltung = st.session_state.veranstaltung
 collection_name = st.session_state.collection_name
 leer = st.session_state.leer

@@ -33,6 +33,7 @@ import schema20240522
 mongo_db.command('collMod','veranstaltung', validator=schema20240522.veranstaltung_validator, validationLevel='off')
 mongo_db.command('collMod','semester', validator=schema20240522.semester_validator, validationLevel='off')
 mongo_db.command('collMod','code', validator=schema20240522.code_validator, validationLevel='off')
+#mongo_db.command('collMod','terminart', validator=schema20240522.terminart_validator, validationLevel='off')
 
 # Ab hier wird die Datenbank verändert
 print("Ab hier wird verändert")
@@ -78,12 +79,18 @@ for v in list(ver.find()):
                 i = i+1
                 z = ter.insert_one(newter)
                 ver.update_one({"_id": v["_id"]}, {"$set": {"einmaliger_termin."+ str(v["einmaliger_termin"].index(t)) + ".key" : z.inserted_id}})
-                
 
-
+newter =   { "name_de": "-",
+                "rang": i,
+                "name_en": "-",
+                "hp_sichtbar": True,
+                "komm_sichtbar": True
+}
+i = i+1
+ter.insert_one(newter)
 
 # Delete hp_sichtbar from code (goes to codekategorie)
-
+cod.update_many({}, {"$unset": {"hp_sichtbar":""}})
 codkat = mongo_db["codekategorie"]
 a = codkat.insert_one({"name_de": "Allgemein", "name_en" : "general", "hp_sichtbar" : True, "beschreibung_de": "", "beschreibung_en": "", "rang": 1, "code": [], "kommentar": ""})
 cod.update_many({}, {"$set": {"codekategorie": a.inserted_id}})
