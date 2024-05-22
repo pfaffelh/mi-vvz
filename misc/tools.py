@@ -57,6 +57,7 @@ def new(collection, ini = {}, switch = True):
     util.new[collection]["rang"] = rang    
     for key, value in ini.items():
         util.new[collection][key] = value
+    util.new[collection].pop("_id", None)
     x = collection.insert_one(util.new[collection])
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} ein neues Item angelegt.")
@@ -83,7 +84,7 @@ def find_dependent_items(collection, id):
     res = []
     for x in util.abhaengigkeit[collection]:
         if x["list"]:
-            for y in list(x["collection"].find({x["field"]: { "$elemMatch": { "$eq": id }}})):
+            for y in list(x["collection"].find({x["field"].replace(".$",""): { "$elemMatch": { "$eq": id }}})):
                 res.append(repr(x["collection"], y["_id"]))
         else:
             for y in list(x["collection"].find({x["field"]: id})):
@@ -97,7 +98,7 @@ def find_dependent_veranstaltung(collection, id):
     for x in util.abhaengigkeit[collection]:
         if x["collection"] == util.veranstaltung:
             if x["list"]:
-                for y in list(x["collection"].find({x["field"]: { "$elemMatch": { "$eq": id }}})):
+                for y in list(x["collection"].find({x["field"].replace(".$",""): { "$elemMatch": { "$eq": id }}})):
                     res.append(y["_id"])
             else:
                 for y in list(x["collection"].find({x["field"]: id})):
@@ -114,7 +115,7 @@ def delete_item_update_dependent_items(collection, id ,switch = True):
             s = f"\n{s}  \ngeändert."     
         for x in util.abhaengigkeit[collection]:
             if x["list"]:
-                x["collection"].update_many({x["field"]: { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
+                x["collection"].update_many({x["field"].replace(".$",""): { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
                 st.write(util.collection_name[x["collection"]])
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             

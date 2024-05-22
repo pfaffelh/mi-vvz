@@ -1,9 +1,7 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import datetime 
 import pymongo
 import pandas as pd
-from itertools import chain
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -16,23 +14,17 @@ from misc.config import *
 import misc.util as util
 import misc.tools as tools
 
-# make all neccesary variables available to session_state
-# setup_session_state()
-
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
-
-# Es geht hier vor allem um diese Collection:
-collection = util.veranstaltung
 st.session_state.page = "Suchen"
 
 if st.session_state.logged_in:
     st.header("Suche nach Veranstaltungen")
     st.write("...auf die folgendes zutrifft:")
-
+    st.write("(Die einzelnen Zeilen sind mit 'und' verknüpft. Die eingegebenen Wörter im Textfeld sind mit 'oder' verknüpft.)")
     # QUERY
     # Auswahl von Semester
-    semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+    semesters = list(util.semester.find(sort=[("rang", pymongo.DESCENDING)]))
     col1, col2, col3 = st.columns([1,1,1])
     with col1:
         st.write("von...")
@@ -42,29 +34,22 @@ if st.session_state.logged_in:
         st.write("...bis...")
         semester_id_bis = st.selectbox(label="bis", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_bis")
         semester_bis = util.semester.find_one({"_id": semester_id_bis})
-    semester_auswahl = list(util.semester.find({"kurzname": {"$gte": semester_von["kurzname"], "$lte": semester_bis["kurzname"]}}))
+    semester_auswahl = list(util.semester.find({"rang": {"$gte": semester_von["rang"], "$lte": semester_bis["rang"]}}))
 
     # Auswahl von Rubriken 
     rubrik_vorauswahl = list(util.rubrik.find({"semester": {"$in": [x["_id"] for x in semester_auswahl]}, "veranstaltung": {"$ne": []}}, sort = [("titel_de", pymongo.ASCENDING)]))
     rubrik_list = st.multiselect("Rubriken", [x["_id"] for x in rubrik_vorauswahl], [], format_func = (lambda a: tools.repr(util.rubrik, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchte Veranstaltung muss einen der ausgewählten Rubriken tragen. Falls keine Rubrik angegeben ist, werden Rubriken in der Suche nicht berücksichtigt.")
 
-    # Sortiere Rubriken nach ihrem Rang 
-#    ru = list(util.rubrik.find({"_id": {"$in": rubrik_list}}, sort=[("rang", pymongo.ASCENDING)]))
-#    rubrik_list = [r["_id"] for r in ru]
-
     # Auswahl von Codes
     code_vorauswahl = list(util.code.find({"semester": {"$in": [x["_id"] for x in semester_auswahl]}, "veranstaltung": {"$ne": []}}, sort = [("beschreibung_de", pymongo.ASCENDING)]))
     code_list = st.multiselect("Codes", [x["_id"] for x in code_vorauswahl], [], format_func = (lambda a: tools.repr(util.code, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen einen der ausgewählten Codes tragen. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
-    # Sortiere codes nach ihrem Rang 
-    #    co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
-    #    code_list = [c["_id"] for c in co]
 
     # Auswahl von Personen
     person_vorauswahl = list(util.person.find({"semester": {"$elemMatch": {"$in": [x["_id"] for x in semester_auswahl]}}, "veranstaltung": {"$ne": []}}, sort = [("name", pymongo.ASCENDING)]))
     person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen mit einer der ausgewählten Personen verbunden sein. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
 
     # Freitextsuche im Titel
-    te = st.text_input("Titel (de) enthält", help = "Es wird nach ganzen Wörtern mit einer oder-Verknüpfung gesucht")
+    te = st.text_input("Titel enthält", help = "Es wird nach ganzen Wörtern mit einer oder-Verknüpfung gesucht")
 
     # Erstellung der Query
     query = {}
@@ -78,7 +63,6 @@ if st.session_state.logged_in:
     if te:
         query["$text"] = {"$search": f'{te}'}
 
-    util.veranstaltung.create_index( [ ("name_de", pymongo.TEXT)], default_language ="english")
 
     result = list(util.veranstaltung.find(query))
 

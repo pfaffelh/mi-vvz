@@ -1,6 +1,5 @@
 import streamlit as st
 from misc.config import *
-import ldap
 import pymongo
 
 # Initialize logging
@@ -119,7 +118,7 @@ def setup_session_state():
     }
     leer = st.session_state.leer
 
-    semester_id = semester.find_one()["_id"]
+    semester_id = st.session_state.semester_id
     st.session_state.new = {
         gebaeude: {"name_de": "neu", 
                 "name_en": "", 
@@ -152,10 +151,11 @@ def setup_session_state():
                 "kurzname": "", 
                 "kommentar": "", 
                 "sichtbar": True,
-                "modul": [] 
+                "modul": [],
+                "semester": []
         },
         modul: {"name_de": "Neues Modul",
-                "name_en": "Neues Modul",
+                "name_en": "",
                 "kurzname": "", 
                 "kommentar": "", 
                 "sichtbar": True,
@@ -171,7 +171,8 @@ def setup_session_state():
                 "suffix_en": "", 
                 "hp_sichtbar": True,
                 "veranstaltung": [] ,
-                "kommentar": ""
+                "kommentar": "",
+                "semester": st.session_state.semester_id                
         },
         code:  {"name": "",
                 "beschreibung_de": "Neuer Code",
@@ -179,7 +180,7 @@ def setup_session_state():
                 "codekategorie": leer[codekategorie],
                 "veranstaltung": [] ,
                 "kommentar": "", 
-                "semester": semester_id
+                "semester": st.session_state.semester_id
         },
         codekategorie:  {
                 "name_de": "Neu",
@@ -187,7 +188,8 @@ def setup_session_state():
                 "beschreibung_de": "",
                 "beschreibung_en": "", 
                 "hp_sichtbar": True,
-                "code": [] ,
+                "code": [],
+                "semester": [],
                 "kommentar": ""
         },
         terminart: {"name_de": "Neu",
@@ -228,15 +230,18 @@ def setup_session_state():
 
     st.session_state.abhaengigkeit = {
         gebaeude: [{"collection": raum, "field": "gebaeude", "list": False}],
-        raum    : [{"collection": veranstaltung, "field": "einmaliger_termin.raum", "list": False}, 
+        raum    : [{"collection": veranstaltung, "field": "einmaliger_termin.$.raum", "list": True}, 
                     {"collection": veranstaltung, "field": "woechentlicher_termin.raum", "list": False}],
         semester: [{"collection": veranstaltung, "field": "semester", "list": False},
                     {"collection": person, "field": "semester", "list": True},
+                    {"collection": studiengang, "field": "semester", "list": True},
                     {"collection": rubrik, "field": "semester", "list": False}, 
-                    {"collection": code, "field": "semester", "list": False}, ],
+                    {"collection": code, "field": "semester", "list": False},
+                    {"collection": codekategorie, "field": "semester", "list": False}, ],
         rubrik: [{"collection": semester, "field": "rubrik", "list": True}, 
                     {"collection": veranstaltung, "field": "rubrik", "list": False}],
         code:     [{"collection": semester, "field": "code", "list": True}, 
+                    {"collection": codekategorie, "field": "code", "list": True},
                     {"collection": veranstaltung, "field": "code", "list": True}],
         codekategorie: [{"collection": code, "field": "codekategorie", "list": False}],
         person  : [{"collection": veranstaltung, "field": "dozent", "list": True}, 

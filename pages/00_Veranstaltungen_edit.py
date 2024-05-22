@@ -7,7 +7,6 @@ import pandas as pd
 from itertools import chain
 from bson import ObjectId
 
-
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
@@ -178,10 +177,10 @@ if st.session_state.logged_in:
                     wochentag_index = None
                 w_wochentag = st.selectbox("Tag", wochentage, wochentag_index, key = f"termin_{i}_wochentag", placeholder = "Bitte auswählen")
             with cols[4]:
-                start_display = w["start"] if w["start"] else datetime.time(9, 00)
+                start_display = w["start"] if w["start"] else None # datetime.time(9, 00)
                 w_start = st.time_input("Start", start_display, key =f"termin_{i}_start", step=3600)
             with cols[5]:
-                ende_display = w["ende"] if w["ende"] else datetime.time(9, 00)
+                ende_display = w["ende"] if w["ende"] else None # datetime.time(9, 00)
                 w_ende = st.time_input("Ende", ende_display, key =f"termin_{i}_ende", step=3600)
             with cols[6]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
@@ -218,7 +217,7 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             tools.update_confirm(collection, x, ver_updated, reset = False)
             leerer_termin = {
-                "key": "",
+                "key": util.leer[util.terminart],
                 "kommentar": "",
                 "wochentag": "",
                 "raum": util.raum.find_one({"name_de": "-"})["_id"],
@@ -296,7 +295,7 @@ if st.session_state.logged_in:
             tools.update_confirm(collection, x, ver_updated, reset = False)
         if neuer_termin:
             leerer_termin = {
-                "key": "",
+                "key": util.leer[util.terminart],
                 "kommentar": "",
                 "raum": [],
                 "person": [],
@@ -350,7 +349,7 @@ if st.session_state.logged_in:
             with colu1:
                 st.button(label = "Importieren", type = 'primary', on_click = tools.update_confirm, args = (util.veranstaltung, x, x_updated, False), key = f"import-verwendbarkeit-{x['_id']}")
             with colu2: 
-                st.button(label="Abbrechen", on_click = tools.reset_vars, args=("Nicht kopiert!",), key = f"not-imported-{x['_id']}")
+                st.button(label="Abbrechen", on_click = st.rerun, args=(), key = f"not-imported-{x['_id']}")
 
         mo = list(util.modul.find({"$or": [{"sichtbar": True}, {"_id": { "$elemMatch": { "$eq": x["verwendbarkeit_modul"]}}}]}, sort = [("rang", pymongo.ASCENDING)]))
         mo_dict = {m["_id"]: tools.repr(util.modul, m["_id"], show_collection = False) for m in mo }

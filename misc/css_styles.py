@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 # css-style for right allignment
 def init_css():
     st.markdown("""
