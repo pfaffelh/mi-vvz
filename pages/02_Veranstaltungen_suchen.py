@@ -29,10 +29,10 @@ st.session_state.page = "Suchen"
 if st.session_state.logged_in:
     st.header("Suche nach Veranstaltungen")
     st.write("...auf die folgendes zutrifft:")
+
     # QUERY
     # Auswahl von Semester
     semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
-
     col1, col2, col3 = st.columns([1,1,1])
     with col1:
         st.write("von...")
@@ -42,29 +42,43 @@ if st.session_state.logged_in:
         st.write("...bis...")
         semester_id_bis = st.selectbox(label="bis", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_bis")
         semester_bis = util.semester.find_one({"_id": semester_id_bis})
-
-    rubrik_list = st.multiselect("Rubriken", [x["_id"] for x in util.rubrik.find({"semester": {"$in": [x["_id"] for x in semesters]}}, sort = [("titel_de", pymongo.ASCENDING)])], [], format_func = (lambda a: tools.repr(util.rubrik, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchte Veranstaltung muss einen der ausgewählten Rubriken tragen. Falls keine Rubrik angegeben ist, werden Rubriken in der Suche nicht berücksichtigt.")
-    # Sortiere codes nach ihrem Rang 
-    ru = list(util.rubrik.find({"_id": {"$in": rubrik_list}}, sort=[("rang", pymongo.ASCENDING)]))
-    rubrik_list = [r["_id"] for r in ru]
-
-    code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({}, sort = [("beschreibung_de", pymongo.ASCENDING)])], [], format_func = (lambda a: tools.repr(util.code, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchte Veranstaltung muss einen der ausgewählten Codes tragen. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
-    # Sortiere codes nach ihrem Rang 
-    co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
-    code_list = [c["_id"] for c in co]
-
-    te = st.text_input("Titel (de) enthält")
-
-#    Personen
-
     semester_auswahl = list(util.semester.find({"kurzname": {"$gte": semester_von["kurzname"], "$lte": semester_bis["kurzname"]}}))
 
+    # Auswahl von Rubriken 
+    rubrik_vorauswahl = list(util.rubrik.find({"semester": {"$in": [x["_id"] for x in semester_auswahl]}, "veranstaltung": {"$ne": []}}, sort = [("titel_de", pymongo.ASCENDING)]))
+    rubrik_list = st.multiselect("Rubriken", [x["_id"] for x in rubrik_vorauswahl], [], format_func = (lambda a: tools.repr(util.rubrik, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchte Veranstaltung muss einen der ausgewählten Rubriken tragen. Falls keine Rubrik angegeben ist, werden Rubriken in der Suche nicht berücksichtigt.")
+
+    # Sortiere Rubriken nach ihrem Rang 
+#    ru = list(util.rubrik.find({"_id": {"$in": rubrik_list}}, sort=[("rang", pymongo.ASCENDING)]))
+#    rubrik_list = [r["_id"] for r in ru]
+
+    # Auswahl von Codes
+    code_vorauswahl = list(util.code.find({"semester": {"$in": [x["_id"] for x in semester_auswahl]}, "veranstaltung": {"$ne": []}}, sort = [("beschreibung_de", pymongo.ASCENDING)]))
+    code_list = st.multiselect("Codes", [x["_id"] for x in code_vorauswahl], [], format_func = (lambda a: tools.repr(util.code, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen einen der ausgewählten Codes tragen. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
+    # Sortiere codes nach ihrem Rang 
+    #    co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
+    #    code_list = [c["_id"] for c in co]
+
+    # Auswahl von Personen
+    person_vorauswahl = list(util.person.find({"semester": {"$elemMatch": {"$in": [x["_id"] for x in semester_auswahl]}}, "veranstaltung": {"$ne": []}}, sort = [("name", pymongo.ASCENDING)]))
+    person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen mit einer der ausgewählten Personen verbunden sein. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
+
+    # Freitextsuche im Titel
+    te = st.text_input("Titel (de) enthält", help = "Es wird nach ganzen Wörtern mit einer oder-Verknüpfung gesucht")
+
+    # Erstellung der Query
     query = {}
     query["semester"] = {"$in": [x["_id"] for x in semester_auswahl]}
     if code_list:
         query["code"] = {"$elemMatch": { "$in": code_list}}
     if rubrik_list:
-        query["rubrik"] = {"$in": code_list}
+        query["rubrik"] = {"$in": rubrik_list}
+    if person_list:
+        query["$or"] = [{"dozent": {"$elemMatch": { "$in": person_list}}}, {"assistent": {"$elemMatch": { "$in": person_list}}}, {"organisation": {"$elemMatch": { "$in": person_list}}}]
+    if te:
+        query["$text"] = {"$search": f'{te}'}
+
+    util.veranstaltung.create_index( [ ("name_de", pymongo.TEXT)], default_language ="english")
 
     result = list(util.veranstaltung.find(query))
 
@@ -82,7 +96,6 @@ if st.session_state.logged_in:
         ausgabe_assistent = st.checkbox("Assistent*innen", True)
 
 
-
     semester = [tools.repr(util.semester, r["semester"], False, True) for r in result]
     titel = [r["name_de"] for r in result]
     dozent = [", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in r["dozent"]]]) for r in result]
@@ -93,10 +106,10 @@ if st.session_state.logged_in:
         dict["Semester"] = semester
     if ausgabe_titel:
         dict["Veranstaltung"] = titel    
-    if ausgabe_assistent:
-        dict["Assistent*innen"] = assistent
     if ausgabe_dozent:
         dict["Dozent*innen"] = dozent
+    if ausgabe_assistent:
+        dict["Assistent*innen"] = assistent
 
     df = pd.DataFrame(dict)
 

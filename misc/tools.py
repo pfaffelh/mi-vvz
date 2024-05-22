@@ -90,6 +90,20 @@ def find_dependent_items(collection, id):
                 res.append(repr(x["collection"], y["_id"]))
     return res
 
+# Finde in collection.field die id, und gebe im Datensatz return_field zurück. Falls list=True,
+# dann ist collection.field ein array.
+def find_dependent_veranstaltung(collection, id):
+    res = []
+    for x in util.abhaengigkeit[collection]:
+        if x["collection"] == util.veranstaltung:
+            if x["list"]:
+                for y in list(x["collection"].find({x["field"]: { "$elemMatch": { "$eq": id }}})):
+                    res.append(y["_id"])
+            else:
+                for y in list(x["collection"].find({x["field"]: id})):
+                    res.append(y["_id"])
+    return res
+
 def delete_item_update_dependent_items(collection, id ,switch = True):
     if collection in util.leer.keys() and id == util.leer[collection]:
             st.toast("Fehler! Dieses Item kann nicht gelöscht werden!")
