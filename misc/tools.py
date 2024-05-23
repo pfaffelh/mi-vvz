@@ -133,13 +133,14 @@ def kopiere_veranstaltung_confirm(id, kop_sem_id, kopiere_personen, kopiere_term
     time.sleep(2)
     st.session_state.semester_id = kop_sem_id
     st.session_state.edit = w_id
-    
-def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
-    v = util.veranstaltung.find_one({"_id": ObjectId(id)})
-    k = v["rubrik"] if v["semester"] == kop_sem_id else util.rubrik.find_one({"semester": kop_sem_id, "titel_de": "-"})["_id"]
+
+# id ist die id der zu kopierenden Veranstaltung, sem_id die id des Semesters, in das kopiert werden soll.
+def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
+    v = util.veranstaltung.find_one({"_id": id})
+    k = v["rubrik"] if v["semester"] == sem_id else util.rubrik.find_one({"semester": sem_id, "titel_de": "-"})["_id"]
     # Das wird der Rang der kopierten Veranstaltung
     try:
-        r = util.veranstaltung.find_one({"semester": kop_sem_id, "rubrik": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
+        r = util.veranstaltung.find_one({"semester": sem_id, "rubrik": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
     except:
         r = 0
     v_new = {
@@ -150,9 +151,9 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "midname_en": v["midname_en"],
         "ects": v["ects"],
         "url": "",
-        "semester": kop_sem_id,
+        "semester": sem_id,
         "rubrik": k,
-        "code": v["code"] if v["semester"] == kop_sem_id else [],
+        "code": v["code"] if v["semester"] == sem_id else [],
         "rang": r,
         "kommentar_html_de": v["kommentar_html_de"],
         "kommentar_html_en": v["kommentar_html_en"],
@@ -167,59 +168,70 @@ def kopiere_veranstaltung(id, kop_sem_id, kopiere_personen, kopiere_termine, kop
         "verwendbarkeit_modul": v["verwendbarkeit_modul"] if kopiere_verwendbarkeit else [],
         "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"] if kopiere_verwendbarkeit else [],
         "verwendbarkeit": v["verwendbarkeit"] if kopiere_verwendbarkeit else [], 
-        "dozent": [p for p in v["dozent"] if (kop_sem_id in util.person.find_one({"_id": p})["semester"])] if kopiere_personen else [],
-        "assistent": [p for p in v["assistent"] if kop_sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
-        "organisation": [p for p in v["organisation"] if kop_sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
+        "dozent": [p for p in v["dozent"] if (sem_id in util.person.find_one({"_id": p})["semester"])] if kopiere_personen else [],
+        "assistent": [p for p in v["assistent"] if sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
+        "organisation": [p for p in v["organisation"] if sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
         "woechentlicher_termin": v["woechentlicher_termin"] if kopiere_termine else [],
         "einmaliger_termin": v["einmaliger_termin"] if kopiere_termine else [],
-        "hp_sichtbar": True
+        "hp_sichtbar": v["hp_sichtbar"]
     }
     w = util.veranstaltung.insert_one(v_new)
-    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, kop_sem_id)} kopiert.")
-    util.semester.update_one({"sem": kop_sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
+    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, sem_id)} kopiert.")
+    util.semester.update_one({"sem": sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.rubrik.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
         util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
     return w.inserted_id
 
-# Kopiere ein Semester    
-def kopiere_semester(id, x_updated, df, kopiere_personen):
-    last_sem_id = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["_id"]
+# Neues Semester anlegen
+# df ist ein dataframe, wobei "Veranstaltung übernehmen" die ids der aus dem vorlestzten Semester zu übernehmenden Veranstaltungen enthält.
+def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_uebernehmen):
+    sem = list(util.semester.find({}, sort = [("rang", pymongo.DESCENDING)]))
     s = util.semester.insert_one(x_updated)
+    # sem_id is die id des anzulegenden Semesters
     sem_id = s.inserted_id
-    util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} nach {repr(util.semester, sem_id)} kopiert.")
     # kopien enthält die ids der originalen und kopierten Datensätze
     kopie = {id: sem_id}
     # Kopiere Personen aus dem letzten Semester
-    if kopiere_personen:
-        util.person.update_many({"semester": {"$elemMatch": {"$eq": last_sem_id }}}, { "$push": { "semester": sem_id}})
+    if personen_uebernehmen:
+        util.person.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
 
     # Kopiere Rubriken und Codes
-    for k in list(util.rubrik.find({"semester": id})):
-        k_loc = k["_id"]
-        del k["_id"] # andernfalls gibt es einen duplicate key error
-        k_new = util.rubrik.insert_one(k)
-        util.rubrik.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
-        kopie[k_loc] = k_new.inserted_id
-        util.semester.update_one({"_id": sem_id}, {"$push": {"rubrik": k_new.inserted_id}})
-    for k in list(util.code.find({"semester": id})):
-        k_loc = k["_id"]
-        del k["_id"]  # andernfalls gibt es einen duplicate key error
-        k_new = util.code.insert_one(k)
-        util.code.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
-        kopie[k_loc] = k_new.inserted_id
-        util.semester.update_one({"_id": sem_id}, {"$push": {"code": k_new.inserted_id}})
-    # Kopiere Veranstaltungen, übertrage rubrik und Codes
-    for index, row in df.iterrows():
-        kop_ver_id = kopiere_veranstaltung(ObjectId(row["_id"]), sem_id, row["Personen"], row["Termine"], row["Kommentare"], row["Verwendbarkeit"])
-        kopie[row["_id"]] = kop_ver_id
-        v = util.veranstaltung.find_one({"_id": ObjectId(row["_id"])})
-        util.veranstaltung.update_one({"_id": kop_ver_id}, 
-                                 {"$set": 
-                                  {"rubrik": kopie[v["rubrik"]],
-                                  "code": [kopie[co] for co in v["code"]]}})
-        util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": kop_ver_id}})
-    st.success("Erfolgreich kopiert!")
+    if veranstaltung_uebernehmen:
+        for k in list(util.rubrik.find({"semester": sem[1]["_id"]})):
+            k_loc = k["_id"]
+            del k["_id"] # andernfalls gibt es einen duplicate key error
+            k_new = util.rubrik.insert_one(k)
+            util.rubrik.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
+            kopie[k_loc] = k_new.inserted_id
+            util.semester.update_one({"_id": sem_id}, {"$push": {"rubrik": k_new.inserted_id}})
+        for k in list(util.codekategorie.find({"semester": sem[1]["_id"]})):
+            k_loc = k["_id"]
+            del k["_id"]  # andernfalls gibt es einen duplicate key error
+            k_new = util.codekategorie.insert_one(k)
+            util.codekategorie.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
+            kopie[k_loc] = k_new.inserted_id
+            util.semester.update_one({"_id": sem_id}, {"$push": {"codekategorie": k_new.inserted_id}})
+        for k in list(util.code.find({"semester": sem[1]["_id"]})):
+            k_loc = k["_id"]
+            del k["_id"]  # andernfalls gibt es einen duplicate key error
+            k_new = util.code.insert_one(k)
+            util.code.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
+            kopie[k_loc] = k_new.inserted_id
+            util.semester.update_one({"_id": sem_id}, {"$push": {"code": k_new.inserted_id}})
+        # Kopiere Veranstaltungen, übertrage rubrik und Codes
+        for index, row in df.iterrows():
+            if row["Veranstaltung übernehmen"]:
+                kop_ver_id = kopiere_veranstaltung(ObjectId(row["_id"]), sem_id, row["...mit Dozenten/Assistenten"], row["...mit Terminen"], row["...mit Kommentaren"], row["...mit Verwendbarkeit"])
+                kopie[row["_id"]] = kop_ver_id
+                v = util.veranstaltung.find_one({"_id": ObjectId(row["_id"])})
+                util.veranstaltung.update_one({"_id": kop_ver_id}, 
+                                        {"$set": 
+                                        {"rubrik": kopie[v["rubrik"]],
+                                        "code": [kopie[co] for co in v["code"]]}})
+            util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": kop_ver_id}})
+    st.success("Semester erfolgreich angelegt!")
+    util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, sem_id)} neu algelegt.")
     time.sleep(2)
     st.session_state.edit = ""
     st.session_state.page = "Veranstaltung"
@@ -353,3 +365,73 @@ def shortify(str1, str2):
     else:
         return None
 
+def next_semester_kurzname(kurzname):
+    a = int(kurzname[:4])
+    b = kurzname[4:]
+    return f"{a+1}SS" if b == "WS" else f"{a}WS"
+
+def semester_name_de(kurzname):
+    a = int(kurzname[:4])
+    b = kurzname[4:]
+    c = f"/{a+1}" if b == "WS" else ""
+    return f"{"Wintersemester" if b == "WS" else "Sommersemester"} {a}{c}"
+
+def semester_name_en(kurzname):
+    a = int(kurzname[:4])
+    b = kurzname[4:]
+    c = f"/{a+1}" if b == "WS" else ""
+    return f"{"Winter term" if b == "WS" else "Summer term"} {a}{c}"
+
+def new_semester_dict():
+    most_current_semester = util.semester.find_one({}, sort = [("rang", pymongo.DESCENDING)])
+    kurzname = next_semester_kurzname(most_current_semester["kurzname"])
+    name_de = semester_name_de(kurzname)
+    name_en = semester_name_en(kurzname)
+    return {"kurzname": kurzname, "name_de": name_de, "name_en": name_en, "rubrik":[], "code": [], "veranstaltung": [], "hp_sichtbar": True, "rang": most_current_semester["rang"]+1}
+
+def veranstaltung_anlegen(sem_id, rub_id, v_dict):
+    try:
+        r = util.veranstaltung.find_one({"semester": sem_id}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
+    except:
+        r = 0
+
+    v = {
+        "semester": sem_id,
+        "hp_sichtbar": False,
+        "name_de": "",
+        "name_en": "",
+        "midname_de": "",
+        "midname_en": "",
+        "kurzname": "",
+        "ects": "",
+        "rubrik": rub_id,
+        "code": [],
+        "url": "",
+        "kommentar_html_de": "",
+        "kommentar_html_en": "",
+        "rang": r,
+        "inhalt_de": "",
+        "inhalt_en":  "",
+        "literatur_de": "",
+        "literatur_en": "",
+        "vorkenntnisse_de": "",
+        "vorkenntnisse_en": "",
+        "kommentar_latex_de": "",
+        "kommentar_latex_en": "",
+        "verwendbarkeit_modul": [],
+        "verwendbarkeit_anforderung": [],
+        "verwendbarkeit": [], 
+        "dozent": [],
+        "assistent": [],
+        "organisation": [],
+        "woechentlicher_termin": [],
+        "einmaliger_termin": []
+    }
+    for key, value in v_dict.items():
+        v[key] = value
+    w = util.veranstaltung.insert_one(v)
+    util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, w.inserted_id)} angelegt.")
+    util.semester.update_one({"sem": st.session_state.semester_id}, {"$push": {"veranstaltung": w.inserted_id}})
+    util.rubrik.update_one({"_id": rub_id}, {"$push": {"veranstaltung": w.inserted_id}})
+    st.session_state.edit = w.inserted_id
+    return w.inserted_id

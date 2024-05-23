@@ -26,8 +26,22 @@ collection = util.veranstaltung
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
     st.header("Veranstaltungen")
-    # semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
-    # st.session_state.semester_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.current_semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
+    with st.popover(f'Neue Veranstaltung anlegen'):
+        name_de=st.text_input('Name (de)', "")
+        name_en=st.text_input('Name (en)', "")
+        kurzname=st.text_input('Kurzname', "", help = "Wird im Raumplan verwendet.")
+        kat = [g["_id"] for g in list(util.rubrik.find({"semester": st.session_state.semester_id}))]
+        kat = st.selectbox("Rubrik", [x for x in kat], index = 0, format_func = (lambda a: tools.repr(util.rubrik, a)))
+        v = {
+            "name_de": name_de,
+            "name_en": name_en,
+            "kurzname": kurzname,
+            "rubrik": kat,
+        }
+        submit = st.button("Veranstaltung anlegen", on_click=tools.veranstaltung_anlegen,   args = (st.session_state.semester_id, kat, v), type="primary")
+        if submit:
+            switch_page("veranstaltungen edit")
+
     if st.session_state.semester_id is not None:
         kat = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))
         for k in kat:

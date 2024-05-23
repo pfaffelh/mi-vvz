@@ -46,32 +46,38 @@ if st.session_state.logged_in:
     st.write(" ")
     x = util.semester.find_one({"_id": st.session_state.semester_id})
 
-    with st.popover(f'{tools.repr(collection, st.session_state.semester_id, False, False)} löschen', help = "Dieses Semester wird in der Tat aus der Datenbank gelöscht!"):
-        s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
-        if s:
-            st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
-        else:
-            st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
-        colu1, colu2, colu3 = st.columns([1,1,1])
-        with colu1:
-            submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
-        if submit:
-            tools.delete_semester(st.session_state.semester_id)
-            time.sleep(2)
-            semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
-            st.session_state.semester_id = semesters[0]["_id"]
-            st.session_state.edit = ""
-            st.rerun()
-        with colu3: 
-            st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
-    with st.expander(f'{tools.repr(collection, st.session_state.semester_id, False, False)} kopieren'):
-        st.write("Kopiere " + util.semester.find_one(x)["name_de"])
-        new_name_de = st.text_input('Name der Kopie (de)', "")
-        new_name_en = st.text_input('Name der Kopie (en)', "")
-        new_kurzname = st.text_input('Kurzname der Kopie', "")
+    col1, col2 = st.columns([1,1])
+    with col1:
+        st.write("Hier zurück ohne speichern Button")
+    with col2:
+        with st.popover(f'{tools.repr(collection, st.session_state.semester_id, False, False)} löschen', help = "Dieses Semester wird in der Tat aus der Datenbank gelöscht!"):
+            s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
+            if s:
+                st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
+            else:
+                st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
+            colu1, colu2, colu3 = st.columns([1,1,1])
+            with colu1:
+                submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+            if submit:
+                tools.delete_semester(st.session_state.semester_id)
+                time.sleep(2)
+                semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+                st.session_state.semester_id = semesters[0]["_id"]
+                st.session_state.edit = ""
+                st.rerun()
+            with colu3: 
+                st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+    with st.expander(f'Neues Semester anlegen'):
+        s = list(util.semester.find({}, sort = [("rang", pymongo.DESCENDING)]))
+        d = tools.new_semester_dict()
+        new_name_de = st.text_input('Name des angelegten Semesters (de)', d["name_de"], disabled = True)
+        new_name_en = st.text_input('Name des angelegten Semesters (en)', d["name_en"], disabled = True)
+        new_kurzname = st.text_input('Kurzname des angelegten Semesters', d["kurzname"], disabled = True)
         new_hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar", value = False, key=f'kopie-hp_sichtbar')
+        personen_uebernehmen = st.checkbox(f"Personen aus {s[0]['name_de']} in die Personenliste des Semesters übernehmen", value = True, key=f'personen_uebernehmen')
+        veranstaltungen_uebernehmen = st.checkbox(f"Veranstaltungen aus {s[1]['name_de']} übernehmen. (Rubriken und Codes von Veranstaltungen werden übernommen, URLs nicht.)", value = True, key=f'veranstaltungen_uebernehmen')
         last_sem_kurzname = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["kurzname"]
-        kopiere_personen = st.checkbox(f"Alle im {last_sem_kurzname} beteiligten Personen ins kopierte Semester übernehmen?", value = True, key=f'kopie-person')
         x_updated = {"name_de": new_name_de, 
                      "name_en": new_name_en, 
                      "kurzname": new_kurzname, 
@@ -79,24 +85,23 @@ if st.session_state.logged_in:
                      "rubrik": [], 
                      "code": [], 
                      "veranstaltung": [], 
-                     "rang": list(collection.find(sort = [("rang", pymongo.DESCENDING)]))[0]["rang"]+1
+                     "rang": s[0]["rang"]+1
                      }
-        st.write("Rubriken und Codes von Veranstaltungen werden übernommen, URLs nicht.")
-        kat_list = list(util.rubrik.find({"semester": x["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
+        rub_list = list(util.rubrik.find({"semester": s[1]["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
         ver_list = []
-        for k in kat_list:
-            ver_list.extend(list(util.veranstaltung.find({"rubrik": k["_id"]}, sort = [("rang", pymongo.ASCENDING)])))
-        kop_ver_list = st.multiselect("Zu kopierende Veranstaltungen", [v["_id"] for v in ver_list], [v["_id"] for v in ver_list], format_func = (lambda a: tools.repr(util.veranstaltung, a, False)))
-        g = [{"_id": v, "Name": tools.repr(util.veranstaltung, v, False), "Personen": False, "Termine": False, "Kommentare": False, "Verwendbarkeit": True} for v in kop_ver_list]
-        df = pd.DataFrame.from_records(g)
-        df_new = st.data_editor(
-            df, height = None, column_config = {"_id": None}, disabled=["Name"], hide_index = True)
-        st.button("Kopieren", on_click=tools.kopiere_semester, args = (x["_id"], x_updated, df_new, kopiere_personen), type="primary")
+        for r in rub_list:
+            ver_list.extend([v["_id"] for v in list(util.veranstaltung.find({"rubrik": r["_id"]}, sort = [("rang", pymongo.ASCENDING)]))])
+        g = [{"_id": v, "Name": tools.repr(util.veranstaltung, v, False), "Veranstaltung übernehmen": veranstaltungen_uebernehmen, "...mit Dozenten/Assistenten": False, "...mit Terminen": False, "...mit Kommentaren": False, "...mit Verwendbarkeit": True} for v in ver_list]
+        df = df_new = pd.DataFrame.from_records(g)
+        if veranstaltungen_uebernehmen:
+            df_new = st.data_editor(
+                df, height = None, column_config = {"_id": None}, disabled=["Name"], hide_index = True)
+        st.button("Semester anlegen", on_click=tools.semester_anlegen, args = (x_updated, df_new, personen_uebernehmen, veranstaltungen_uebernehmen), type="primary")
     with st.form(f'ID-{x["_id"]}'):
-        name_de = st.text_input('Name (de)', x["name_de"])
-        name_en = st.text_input('Name (en)', x["name_en"])
-        kurzname = st.text_input('Kurzname', x["kurzname"])
-        hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
+        name_de = st.text_input('Name (de)', x["name_de"], disabled = True)
+        name_en = st.text_input('Name (en)', x["name_en"], disabled = True)
+        kurzname = st.text_input('Kurzname', x["kurzname"], disabled = True)
+        hp_sichtbar = st.checkbox(f"Auf www.math... sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
         x_updated = {"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "hp_sichtbar": hp_sichtbar}
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
