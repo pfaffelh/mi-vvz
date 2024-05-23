@@ -30,12 +30,18 @@ if st.session_state.logged_in:
         name_de=st.text_input('Name (de)', "")
         name_en=st.text_input('Name (en)', "")
         kurzname=st.text_input('Kurzname', "", help = "Wird im Raumplan verwendet.")
+        pe = list(util.person.find({"semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort = [("name", pymongo.ASCENDING)]))
+        per_dict = {p["_id"]: tools.repr(util.person, p["_id"], False, True) for p in pe }
+        doz_list = st.multiselect("Dozent*innen", per_dict.keys(), [], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+        doz = list(util.person.find({"_id": {"$in": doz_list}}, sort=[("name", pymongo.ASCENDING)]))
+        doz_list = [d["_id"] for d in doz]
         kat = [g["_id"] for g in list(util.rubrik.find({"semester": st.session_state.semester_id}))]
         kat = st.selectbox("Rubrik", [x for x in kat], index = 0, format_func = (lambda a: tools.repr(util.rubrik, a)))
         v = {
             "name_de": name_de,
             "name_en": name_en,
             "kurzname": kurzname,
+            "dozent": doz_list,
             "rubrik": kat,
         }
         submit = st.button("Veranstaltung anlegen", on_click=tools.veranstaltung_anlegen,   args = (st.session_state.semester_id, kat, v), type="primary")
