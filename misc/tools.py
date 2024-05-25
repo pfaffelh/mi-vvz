@@ -374,7 +374,7 @@ def semester_name_de(kurzname):
     a = int(kurzname[:4])
     b = kurzname[4:]
     c = f"/{a+1}" if b == "WS" else ""
-    return f"{"Wintersemester" if b == "WS" else "Sommersemester"} {a}{c}"
+    return f"{'Wintersemester' if b == 'WS' else 'Sommersemester'} {a}{c}"
 
 def semester_name_en(kurzname):
     a = int(kurzname[:4])
