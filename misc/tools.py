@@ -380,7 +380,7 @@ def semester_name_en(kurzname):
     a = int(kurzname[:4])
     b = kurzname[4:]
     c = f"/{a+1}" if b == "WS" else ""
-    return f"{"Winter term" if b == "WS" else "Summer term"} {a}{c}"
+    return f"{'Winter term' if b == 'WS' else 'Summer term'} {a}{c}"
 
 def new_semester_dict():
     most_current_semester = util.semester.find_one({}, sort = [("rang", pymongo.DESCENDING)])
