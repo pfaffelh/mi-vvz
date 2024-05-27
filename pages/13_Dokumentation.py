@@ -38,8 +38,8 @@ if st.session_state.logged_in:
             st.markdown("[💁 Dozent*innen]", help = "Eine Liste an Dozent*innen für diese Veranstaltung.")
             st.markdown("[💁 Assistent*innen]", help = "Eine Liste an Assistent*innen für diese Veranstaltung.")
             st.markdown("[💁 Organisator*innen]", help = "Eine Liste an Organisator*innen für diese Veranstaltung.")
-            st.markdown("Ein wöchentlicher Termine besteht aus _Art_ (z.B. Vorlesung), ⛺ _Raum_, _Wochentag_, _Beginn_, _Ende_, _Kommentar_. Von diesen wird eine Liste angelegt, wobei _Wochentag_, _Beginn_ und _Ende_ nicht belegt sein müssen. (_Raum_ muss belegt sein, aber es gibt einen leeren Raum.)")
-            st.markdown("Einmalige Termine sind momentan in der Datenbank hinterlegt, jedoch in der App nicht befüllbar, da sie in einem eigenen Kalender verwaltet werden.")
+            st.markdown("Ein wöchentlicher Termine besteht aus _Terminart_ (z.B. Vorlesung), ⛺ _Raum_, [💁 _Person_], _Wochentag_, _Beginn_, _Ende_, _Kommentar_. Von diesen wird eine Liste angelegt, wobei _Wochentag_, _Beginn_ und _Ende_ nicht belegt sein müssen. (_Raum_ muss belegt sein, aber es gibt einen leeren Raum.)")
+            st.markdown("Ein einmaliger Termine besteht aus Terminart_ (z.B. Vorbesprechung), [⛺ _Raum_], [💁 _Person_], _Beginn (mit Datum)_, _Ende (mit Datum)_, _Kommentar_. ")
         with col3: 
             st.markdown("#### Kommentiertes Vorlesungsverzeichnis")
             st.markdown("Hier werden Informationen hinterlegt, etwa (jeweils de und en) _Inhalt_, _Literatur_, _Vorkenntnisse_, und ein _Kommentar_.")
@@ -50,7 +50,7 @@ if st.session_state.logged_in:
             st.markdown("[🕮 Anforderung]", help = "Liste der möglichen Anforderungen in den einzelnen Modulen.")
             st.markdown("[(🕮 Modul, 🕮 Anforderung)]", help = "Liste aus Tupeln aus Modul und Anforderung. Werden alle Anforderungen erfüllt, kann die Veranstaltung im entsprechenden Modul verbucht werden.")            
         st.divider()
-        col1, col2, col3 = st.columns([1,1,1])
+        col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
             st.markdown("### 🖉 Rubrik")
             st.markdown("(einer Veranstaltung.) Es gibt Felder (jeweils auf deutsch (de) und englisch (en) mit der Reihenfolge in der Anzeige einer Rubrik:  \n* Prefix  \n* Titel  \n* Untertitel  \n* Suffix")
@@ -59,10 +59,15 @@ if st.session_state.logged_in:
             st.markdown("[🎈 Veranstaltung]", help = "Eine Liste von Veranstaltungen, die zu dieser Rubrik gehören.")
         with col2: 
             st.markdown("### ∞ Code")
-            st.markdown("(einer Veranstaltung.) Hier ist _Name_ ein Kürzel, der _Beschreibung_ abkürzen soll. (Letzteres gibt es in de und en.) Wieder gibt es _Rang_, _hp_sichtbar_ und _kommentar_. Wie bei _Rubrik_ gibt es:")
+            st.markdown("(einer Veranstaltung.) Hier ist _Name_ ein Kürzel, der _Beschreibung_ abkürzen soll. (Letzteres gibt es in de und en.) Wieder gibt es _Rang_ und _kommentar_. Wie bei _Rubrik_ gibt es:")
             st.markdown("📅 Semester", help =  "Das eindeutige Semester, in dem es diesen Code gibt")
             st.markdown("[🎈 Veranstaltung]", help = "Eine Liste von Veranstaltungen des entsprechenden Semesters, die diesen Code tragen.")
-        with col3:
+        with col3: 
+            st.markdown("### ∞ Codekategorie")
+            st.markdown("(eines Codes.) Hier ist _Name_de_ eine Beschreibung einer solchen Kategorie. Wir denken z.B. an Codekategorie=Sprache, Code=Angebot auf englisch, oder Codekategorie=Evaluation, Code=wird evaluiert. _hp_sichtbar_ gibt an, ob diese Unterscheidungen auf der Homepage angezeigt werden sollen oder nicht. Wie bei _Rubrik_ gibt es:")
+            st.markdown("📅 Semester", help =  "Das eindeutige Semester, in dem es diesen Code gibt")
+            st.markdown("[∞ Code]", help = "Eine Liste von Codes des entsprechenden Semesters, die in diese Codekategorie fallen.")
+        with col4:
             st.markdown("### 📅  Semester")
             st.markdown("Es gibt _Name_ (de und en), jeweils Langnamen für das Semester.")
             st.markdown("Ein _Kurzname_ (z.B. 2024SS), wird in vielen Anzeichen verwendet, und auch zum Sortieren der Semester.")
@@ -72,7 +77,7 @@ if st.session_state.logged_in:
             st.markdown("[∞ Code]", help="Gibt eine Liste der _identifier_ der Codes an (z.B. B: Pflicht im BSc), die es in diesem Semester gibt.")
             st.markdown("[🎈 Veranstaltung]", help="Gibt eine Liste der _identifier_ der Veranstaltungen an, die es in diesem Semester gibt.")
         st.divider()
-        col1, col2, col3 = st.columns([1,1,1])
+        col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
             st.markdown("### ⛺ Raum")
             st.markdown("_Name_ (de und en) und _Kurzname_ beschreiben den Raum. Der _Kurzname_ wird dabei z.B. in den Darstellungen der Veranstaltungen eines Semesters verwendet. Die _Größe_ gibt die Anzahl der verfügbaren Sitzplätze an, und es gibt ein Feld _Kommentar_. _sichtbar_ gibt die Verfügbarkeit in Auswahllisten an.")
@@ -85,6 +90,9 @@ if st.session_state.logged_in:
             st.markdown("Es gibt die selbsterklärenden Felder _Name_, _Vorname_, _titel_, _tel_ und _email_. Der _name_prefix_ ist zumeist eine Abkürzung des Vornames und wird bei der Semesterdarstellung verwendet. Die Bool'schen Variablen _sichtbar_ und _hp_sichtbar_ geben die Sichtbarkeit an. Der _Kurzname_ wir zwar weitergeführt, wird aber nicht mehr verwendet.")
             st.markdown("[🎈 Veranstaltung]", help = "Eine Liste der Veranstaltungen, die mit der Person in Verbindung stehen.")
             st.markdown("[📅  Semester]", help = "Eine Liste der Semester, die die Person am Mathematischen Institut verbracht hat (und dort Lehre gemacht hat).")
+        with col4:
+            st.markdown("### Terminart")
+            st.markdown("Art eines Termins, z.B. _Vorlesung_ oder _Klausur_. Es gibt die selbsterklärenden Felder _name_de_, _name_en_, sowie true/false-Variablen, die anzeigt sollen, ob diese Termineart auf Homepage und/oder den Kommentaren erscheinen soll.")
         st.divider()
         col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
