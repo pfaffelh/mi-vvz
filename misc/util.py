@@ -249,7 +249,7 @@ def setup_session_state():
                     {"collection": veranstaltung, "field": "organisation", "list": True}, 
                     {"collection": veranstaltung, "field": "einmaliger_termin.person", "list": False}, 
                     {"collection": veranstaltung, "field": "woechentlicher_termin.person", "list": False}],
-        studiengang:[{"collection": modul, "field": "studiengang", "list": True}],  
+        studiengang:[{"collection": modul, "field": "studiengang", "list": True}],
         modul:     [{"collection": studiengang, "field": "modul", "list": True}, 
                     {"collection": veranstaltung, "field": "verwendbarkeit_modul", "list": True},
                     {"collection": veranstaltung, "field": "verwendbarkeit.modul", "list": False}],

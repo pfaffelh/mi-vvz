@@ -155,7 +155,7 @@ if st.session_state.logged_in:
         wt = x["woechentlicher_termin"]
         woechentlicher_termin = []
         for i, w in enumerate(wt):
-            cols = st.columns([1,1,5,5,5,5,5,5,1])
+            cols = st.columns([1,1,10,5,5,5,1])
             with cols[0]:
                 st.write("")
                 st.write("")
@@ -183,17 +183,20 @@ if st.session_state.logged_in:
                 ende_display = w["ende"] if w["ende"] else None # datetime.time(9, 00)
                 w_ende = st.time_input("Ende", ende_display, key =f"termin_{i}_ende", step=3600)
             with cols[6]:
+                st.write("")
+                st.write("")
+                st.button('✕', key=f'close-w-{i}', on_click = tools.remove_from_list, args = (collection, x["_id"], "woechentlicher_termin", w,))
+            cols = st.columns([1,1,5,5,15,1])
+            with cols[2]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
                 index = [g["_id"] for g in termin_raum].index(w["raum"])
                 w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
-                #                termin_raum_person_list = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
-            with cols[7]:
+            with cols[3]:
+                w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"termin_{i}_person")
+            with cols[4]:
                 w_kommentar = st.text_input("Kommentar", w["kommentar"], key =f"termin_{i}_kommentar")
-            with cols[8]:
-                st.write("")
-                st.write("")
-                st.button('✕', key=f'close-w-{i}', on_click = tools.remove_from_list, args = (collection, x["_id"], "woechentlicher_termin", w,))
+            #st.divider()
             woechentlicher_termin.append({
                 "key": w_key,
                 "raum": w_raum,
@@ -202,6 +205,7 @@ if st.session_state.logged_in:
                 "wochentag": w_wochentag if w_wochentag is not None else "", 
                 "start": None if w_start == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_start),
                 "ende": None if w_ende == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_ende),
+                "person": w_person,
                 "kommentar": w_kommentar
             })
         ver_updated = {
@@ -217,7 +221,7 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             tools.update_confirm(collection, x, ver_updated, reset = False)
             leerer_termin = {
-                "key": util.leer[util.terminart],
+                "key": util.terminart.find_one({"name_de": "-"})["_id"],
                 "kommentar": "",
                 "wochentag": "",
                 "raum": util.raum.find_one({"name_de": "-"})["_id"],
@@ -232,7 +236,7 @@ if st.session_state.logged_in:
         wt = x["einmaliger_termin"]
         einmaliger_termin = []
         for i, w in enumerate(wt):
-            cols = st.columns([1,1,5,5,5,5,5,1])
+            cols = st.columns([1,1,10,5,5,5,1])
             with cols[0]:
                 st.write("")
                 st.write("")
@@ -246,28 +250,31 @@ if st.session_state.logged_in:
                 index = ta.index(w["key"])
                 w_key = st.selectbox("", ta, index = index, format_func = (lambda a: tools.repr(st.session_state.terminart, a)), key = f"et_{i}")
             with cols[3]:
-                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
-                termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in termin_raum }
-                w_raum = st.multiselect("Raum", termin_raum_dict.keys(), w["raum"], format_func = (lambda a: termin_raum_dict[a]), placeholder = "Bitte auswählen", key = f"einmaliger_termin_{i}_raum")
-                #                termin_raum_person_list = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
-            with cols[4]:
                 w_startdatum = st.date_input("Start", value = None if w["startdatum"] == None else w["startdatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_startdatum")
                 #st.write(type(w_startdatum))
                 w_startdatum = None if w_startdatum == None else datetime.datetime.combine(w_startdatum, datetime.time(hour = 0, minute = 0))
-                w_startzeit = st.time_input("", value = w["startzeit"], key = f"einmaliger_termin_{i}_startzeit")
-                w_startzeit = None if w_startzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_startzeit)
-                #st.write(type(w_startzeit))
-            with cols[5]:
+            with cols[4]:
                 w_enddatum = st.date_input("Ende", value = w["enddatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_enddatum")
                 w_enddatum = None if w_enddatum == None else datetime.datetime.combine(w_enddatum, datetime.time(hour = 0, minute = 0))                                           
-                w_endzeit = st.time_input("", value = w["endzeit"], key = f"einmaliger_termin_{i}_endzeit")
-                w_endzeit = None if w_endzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_endzeit)
-            with cols[6]:
+            with cols[5]:
                 w_kommentar = st.text_input("Kommentar", w["kommentar"], key =f"einmaliger_termin_{i}_kommentar")
-            with cols[7]:
+            with cols[6]:
                 st.write("")
                 st.write("")
                 st.button('✕', key=f'close-e-{i}', on_click = tools.remove_from_list, args = (collection, x["_id"], "einmaliger_termin", w,))
+            cols = st.columns([1,1,5,5,5,5,5,1])
+            with cols[2]:
+                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
+                termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in termin_raum }
+                w_raum = st.multiselect("Raum", termin_raum_dict.keys(), w["raum"], format_func = (lambda a: termin_raum_dict[a]), placeholder = "Bitte auswählen", key = f"einmaliger_termin_{i}_raum")
+            with cols[3]:
+                w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"etermin_{i}_person")
+            with cols[4]:
+                w_startzeit = st.time_input("", value = w["startzeit"], key = f"einmaliger_termin_{i}_startzeit")
+                w_startzeit = None if w_startzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_startzeit)
+            with cols[5]:
+                w_endzeit = st.time_input("", value = w["endzeit"], key = f"einmaliger_termin_{i}_endzeit")
+                w_endzeit = None if w_endzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_endzeit)
             einmaliger_termin.append({
                 "key": w_key,
                 "raum": w_raum,
@@ -295,7 +302,7 @@ if st.session_state.logged_in:
             tools.update_confirm(collection, x, ver_updated, reset = False)
         if neuer_termin:
             leerer_termin = {
-                "key": util.leer[util.terminart],
+                "key": util.terminart.find_one({"name_de": "-"})["_id"],
                 "kommentar": "",
                 "raum": [],
                 "person": [],
