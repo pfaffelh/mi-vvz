@@ -24,11 +24,20 @@ tools.display_navigation()
 # Es geht hier vor allem um diese Collection:
 collection = util.gebaeude
 
+new_entry = False
+
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Gebäude")
-    x = collection.find_one({"_id": st.session_state.edit})
-    st.subheader(tools.repr(collection, x["_id"]))
+
+    # check if entry can be found in database
+    if st.session_state.edit == "new":
+        new_entry = True
+        x = st.session_state.new[collection]
+        x["_id"] = "new"
+    else:
+        x = collection.find_one({"_id": st.session_state.edit})
+        st.subheader(tools.repr(collection, x["_id"]))
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -36,18 +45,19 @@ if st.session_state.logged_in:
             switch_page("Gebäude")
     with col2:
         with st.popover('Gebäude löschen'):
-            s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
-            if s:
-                st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
-            else:
-                st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
-            colu1, colu2, colu3 = st.columns([1,1,1])
-            with colu1:
-                submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
-            if submit:
-                tools.delete_item_update_dependent_items(collection, x["_id"])
-            with colu3: 
-                st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+            if not new_entry:
+                s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
+                if s:
+                    st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
+                else:
+                    st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
+                colu1, colu2, colu3 = st.columns([1,1,1])
+                with colu1:
+                    submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                if submit:
+                    tools.delete_item_update_dependent_items(collection, x["_id"])
+                with colu3: 
+                    st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         
 
     with st.form(f'ID-{x["_id"]}'):
@@ -61,6 +71,9 @@ if st.session_state.logged_in:
         x_updated = ({"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "adresse": adresse, "url": url, "sichtbar": sichtbar, "kommentar": kommentar})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
+            if new_entry:
+                tools.new(collection, switch=False)
+
             tools.update_confirm(collection, x, x_updated, )
             time.sleep(2)
             st.session_state.edit = ""
