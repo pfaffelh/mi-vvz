@@ -31,7 +31,8 @@ if st.session_state.logged_in:
     co1, co2, co3 = st.columns([1,1,23]) 
     with co3:
         if st.button('**Neuen Studiengang hinzufügen**'):
-            tools.new(collection)
+            st.session_state.edit = "new"
+            switch_page("studiengänge edit")
 
     y = list(collection.find(sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
