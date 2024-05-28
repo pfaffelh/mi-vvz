@@ -30,7 +30,8 @@ if st.session_state.logged_in:
     co1, co2, co3 = st.columns([1,1,23]) 
     with co3:
         if st.button('**Neue Person hinzufügen**'):
-            tools.new(collection)
+            st.session_state.edit = "new"
+            switch_page("personen edit")
 
     y = list(collection.find({"semester": { "$elemMatch": {"$eq": st.session_state.semester_id}}}, sort=[("name", pymongo.ASCENDING)]))
     for x in y:

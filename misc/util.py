@@ -83,6 +83,9 @@ def setup_session_state():
     # Element to edit
     if "edit" not in st.session_state:
         st.session_state.edit = ""
+    # Data of element that get's edited
+    if "edit_data" not in st.session_state:
+        st.session_state.edit_data = dict()
     # Determines which page we are on
     if "page" not in st.session_state:
         st.session_state.page = ""
