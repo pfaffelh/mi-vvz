@@ -66,7 +66,7 @@ if st.session_state.logged_in:
         hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
         col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
         with col1:
-            name=st.text_input('Name (de)', x["name"], disabled = (True if x["_id"] == util.leer[collection] else False))
+            name=st.text_input('Name (de)', x["name"], disabled = (True if not new_entry and x["_id"] == util.leer[collection] else False))
         with col2:
             vorname=st.text_input('Vorname', x["vorname"])
         with col3:
