@@ -27,22 +27,15 @@ collection = util.person
 if st.session_state.logged_in:
     st.header("Personen")
     st.write(" ")
-    co1, co2, co3 = st.columns([1,1,23]) 
-    with co3:
-        if st.button('**Neue Person hinzufügen**'):
-            st.session_state.edit = "new"
-            switch_page("personen edit")
+
+    if st.button('**Neue Person hinzufügen**'):
+        st.session_state.edit = "new"
+        switch_page("personen edit")
 
     y = list(collection.find({"semester": { "$elemMatch": {"$eq": st.session_state.semester_id}}}, sort=[("name", pymongo.ASCENDING)]))
     for x in y:
-        co1, co2, co3 = st.columns([1,1,23]) 
-#        with co1: 
-#            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
-#        with co2:
-#            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
-        with co3:
-            abk = f"{x['name'].strip()}, {x['vorname'].strip()}".strip()
-            submit = st.button(abk, key=f"edit-{x['_id']}")
+        abk = f"{x['name'].strip()}, {x['vorname'].strip()}".strip()
+        submit = st.button(abk, key=f"edit-{x['_id']}")
         if submit:
             st.session_state.edit = x["_id"]
             switch_page("personen edit")
