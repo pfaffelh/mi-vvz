@@ -26,6 +26,7 @@ collection = util.anforderung
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Anforderungen")
+    st.markdown("Zu den [Anforderungskategorien](#anforderungskategorien).")
     st.write("Mit 😎 markierte Anforderungen sind in Auswahlmenüs sichtbar.")
     st.write(" ")
     co1, co2, co3 = st.columns([1,1,23]) 
