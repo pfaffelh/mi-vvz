@@ -86,6 +86,9 @@ def setup_session_state():
     # Determines which page we are on
     if "page" not in st.session_state:
         st.session_state.page = ""
+    # saving tmp data for new termine
+    if "veranstaltung_tmp" not in st.session_state:
+        st.session_state.veranstaltung_tmp = dict()
 
     st.session_state.collection_name = {
         anforderung: "Anforderungen",

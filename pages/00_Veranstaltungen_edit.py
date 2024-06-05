@@ -33,6 +33,26 @@ collection = util.veranstaltung
 ver_updated_all = dict()
 save_all = False
 
+# setup tmp data
+if "woechentliche_termine" not in st.session_state.veranstaltung_tmp:
+    st.session_state.veranstaltung_tmp["woechentliche_termine"] = []
+if "einmalige_termine" not in st.session_state.veranstaltung_tmp:
+    st.session_state.veranstaltung_tmp["einmalige_termine"] = []
+
+def clear_tmp():
+    st.session_state.veranstaltung_tmp["woechentliche_termine"].clear()
+    st.session_state.veranstaltung_tmp["einmalige_termine"].clear()
+
+def push_termine():
+    for termin in st.session_state.veranstaltung_tmp["woechentliche_termine"]:
+        util.veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"woechentlicher_termin": termin}})
+    for termin in st.session_state.veranstaltung_tmp["einmalige_termine"]:
+        util.veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"einmaliger_termin": termin}})
+    # clear tmp data
+    clear_tmp()
+
+
+
 semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
 # Ab hier wird die Seite angezeigt
@@ -43,6 +63,7 @@ if st.session_state.logged_in:
 
     with col1:
         if st.button("Zurück ohne Speichern"):
+            clear_tmp()
             switch_page("Veranstaltungen")
     with col2:
         if st.button("Alles Speichern", type = 'primary'):
@@ -153,6 +174,12 @@ if st.session_state.logged_in:
 
         st.subheader("Wöchentliche Termine")
         wt = x["woechentlicher_termin"]
+
+        # check for new termine in session state
+        if "woechentliche_termine" in st.session_state.veranstaltung_tmp:
+            for termin in st.session_state.veranstaltung_tmp["woechentliche_termine"]:
+                wt.append(termin)
+
         woechentlicher_termin = []
         for i, w in enumerate(wt):
             cols = st.columns([1,1,10,5,5,5,1])
@@ -219,7 +246,6 @@ if st.session_state.logged_in:
         neuer_termin = st.button('Neuer Termin', key = "neuer_wöchentlicher_termin")
         if neuer_termin:
             st.session_state.expanded = "termine"
-            tools.update_confirm(collection, x, ver_updated, reset = False)
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
                 "kommentar": "",
@@ -229,11 +255,17 @@ if st.session_state.logged_in:
                 "start": None,
                 "ende": None
             }
-            util.veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"woechentlicher_termin": leerer_termin}})
+            st.session_state.veranstaltung_tmp["woechentliche_termine"].append(leerer_termin)
             st.rerun()
 
         st.subheader("Einmalige Termine")
         wt = x["einmaliger_termin"]
+
+        # check for new termine in session state
+        if "einmalige_termine" in st.session_state.veranstaltung_tmp:
+            for termin in st.session_state.veranstaltung_tmp["einmalige_termine"]:
+                wt.append(termin)
+
         einmaliger_termin = []
         for i, w in enumerate(wt):
             cols = st.columns([1,1,10,5,5,5,1])
@@ -297,9 +329,7 @@ if st.session_state.logged_in:
 
         neuer_termin = st.button('Neuer Termin', key = "neuer_einmaliger_termin")
         submit = st.button('Speichern (Personen, Termine) ', type = 'primary', key = "speichern_einmaliger_termin")
-        if neuer_termin or submit:
-            st.session_state.expanded = "termine"
-            tools.update_confirm(collection, x, ver_updated, reset = False)
+
         if neuer_termin:
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
@@ -311,8 +341,13 @@ if st.session_state.logged_in:
                 "enddatum": None,
                 "endzeit": None
             }
-            util.veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"einmaliger_termin": leerer_termin}})
+            st.session_state.veranstaltung_tmp["einmalige_termine"].append(leerer_termin)
             st.rerun()
+
+        if submit:
+            st.session_state.expanded = "termine"
+            push_termine()
+            tools.update_confirm(collection, x, ver_updated, reset = False)
 
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
         inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
@@ -397,7 +432,9 @@ if st.session_state.logged_in:
             tools.update_confirm(util.veranstaltung, x, x_updated, False,)
 
     if save_all:
+        push_termine()
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
+        clear_tmp()
         switch_page("Veranstaltungen")
 
 else: 
