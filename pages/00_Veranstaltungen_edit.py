@@ -34,23 +34,54 @@ ver_updated_all = dict()
 save_all = False
 
 # setup tmp data
-if "woechentliche_termine" not in st.session_state.veranstaltung_tmp:
-    st.session_state.veranstaltung_tmp["woechentliche_termine"] = []
-if "einmalige_termine" not in st.session_state.veranstaltung_tmp:
-    st.session_state.veranstaltung_tmp["einmalige_termine"] = []
+# termine that are not saved yet
+if "woechentlicher_termin" not in st.session_state.veranstaltung_tmp:
+    st.session_state.veranstaltung_tmp["woechentlicher_termin"] = []
+if "einmaliger_termin" not in st.session_state.veranstaltung_tmp:
+    st.session_state.veranstaltung_tmp["einmaliger_termin"] = []
+
+# list of ids getting removed after save
+if "woechentlicher_termin_removed" not in st.session_state.veranstaltung_tmp:
+    st.session_state.veranstaltung_tmp["woechentlicher_termin_removed"] = []
+if "einmaliger_termin_removed" not in st.session_state.veranstaltung_tmp:
+    st.session_state.veranstaltung_tmp["einmaliger_termin_removed"] = []
 
 def clear_tmp():
-    st.session_state.veranstaltung_tmp["woechentliche_termine"].clear()
-    st.session_state.veranstaltung_tmp["einmalige_termine"].clear()
+    st.session_state.veranstaltung_tmp["woechentlicher_termin"].clear()
+    st.session_state.veranstaltung_tmp["einmaliger_termin"].clear()
+    st.session_state.veranstaltung_tmp["woechentlicher_termin_removed"].clear()
+    st.session_state.veranstaltung_tmp["einmaliger_termin_removed"].clear()
 
-def push_termine():
-    for termin in st.session_state.veranstaltung_tmp["woechentliche_termine"]:
+def sync_termine():
+    # push not saved termine
+    for termin in st.session_state.veranstaltung_tmp["woechentlicher_termin"]:
+        termin["_id"] = util.terminart.find_one({"name_de": "-"})["_id"] 
         util.veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"woechentlicher_termin": termin}})
-    for termin in st.session_state.veranstaltung_tmp["einmalige_termine"]:
+    for termin in st.session_state.veranstaltung_tmp["einmaliger_termin"]:
+        termin["_id"] = util.terminart.find_one({"name_de": "-"})["_id"] 
         util.veranstaltung.update_one({"_id": x["_id"]}, { "$push": {"einmaliger_termin": termin}})
-    # clear tmp data
+
+    # delete temporary deleted termine
+    for id in st.session_state.veranstaltung_tmp["woechentlicher_termin_removed"]:
+        wt = x["woechentlicher_termin"]
+        tools.remove_from_list(collection, x["_id"], "woechentlicher_termin", wt[id])
+
     clear_tmp()
 
+
+def remove_termin(tmp_id_start, id, field):
+    # remove temporary termin
+    if id >= tmp_id_start:
+        st.session_state.veranstaltung_tmp[field].pop(id - tmp_id_start)
+    else:
+        st.session_state.veranstaltung_tmp[field + "_removed"].append(id)
+        print(st.session_state.veranstaltung_tmp[field + "_removed"])
+        #tools.remove_from_list(collection, x["_id"], "woechentlicher_termin", w)
+    st.rerun()
+
+def write_tmp(i_tmp_start, field, termine):
+    for i in range(0, len(termine) - i_tmp_start):
+        st.session_state.veranstaltung_tmp[field][i] = termine[tmp_id_start + i]
 
 
 semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
@@ -177,12 +208,17 @@ if st.session_state.logged_in:
 
         # check for new termine in session state
         tmp_id_start = len(wt)
-        if "woechentliche_termine" in st.session_state.veranstaltung_tmp:
-            for termin in st.session_state.veranstaltung_tmp["woechentliche_termine"]:
+        if "woechentlicher_termin" in st.session_state.veranstaltung_tmp:
+            for termin in st.session_state.veranstaltung_tmp["woechentlicher_termin"]:
                 wt.append(termin)
+        termin_remove_id = -1 # id which was removed -1 => no entry removed
 
         woechentlicher_termin = []
         for i, w in enumerate(wt):
+            # skip temporary removed temine
+            if i in st.session_state.veranstaltung_tmp["woechentlicher_termin_removed"]:
+                continue
+
             cols = st.columns([1,1,10,5,5,5,1])
             with cols[0]:
                 st.write("")
@@ -215,7 +251,9 @@ if st.session_state.logged_in:
             with cols[6]:
                 st.write("")
                 st.write("")
-                st.button('✕', key=f'close-w-{i}', on_click = tools.remove_from_list, args = (collection, x["_id"], "woechentlicher_termin", w,))
+                if st.button('✕', key=f'close-w-{i}'):
+                    termin_remove_id = i
+
             cols = st.columns([1,1,5,5,15,1])
             with cols[2]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
@@ -246,6 +284,12 @@ if st.session_state.logged_in:
         }
         ver_updated_all.update(ver_updated)
 
+        write_tmp(tmp_id_start, "woechentlicher_termin", woechentlicher_termin)
+
+        if termin_remove_id >= 0:
+            remove_termin(tmp_id_start, termin_remove_id, "woechentlicher_termin")
+
+
         neuer_termin = st.button('Neuer Termin', key = "neuer_wöchentlicher_termin")
         if neuer_termin:
             st.session_state.expanded = "termine"
@@ -258,7 +302,7 @@ if st.session_state.logged_in:
                 "start": None,
                 "ende": None
             }
-            st.session_state.veranstaltung_tmp["woechentliche_termine"].append(leerer_termin)
+            st.session_state.veranstaltung_tmp["woechentlicher_termin"].append(leerer_termin)
             st.rerun()
 
         st.subheader("Einmalige Termine")
@@ -266,12 +310,17 @@ if st.session_state.logged_in:
 
         # check for new termine in session state
         tmp_id_start = len(wt)
-        if "einmalige_termine" in st.session_state.veranstaltung_tmp:
-            for termin in st.session_state.veranstaltung_tmp["einmalige_termine"]:
+        if "einmaliger_termin" in st.session_state.veranstaltung_tmp:
+            for termin in st.session_state.veranstaltung_tmp["einmaliger_termin"]:
                 wt.append(termin)
+        termin_remove_id = -1 # id which was removed -1 => no entry removed
 
         einmaliger_termin = []
         for i, w in enumerate(wt):
+            # skip temporary removed temine
+            if i in st.session_state.veranstaltung_tmp["einmaliger_termin_removed"]:
+                continue
+
             cols = st.columns([1,1,10,5,5,5,1])
             with cols[0]:
                 st.write("")
@@ -299,7 +348,9 @@ if st.session_state.logged_in:
             with cols[6]:
                 st.write("")
                 st.write("")
-                st.button('✕', key=f'close-e-{i}', on_click = tools.remove_from_list, args = (collection, x["_id"], "einmaliger_termin", w,))
+                if st.button('✕', key=f'close-e-{i}'):
+                    termin_remove_id = i
+
             cols = st.columns([1,1,5,5,5,5,5,1])
             with cols[2]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
@@ -333,6 +384,12 @@ if st.session_state.logged_in:
         }
         ver_updated_all.update(ver_updated)
 
+        write_tmp(tmp_id_start, "einmaliger_termin", einmaliger_termin)
+
+        if termin_remove_id >= 0:
+            remove_termin(tmp_id_start, termin_remove_id, "einmaliger_termin")
+
+
         neuer_termin = st.button('Neuer Termin', key = "neuer_einmaliger_termin")
         submit = st.button('Speichern (Personen, Termine) ', type = 'primary', key = "speichern_einmaliger_termin")
 
@@ -347,12 +404,12 @@ if st.session_state.logged_in:
                 "enddatum": None,
                 "endzeit": None
             }
-            st.session_state.veranstaltung_tmp["einmalige_termine"].append(leerer_termin)
+            st.session_state.veranstaltung_tmp["einmaliger_termin"].append(leerer_termin)
             st.rerun()
 
         if submit:
             st.session_state.expanded = "termine"
-            push_termine()
+            sync_termine()
             tools.update_confirm(collection, x, ver_updated, reset = False)
             st.rerun()
 
@@ -439,7 +496,7 @@ if st.session_state.logged_in:
             tools.update_confirm(util.veranstaltung, x, x_updated, False,)
 
     if save_all:
-        push_termine()
+        sync_termine()
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
         clear_tmp()
         switch_page("Veranstaltungen")
