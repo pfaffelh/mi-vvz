@@ -94,7 +94,6 @@ if st.session_state.logged_in:
 
     with col1:
         if st.button("Zurück (ohne Speichern)"):
-            clear_tmp()
             switch_page("Veranstaltungen")
     with col2:
         if st.button("Alles Speichern", type = 'primary'):
@@ -504,7 +503,7 @@ if st.session_state.logged_in:
     if save_all:
         sync_termine()
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
-        clear_tmp()
+        time.sleep(2)
         switch_page("Veranstaltungen")
 
 else: 
