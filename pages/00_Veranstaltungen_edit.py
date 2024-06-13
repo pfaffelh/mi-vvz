@@ -410,6 +410,7 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             sync_termine()
             tools.update_confirm(collection, x, ver_updated, reset = False)
+            time.sleep(0.1) ## to show toast
             st.rerun()
 
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
