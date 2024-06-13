@@ -75,8 +75,6 @@ def remove_termin(tmp_id_start, id, field):
         st.session_state.veranstaltung_tmp[field].pop(id - tmp_id_start)
     else:
         st.session_state.veranstaltung_tmp[field + "_removed"].append(id)
-        print(st.session_state.veranstaltung_tmp[field + "_removed"])
-        #tools.remove_from_list(collection, x["_id"], "woechentlicher_termin", w)
     st.rerun()
 
 def write_tmp(i_tmp_start, field, termine):
@@ -93,7 +91,7 @@ if st.session_state.logged_in:
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
     with col1:
-        if st.button("Zurück ohne Speichern"):
+        if st.button("Zurück (ohne Speichern)"):
             clear_tmp()
             switch_page("Veranstaltungen")
     with col2:
@@ -434,10 +432,16 @@ if st.session_state.logged_in:
         }
         ver_updated_all.update(ver_updated)
 
-        submit = st.button('Speichern (Kommentiertes Vorlesungsverzeichnis)', type = 'primary')
+        col1_button, col2_button = st. columns([2,5])
+        with col1_button:
+            submit = st.button('Speichern (Kommentiertes Vorlesungsverzeichnis)', type = 'primary')
         if submit:
             st.session_state.expanded = "kommentiertes_VVZ"
             tools.update_confirm(collection, x, ver_updated, reset = False)
+        with col2_button:
+            translate = st.button("Übersetzungsvorschlag")
+        if translate:
+            pass
 
     ## Verwendbarkeiten
     with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
