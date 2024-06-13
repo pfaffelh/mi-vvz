@@ -218,16 +218,16 @@ if st.session_state.logged_in:
                 continue
 
             cols = st.columns([1,1,10,5,5,5,1])
+            disable_move = ((len(st.session_state.veranstaltung_tmp["woechentlicher_termin_removed"])) > 0)  or i >= tmp_id_start
             with cols[0]:
                 st.write("")
                 st.write("")
-                disable = False if tmp_id_start > i else True 
-                st.button('↓', key=f'down-w-{i}', on_click = tools.move_down_list, args = (collection, x["_id"], "woechentlicher_termin", w,), disabled=disable)
+                st.button('↓', key=f'down-w-{i}', on_click = tools.move_down_list, args = (collection, x["_id"], "woechentlicher_termin", w,), disabled=disable_move)
             with cols[1]:
                 st.write("")
                 st.write("")
                 disable = False if tmp_id_start > i else True 
-                st.button('↑', key=f'up-w-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "woechentlicher_termin", w,), disabled=disable)
+                st.button('↑', key=f'up-w-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "woechentlicher_termin", w,), disabled=disable_move)
             with cols[2]:
                 terminart_list = list(util.terminart.find({}, sort = [("rang", pymongo.ASCENDING)]))
                 terminart_dict = {r["_id"]: tools.repr(util.terminart, r["_id"], show_collection = False) for r in terminart_list}
@@ -320,16 +320,15 @@ if st.session_state.logged_in:
                 continue
 
             cols = st.columns([1,1,10,5,5,5,1])
+            disable_move = ((len(st.session_state.veranstaltung_tmp["einmaliger_termin_removed"])) > 0)  or i >= tmp_id_start
             with cols[0]:
                 st.write("")
                 st.write("")
-                disable = False if tmp_id_start > i else True 
-                st.button('↓', key=f'down-e-{i}', on_click = tools.move_down_list, args = (collection, x["_id"], "einmaliger_termin", w,), disabled=disable)
+                st.button('↓', key=f'down-e-{i}', on_click = tools.move_down_list, args = (collection, x["_id"], "einmaliger_termin", w,), disabled=disable_move)
             with cols[1]:
                 st.write("")
                 st.write("")
-                disable = False if tmp_id_start > i else True 
-                st.button('↑', key=f'up-e-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "einmaliger_termin", w,), disabled=disable)
+                st.button('↑', key=f'up-e-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "einmaliger_termin", w,), disabled=disable_move)
             with cols[2]:
                 ta = [g["_id"] for g in list(st.session_state.terminart.find(sort=[("rang", pymongo.ASCENDING)]))]
                 index = ta.index(w["key"])
