@@ -15,6 +15,8 @@ import misc.util as util
 from misc.util import logger
 import misc.tools as tools
 
+tools.delete_temporary()
+
 # load css styles
 from misc.css_styles import init_css
 init_css()

@@ -20,6 +20,8 @@ import misc.tools as tools
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
+tools.delete_temporary()
+
 # Es geht hier vor allem um diese Collection:
 collection = util.veranstaltung
 

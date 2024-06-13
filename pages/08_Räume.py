@@ -14,6 +14,8 @@ from misc.config import *
 import misc.util as util
 import misc.tools as tools
 
+tools.delete_temporary()
+
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
