@@ -91,7 +91,7 @@ def setup_session_state():
         st.session_state.veranstaltung_tmp = dict()
     # saving tmp data for translations
     if "translation_tmp" not in st.session_state:
-        st.session_state.translation_tmp = None
+        st.session_state.translation_tmp = None  # Could be specified
 
     st.session_state.collection_name = {
         anforderung: "Anforderungen",
