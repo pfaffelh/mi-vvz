@@ -15,8 +15,6 @@ import misc.util as util
 from misc.util import logger
 import misc.tools as tools
 
-tools.delete_temporary()
-
 # load css styles
 from misc.css_styles import init_css
 init_css()
@@ -45,9 +43,9 @@ if st.session_state.logged_in:
     col1, col2 = st.columns([1, 1])
     with col1:
         if st.button("Zurück ohne Speichern"):
-            switch_page("Personen")
+            switch_page("Anforderungen")
     with col2:
-        with st.popover('Person löschen'):
+        with st.popover('Anforderungskategorie löschen'):
             if not new_entry:
                 s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
                 if s:

@@ -24,6 +24,8 @@ from misc.config import *
 import misc.util as util
 import misc.tools as tools
 
+tools.delete_temporary("veranstaltung_tmp")
+
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
@@ -92,7 +94,6 @@ if st.session_state.logged_in:
 
     with col1:
         if st.button("Zurück (ohne Speichern)"):
-            clear_tmp()
             switch_page("Veranstaltungen")
     with col2:
         if st.button("Alles Speichern", type = 'primary'):
@@ -408,6 +409,7 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             sync_termine()
             tools.update_confirm(collection, x, ver_updated, reset = False)
+            time.sleep(0.1) ## to show toast
             st.rerun()
 
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
@@ -513,7 +515,7 @@ if st.session_state.logged_in:
     if save_all:
         sync_termine()
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
-        clear_tmp()
+        time.sleep(2)
         switch_page("Veranstaltungen")
 
 else: 

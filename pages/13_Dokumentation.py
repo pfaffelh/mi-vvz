@@ -12,6 +12,8 @@ from misc.config import *
 import misc.util as util
 import misc.tools as tools
 
+tools.delete_temporary()
+
 # make all neccesary variables available to session_state
 # setup_session_state()
 

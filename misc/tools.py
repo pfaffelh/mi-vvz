@@ -435,3 +435,11 @@ def veranstaltung_anlegen(sem_id, rub_id, v_dict):
     util.rubrik.update_one({"_id": rub_id}, {"$push": {"veranstaltung": w.inserted_id}})
     st.session_state.edit = w.inserted_id
     return w.inserted_id
+
+def delete_temporary(except_field = ""):
+    """ Delete temporary data except for the given field."""
+    if not except_field == "veranstaltung_tmp":
+        st.session_state.veranstaltung_tmp.clear()
+
+    if not except_field == "translation_tmp":
+        st.session_state.tranlation_tmp = None

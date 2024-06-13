@@ -86,10 +86,13 @@ def setup_session_state():
     # Determines which page we are on
     if "page" not in st.session_state:
         st.session_state.page = ""
-    # saving tmp data for new termine
+
+    ### temporary data ###
+    ### should be also cleared on every page with tools.
+    # data for new termine
     if "veranstaltung_tmp" not in st.session_state:
         st.session_state.veranstaltung_tmp = dict()
-    # saving tmp data for translations
+    # data for translations
     if "translation_tmp" not in st.session_state:
         st.session_state.translation_tmp = None  # Could be specified
 
