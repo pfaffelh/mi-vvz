@@ -441,7 +441,10 @@ if st.session_state.logged_in:
         if submit:  # TODO: Update Save all for translation
             st.session_state.expanded = "kommentiertes_VVZ"
             if st.session_state.translation_tmp is not None:
+                print(x["kommentar_latex_de"], x["kommentar_latex_en"])
                 x.update(st.session_state.translation_tmp[1])
+                print(x["kommentar_latex_de"], x["kommentar_latex_en"])
+                print(ver_updated["kommentar_latex_de"], ver_updated["kommentar_latex_en"])
                 st.session_state.translation_tmp = None
             tools.update_confirm(collection, x, ver_updated, reset = False)
         with col2_button:
