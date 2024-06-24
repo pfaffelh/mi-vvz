@@ -21,13 +21,13 @@ with placeholder.form("login"):
 
 ## TODO: Develop mode. Remove this later!
 
-placeholder.empty()
-st.session_state.logged_in = True
-st.success("Login successful")
-util.logger.info(f"User {st.session_state.user} hat in sich erfolgreich eingeloggt.")
+#placeholder.empty()
+# st.session_state.logged_in = True
+#st.success("Login successful")
+#util.logger.info(f"User {st.session_state.user} hat in sich erfolgreich eingeloggt.")
 # make all neccesary variables available to session_state
-util.setup_session_state()
-switch_page("veranstaltungen")
+#util.setup_session_state()
+#switch_page("veranstaltungen")
 
 # if submit:
 #     if tools.authenticate(kennung, password): 
