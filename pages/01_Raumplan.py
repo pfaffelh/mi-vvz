@@ -35,7 +35,7 @@ semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 slotstart = [8, 10, 12, 14, 16, 18]
 raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in util.raum.find() }
-st.write(raum_dict.keys())
+
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
     #with open("misc/styles.css") as f:
@@ -45,7 +45,6 @@ if st.session_state.logged_in:
 #    st.session_state.semester = sem_id
     if st.session_state.semester_id is not None:
         kat = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))
-        st.write(util.hauptraum_ids)
         raum_list = st.multiselect("Räume", raum_dict.keys(), util.hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
         st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
         showraum = [util.raum.find_one({"_id": id}) for id in raum_list]
