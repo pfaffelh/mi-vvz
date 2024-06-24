@@ -29,27 +29,27 @@ with placeholder.form("login"):
 #util.setup_session_state()
 #switch_page("veranstaltungen")
 
-# if submit:
-#     if tools.authenticate(kennung, password): 
-#         if tools.can_edit(kennung):
-#             # If the form is submitted and the email and password are correct,
-#             # clear the form/container and display a success message
-#             placeholder.empty()
-#             st.session_state.logged_in = True
-#             st.success("Login successful")
-#             util.logger.info(f"User {st.session_state.user} hat in sich erfolgreich eingeloggt.")
-#             # make all neccesary variables available to session_state
-#             util.setup_session_state()
-#             switch_page("veranstaltungen")
-#         else:
-#             st.error("Nicht genügend Rechte, um VVZ zu editieren.")
-#             util.logger.info(f"User {kennung} hatte nicht gebügend Rechte, um sich einzuloggen.")
-#             time.sleep(2)
-#             st.rerun()
-#     else: 
-#         st.error("Login nicht korrekt, oder RZ-Authentifizierung nicht möglich. (Z.B., falls nicht mit VPN verbunden.)")
-#         util.logger.info(f"Ein falscher Anmeldeversuch.")
-#         time.sleep(2)
-#         st.rerun()
+if submit:
+    if tools.authenticate(kennung, password): 
+        if tools.can_edit(kennung):
+            # If the form is submitted and the email and password are correct,
+            # clear the form/container and display a success message
+            placeholder.empty()
+            st.session_state.logged_in = True
+            st.success("Login successful")
+            util.logger.info(f"User {st.session_state.user} hat in sich erfolgreich eingeloggt.")
+            # make all neccesary variables available to session_state
+            util.setup_session_state()
+            switch_page("veranstaltungen")
+        else:
+            st.error("Nicht genügend Rechte, um VVZ zu editieren.")
+            util.logger.info(f"User {kennung} hatte nicht gebügend Rechte, um sich einzuloggen.")
+            time.sleep(2)
+            st.rerun()
+    else: 
+        st.error("Login nicht korrekt, oder RZ-Authentifizierung nicht möglich. (Z.B., falls nicht mit VPN verbunden.)")
+        util.logger.info(f"Ein falscher Anmeldeversuch.")
+        time.sleep(2)
+        st.rerun()
 
 
