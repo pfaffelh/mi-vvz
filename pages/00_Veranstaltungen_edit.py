@@ -505,7 +505,7 @@ if st.session_state.logged_in:
                 st.write(an_dict[a])
             for i, m in enumerate(mod_list):
                 with cols[i+3]:
-                    g.loc[str(a),str(m)] = st.checkbox(f"{m}_{a}",True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}", label_visibility="hidden")
+                    g.loc[str(a),str(m)] = float(st.checkbox(f"{m}_{a}", True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}", label_visibility="collapsed"))
         verwendbarkeit = [{"modul": m, "anforderung": a} for m in mod_list for a in an_list if g.loc[str(a),str(m)] == True]
         x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit }
         ver_updated_all.update(x_updated)

@@ -50,6 +50,6 @@ if submit:
         st.error("Login nicht korrekt, oder RZ-Authentifizierung nicht möglich. (Z.B., falls nicht mit VPN verbunden.)")
         util.logger.info(f"Ein falscher Anmeldeversuch.")
         time.sleep(2)
-        st.rerun()
+#         st.rerun()
 
 

@@ -236,7 +236,6 @@ def setup_session_state():
     hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226]
     st.session_state.hauptraum_ids = [r["_id"] for r in hauptraum]
 
-
     st.session_state.abhaengigkeit = {
         gebaeude: [{"collection": raum, "field": "gebaeude", "list": False}],
         raum    : [{"collection": veranstaltung, "field": "einmaliger_termin.$.raum", "list": True}, 
