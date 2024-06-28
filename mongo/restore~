@@ -1,0 +1,1 @@
+mongorestore --archive='vvz_backup_20240624_1128'

@@ -154,8 +154,8 @@ if st.session_state.logged_in:
                     untertitel_en=st.text_input('Untertitel (en)', x["untertitel_en"], key=f'untertitel-en-{x["_id"]}')
                     prefix_de=st.text_area('Prefix (de)', x["prefix_de"], key=f'prefix-de-{x["_id"]}')
                     prefix_en=st.text_area('Prefix (en)', x["prefix_en"], key=f'prefix-en-{x["_id"]}')
-                    suffix_de=st.text_area('Prefix (de)', x["suffix_de"], key=f'suffix-de-{x["_id"]}')
-                    suffix_en=st.text_area('Prefix (en)', x["suffix_en"], key=f'suffix-en-{x["_id"]}')
+                    suffix_de=st.text_area('Suffix (de)', x["suffix_de"], key=f'suffix-de-{x["_id"]}')
+                    suffix_en=st.text_area('Suffix (en)', x["suffix_en"], key=f'suffix-en-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
                     x_updated = {"hp_sichtbar": hp_sichtbar, "titel_de": titel_de, "titel_en": titel_en, "untertitel_de": untertitel_de, "untertitel_en": untertitel_en, "prefix_de": prefix_de, "prefix_en": prefix_en, "suffix_de": suffix_de, "suffix_en": suffix_en, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary')

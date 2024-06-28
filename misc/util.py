@@ -273,16 +273,15 @@ def setup_session_state():
     }
 
     st.session_state.wochentag = {
-        "Montag": "Mo",
-        "Dienstag": "Di",
-        "Mittwoch": "Mi",
-        "Donnerstag": "Do",
-        "Freitag": "Fr",
-        "Samstag": "Sa",
-        "Sonntag": "So",
-        "": ""
+        "Montag": {"de": "Mo", "en": "Mon"},
+        "Dienstag": {"de": "Di", "en": "Tue"},
+        "Mittwoch": {"de": "Mi", "en": "Wed"},
+        "Donnerstag": {"de": "Do", "en": "Thu"},
+        "Freitag": {"de": "Fr", "en": "Fri"},
+        "Samstag": {"de": "Sa", "en": "Sat"},
+        "Sonntag": {"de": "So", "en": "Sun"},
+        "": {"de": "", "en": ""}
     }
-
 
 setup_session_state()
 user = st.session_state.user
