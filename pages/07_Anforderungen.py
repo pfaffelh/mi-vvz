@@ -58,8 +58,8 @@ if st.session_state.logged_in:
     st.write("Mit 😎 markierte Anforderungkategorien sind in Auswahlmenüs sichtbar.")
     st.write(" ")
     if st.button('**Neue Anforderungskategorie hinzufügen**'):
-        tools.new(collection)
-
+        tools.new(collection, switch = False)
+    
     y = list(collection.find(sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
@@ -82,7 +82,7 @@ if st.session_state.logged_in:
                     with colu1:
                         submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
                         if submit:
-                            tools.delete_item_update_dependent_items(collection, x["_id"])
+                            tools.delete_item_update_dependent_items(collection, x["_id"], switch = False)
                     with colu3: 
                         st.button(label="Nein", on_click = tools.reset_vars, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
                 with st.form(f'ID-{x["_id"]}'):
