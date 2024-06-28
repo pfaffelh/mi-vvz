@@ -113,9 +113,9 @@ def makedata(sem_kurzname):
         for veranstaltung in veranstaltungen:
             v_dict = {}
             v_dict["titel"] = veranstaltung["name_de"]
-            v_dict["dozent"] = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in veranstaltung["dozent"]])
+            v_dict["dozent"] = ", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["dozent"]])
 
-            assistent = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in veranstaltung["assistent"]])
+            assistent = ", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["assistent"]])
             if assistent:
                 v_dict["person"] = ", Assistenz: ".join([v_dict["dozent"], assistent])
             else:
