@@ -72,9 +72,9 @@ if st.session_state.logged_in:
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             if new_entry:
-                tools.new(collection, switch=False)
-
-            tools.update_confirm(collection, x, x_updated, )
+                tools.new(collection, ini = x_updated, switch=False)
+            else:
+                tools.update_confirm(collection, x, x_updated, )
             time.sleep(2)
             st.session_state.edit = ""
             switch_page("module")           
