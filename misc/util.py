@@ -116,7 +116,7 @@ def setup_session_state():
         anforderung: "",
         anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"],
         code: "",
-        codekategorie: codekategorie.find_one({"name_de": "Allgemein"})["_id"],
+        codekategorie: "",
         gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
         modul: modul.find_one({"name_de": "-"})["_id"],
         person: person.find_one({"name": "-"})["_id"],

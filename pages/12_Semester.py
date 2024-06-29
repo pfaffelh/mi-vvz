@@ -104,7 +104,9 @@ if st.session_state.logged_in:
         name_en = st.text_input('Name (en)', x["name_en"], disabled = True)
         kurzname = st.text_input('Kurzname', x["kurzname"], disabled = True)
         hp_sichtbar = st.checkbox(f"Auf www.math... sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
-        x_updated = {"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "hp_sichtbar": hp_sichtbar}
+        prefix_de = st.text_area('Prefix (de)', x["prefix_de"], help="Dieser Text erscheint oben auf der Veranstaltungsseite des Semesters.")
+        prefix_en = st.text_area('Prefix (en)', x["prefix_en"], help="Dieser Text erscheint oben auf der Veranstaltungsseite des Semesters.")
+        x_updated = {"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "hp_sichtbar": hp_sichtbar, "prefix_de": prefix_de, "prefix_en": prefix_en}
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             tools.update_confirm(collection, x, x_updated, )
@@ -218,7 +220,7 @@ if st.session_state.logged_in:
     st.write("### Codes")
     collection = util.code
     if st.button('**Neuen Code hinzufügen**'):
-        tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
+        tools.new(collection, ini = { "semester": st.session_state.semester_id, "codekategorie": util.codekategorie.find_one({"semester": st.session_state.semester_id, "name_de": "Allgemein"})["_id"] }, switch = False)
 
     y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:

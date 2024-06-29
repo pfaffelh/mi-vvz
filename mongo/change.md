@@ -1,6 +1,5 @@
 ## Nötige Änderungen der Datenbank
 
-* Wöchentliche Termine brauchen eine Liste an Personen
 * Jede Veranstaltung braucht eine True-False-Variable, mit der angezeigt wird, ob ein Kommentar erstellt wird.
 * Beim Kommentar braucht es ein neues Feld der genaueren Spezifizierung der Veranstaltung, zB 4-stündige Vorlesung mit 2-stündiger Übung
 * Termine brauchen eine Art des Termins, zB "Klausur" als eigene Collection
