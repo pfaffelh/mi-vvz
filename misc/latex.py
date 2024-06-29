@@ -96,7 +96,7 @@ def make_raumzeit(veranstaltung):
     res = [f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}" for x in res]
     return res
 
-def makedata(sem_kurzname):
+def makedata(sem_kurzname, komm_id):
     sem_id = util.semester.find_one({"kurzname": sem_kurzname})["_id"]
 
     rubriken = list(util.rubrik.find({"semester": sem_id, "hp_sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
@@ -108,8 +108,7 @@ def makedata(sem_kurzname):
         r_dict = {}
         r_dict["titel"] = rubrik["titel_de"]
         r_dict["veranstaltung"] = []
-        veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}))
-        veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}))
+        veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
         for veranstaltung in veranstaltungen:
             v_dict = {}
             v_dict["titel"] = veranstaltung["name_de"]
@@ -131,7 +130,9 @@ def makedata(sem_kurzname):
             v_dict["verwendbarkeit"] = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in veranstaltung["verwendbarkeit"]]
             r_dict["veranstaltung"].append(v_dict)
 
-        data["rubriken"].append(r_dict)
+        # Rubrik nur dann hinzufügen, wenn hier auch Veranstaltungen sind
+        if veranstaltungen:
+            data["rubriken"].append(r_dict)
     return data
 
 # Für die Kommentare:

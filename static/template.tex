@@ -21,7 +21,7 @@
 \usepackage{pifont} 
 \newcommand{\xmark}{\ding{55}}
 \usepackage{draftwatermark}
-\SetWatermarkText{Test für das kommentierte Vorlesungsverzeichniss, Juli 2024}
+\SetWatermarkText{\VAR{data['wasserzeichen']}}
 \SetWatermarkScale{1}
 
 \setlength{\topmargin}{-2.5cm}
@@ -38,7 +38,7 @@
 \resizebox{\textwidth}{!}{Universität Freiburg -- Mathematisches Institut}
 
 \medskip
-\resizebox{\textwidth}{!}{Sommersemester 2024}
+\resizebox{\textwidth}{!}{\VAR{data["semester"]}}
 
 \bigskip
 \resizebox{\textwidth}{!}{Kommentiertes Vorlesungsverzeichnis}
@@ -65,7 +65,7 @@
 \section*{Über dieses Dokument}
 
 \addcontentsline{toc}{subsection}{Über dieses Dokument}
-Dies ist ein Test!
+Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 
 %#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %#%%  BEGINN VERANSTALTUNGSTEIL
@@ -94,6 +94,8 @@ Dies ist ein Test!
 %% for line in veranstaltung["raumzeit"]
 \VAR{line}\\
 %% endfor 
+
+%% if include_inhalt
 %% if veranstaltung["inhalt"] != ""
 \subsubsection*{\Large Inhalt:}
 \VAR{veranstaltung["inhalt"]}
@@ -105,11 +107,18 @@ Dies ist ein Test!
 %% if veranstaltung["vorkenntnisse"] != ""
 \subsubsection*{\Large Vorkenntnisse:}
 \VAR{veranstaltung["vorkenntnisse"]}
-%% endif 
+%% endif
 %% if veranstaltung["kommentar"] != ""
 \subsubsection*{\Large Bemerkungen:}
 \VAR{veranstaltung["kommentar"]}
 %% endif 
+\subsubsection*{\Large Verwendbar in folgenden Modulen:}
+%% for m in veranstaltung["verwendbarkeit_modul"]
+\VAR{m["titel"]}\\
+%% endfor 
+%% endif 
+
+%% if include_verwendbarkeit
 \subsubsection*{\Large Verwendbarkeit, Studien- und Prüfungsleistungen:}
 \begin{tabularx}{\textwidth}{ p{.5\textwidth}
     %% for i in veranstaltung["verwendbarkeit_modul"]
@@ -140,7 +149,7 @@ Dies ist ein Test!
     \\
     %% endfor
 \end{tabularx}
-
+%% endif 
 %% endfor
 %% endfor
 
