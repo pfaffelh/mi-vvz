@@ -105,20 +105,20 @@ def find_dependent_veranstaltung(collection, id):
                     res.append(y["_id"])
     return res
 
-def delete_item_update_dependent_items(collection, id ,switch = True):
+def delete_item_update_dependent_items(collection, id, switch = True):
     if collection in util.leer.keys() and id == util.leer[collection]:
             st.toast("Fehler! Dieses Item kann nicht gelöscht werden!")
             reset_vars("")
     else:
-        s = ("  \n".join(find_dependent_items(collection, id)))
-        if s:
-            s = f"\n{s}  \ngeändert."     
         for x in util.abhaengigkeit[collection]:
             if x["list"]:
                 x["collection"].update_many({x["field"].replace(".$",""): { "$elemMatch": { "$eq": id }}}, {"$pull": { x["field"] : id}})
             else:
                 st.write(util.collection_name[x["collection"]])
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
+        s = ("  \n".join(find_dependent_items(collection, id)))
+        if s:
+            s = f"\n{s}  \ngeändert."     
         util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} item {repr(collection, id)} gelöscht, und abhängige Felder geändert.")
         collection.delete_one({"_id": id})
         reset_vars("")
@@ -329,10 +329,19 @@ def repr(collection, id, show_collection = True, short = False):
     elif collection == util.studiengang:
         res = f"{x['name']}"
     elif collection == util.modul:
-        s = ", ".join([util.studiengang.find_one({"_id" : id1})["kurzname"] for id1 in x["studiengang"]])
+        res = []
+        for id1 in x["studiengang"]:
+            stu = util.studiengang.find_one({"_id" : id1, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}})
+            if stu:
+                res.append(stu["kurzname"])
+        s = ", ".join(res)
         res = x['name_de'] if short else f"{x['name_de']} ({s})"
     elif collection == util.anforderung:
-        res = x['name_de']
+        an = util.anforderungkategorie.find_one({"_id": x["anforderungskategorie"]})["name_de"]
+        if an.strip() == "Kommentar":
+            res = f"{x['name_de'].strip()}"
+        else:
+            res = f"{x['name_de'].strip()} ({an.strip()})"
     elif collection == util.anforderungkategorie:
         res = x['name_de']
     elif collection == util.codekategorie:

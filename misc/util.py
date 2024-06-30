@@ -113,7 +113,7 @@ def setup_session_state():
     }
 
     st.session_state.leer = {
-        anforderung: "",
+        anforderung: anforderung.find_one({"name_de": "-"})["_id"],
         anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"],
         code: "",
         codekategorie: "",

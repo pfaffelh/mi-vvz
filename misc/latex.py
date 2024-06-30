@@ -24,6 +24,10 @@ def makeanforderungname(anforderung_id):
     k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})["name_de"]
     return f"{a['name_de']} ({k})"
 
+def makeverwendbarkeit(verwendbarkeit):
+    res = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in verwendbarkeit]
+    return res
+
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
 # zusammen in
 # Mo, Mi, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21
@@ -128,6 +132,22 @@ def makedata(sem_kurzname, komm_id):
             v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x)} for x in veranstaltung["verwendbarkeit_modul"]]
             v_dict["verwendbarkeit_anforderung"] = [{"id": str(x), "titel": makeanforderungname(x)} for x in veranstaltung["verwendbarkeit_anforderung"]]
             v_dict["verwendbarkeit"] = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in veranstaltung["verwendbarkeit"]]
+
+            # Spalten zusammenfassen:
+            rm = []
+            for i in range(1,len(v_dict["verwendbarkeit_modul"])):
+                x = v_dict["verwendbarkeit_modul"][i]
+                xanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == x["id"]]
+                for j in range(i, len(v_dict["verwendbarkeit_modul"])):
+                    y = v_dict["verwendbarkeit_modul"][j]
+                    yanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == y["id"]]
+                    if x != y and set(xanforderungen) == set(yanforderungen):
+                        x["titel"] = ", ".join([x["titel"], y["titel"]])
+                        rm.append(j)
+            rm.reverse
+            for j in rm:
+                v_dict["verwendbarkeit_modul"].pop(j)
+
             r_dict["veranstaltung"].append(v_dict)
 
         # Rubrik nur dann hinzufügen, wenn hier auch Veranstaltungen sind

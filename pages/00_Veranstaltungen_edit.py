@@ -458,7 +458,6 @@ if st.session_state.logged_in:
             st.session_state.translation_tmp = (ver_updated.copy(), ver_updated_old)
             st.rerun()
 
-
     ## Verwendbarkeiten
     with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
         st.subheader("Verwendbarkeit")
@@ -478,6 +477,15 @@ if st.session_state.logged_in:
                 st.button(label="Abbrechen", on_click = st.rerun, args=(), key = f"not-imported-{x['_id']}")
 
         mo = list(util.modul.find({"$or": [{"sichtbar": True}, {"_id": { "$elemMatch": { "$eq": x["verwendbarkeit_modul"]}}}]}, sort = [("rang", pymongo.ASCENDING)]))
+
+        for m in x["verwendbarkeit_modul"]:
+            m1 = util.modul.find_one({"_id" : m})
+            l = list(util.studiengang.find({"_id" : { "$in" : m1["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}}))
+            st.write(x["verwendbarkeit_modul"])
+            if l == []:
+                x["verwendbarkeit_modul"].remove(m)
+                st.write(x["verwendbarkeit_modul"])
+
         mo_dict = {m["_id"]: tools.repr(util.modul, m["_id"], show_collection = False) for m in mo }
         mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen")
 
