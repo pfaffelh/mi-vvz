@@ -481,11 +481,9 @@ if st.session_state.logged_in:
         for m in x["verwendbarkeit_modul"]:
             m1 = util.modul.find_one({"_id" : m})
             l = list(util.studiengang.find({"_id" : { "$in" : m1["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}}))
-            st.write(x["verwendbarkeit_modul"])
             if l == []:
                 x["verwendbarkeit_modul"].remove(m)
-                st.write(x["verwendbarkeit_modul"])
-
+            
         mo_dict = {m["_id"]: tools.repr(util.modul, m["_id"], show_collection = False) for m in mo }
         mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen")
 
