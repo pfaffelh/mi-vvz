@@ -29,3 +29,4 @@ anf.insert_one({"name_de": "-",
         })
 
 ver.create_index( [ ("name_de", pymongo.TEXT), ("name_en", pymongo.TEXT)], default_language ="german")
+
