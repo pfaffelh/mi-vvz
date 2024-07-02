@@ -57,14 +57,21 @@ if st.session_state.logged_in:
         else:
             st.write("#### Alle Veranstaltungen mit Kommentar haben Code _Komm_.")
 
+        st.write("#### Generierung des LaTeX-Files")
+        en = st.toggle("Englische Inhalte verwenden", value=False, key=None, help="Andernfalls werden die deutschen Inhalte verwendet")
+        alter = st.toggle("Andere Sprache verwenden, falls Kommentare nicht verfügbar", value=True, help="Andernfalls bleibt der Inhalt im Kommentierten Vorlesungsverzeichnis leer.")
+
         wasserzeichen_komm = st.text_input('Wasserzeichen, z.B. Vorläufige Version', "", key = "watermark_komm")
 
         sem_id = st.session_state.semester_id
         sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
-        sem_name = util.semester.find_one({"_id" : sem_id})["name_de"]
-        data = latex.makedata(sem_kurzname, komm_id)
+        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{"en" if en else "de"}"]
+        data = latex.makedata(sem_kurzname, komm_id, "en" if en else "de", alter)
         data["wasserzeichen"] = wasserzeichen_komm
         data["semester"] = sem_name
+        data["lang"] = "en" if en else "de"
+        data["titel"] = "Kommentiertes Vorlesungsverzeichnis" if data["lang"] == "de" else "Comments on the course catalogue"
+        data["alter"] = alter
 
         template = latex.latex_jinja_env.get_template(f"static/template.tex")
         kommentare = template.render(data = data, include_inhalt = True, include_verwendbarkeit = False)
@@ -73,16 +80,33 @@ if st.session_state.logged_in:
     with st.expander("Erweiterung des Modulhandbuches"):
         st.write("Es werden nur Veranstaltungen aufgenommen, die einen nicht-trivialen Eintrag in Verwendbarkeit haben.")
 
+#        st.write("#### Generierung des LaTeX-Files")
+#        en = st.toggle("Englische Inhalte verwenden", value=False, key=None, help="Andernfalls werden die deutschen Inhalte verwendet")
+#        alter = st.toggle("Andere Sprache verwenden, falls Kommentare nicht verfügbar", value=True, help="Andernfalls bleibt der Inhalt im Kommentierten Vorlesungsverzeichnis leer.")
+
         ver_text = list(util.veranstaltung.find({"semester" : sem_id, "verwendbarkeit_modul" : { "$ne" : []}}))
 
         wasserzeichen_erwM = st.text_input('Wasserzeichen, z.B. Vorläufige Version', "", key = "watermark_erwM")
 
         sem_id = st.session_state.semester_id
         sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
+        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{"en" if en else "de"}"]
+        data = latex.makedata(sem_kurzname, komm_id, "en" if en else "de", alter)
+        data["wasserzeichen"] = wasserzeichen_komm
+        data["semester"] = sem_name
+        data["lang"] = "en" if en else "de"
+        data["titel"] = "Kommentiertes Vorlesungsverzeichnis" if data["lang"] == "de" else "Comments on the course catalogue"
+        data["alter"] = alter
+
+
+
+        sem_id = st.session_state.semester_id
+        sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
         sem_name = util.semester.find_one({"_id" : sem_id})["name_de"]
-        data = latex.makedata(sem_kurzname, komm_id)
+        data = latex.makedata(sem_kurzname, komm_id, lang = "de", alter = True)
         data["wasserzeichen"] = wasserzeichen_erwM
         data["semester"] = sem_name
+#        data["titel"] = "Erweiterungen der Modulhandbücher" if data["lang"] == "de" else "Extensions of the module handbooks"
 
         template = latex.latex_jinja_env.get_template(f"static/template.tex")
         erwM = template.render(data = data, include_inhalt = False, include_verwendbarkeit = True)
