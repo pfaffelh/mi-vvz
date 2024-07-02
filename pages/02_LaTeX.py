@@ -38,13 +38,13 @@ if st.session_state.logged_in:
         ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
         ver_text = list(util.veranstaltung.find({"semester" : sem_id, "$or" : [{ "inhalt_de" : { "$ne" : ""}}, {"inhalt_en" : { "$ne" : ""}}]}))
 
-        # Veranstaltungen, die den Code Komm haben, aber für die kein Kommentar vorhanden ist
+        # Veranstaltungen, die den Code Komm haben, für die kein Kommentar vorhanden ist
         Delta1 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_komm if v not in ver_text]
         # Veranstaltungen, für die ein Kommentar vorhanden ist, die aber den Code Komm nicht tragen
         Delta2 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_text if v not in ver_komm]
 
         if Delta1 != []:
-            st.write("#### Veranstaltungen mit Code _Komm_, aber für die kein Kommentar vorhanden ist")
+            st.write("#### Veranstaltungen mit Code _Komm_, für die kein Kommentar vorhanden ist")
             for v in Delta1:
                 st.write(v)
         else:
@@ -65,7 +65,7 @@ if st.session_state.logged_in:
 
         sem_id = st.session_state.semester_id
         sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
-        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{"en" if en else "de"}"]
+        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
         data = latex.makedata(sem_kurzname, komm_id, "en" if en else "de", alter)
         data["wasserzeichen"] = wasserzeichen_komm
         data["semester"] = sem_name
@@ -90,7 +90,7 @@ if st.session_state.logged_in:
 
         sem_id = st.session_state.semester_id
         sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
-        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{"en" if en else "de"}"]
+        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
         data = latex.makedata(sem_kurzname, komm_id, "en" if en else "de", alter)
         data["wasserzeichen"] = wasserzeichen_komm
         data["semester"] = sem_name

@@ -20,7 +20,7 @@ def makemodulname(modul_id, lang = "de", alter = True):
     mname = m[f"name_{lang}"]
     if alter and mname == "":
         mname = m[f"name_{otherlang}"]    
-    s = ", ".join([x["kurzname"] for x in list(util.studiengang.find({"_id": { "$in" : m["studiengang"]}}))])
+    s = ", ".join([x["kurzname"] for x in list(util.studiengang.find({"_id": { "$in" : m["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}}))])
     return f"{mname} ({s})"
 
 def makeanforderungname(anforderung_id, lang = "de", alter = True):
