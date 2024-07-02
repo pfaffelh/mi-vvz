@@ -35,7 +35,13 @@
 
 \hrule\vskip1pt\hrule\medskip
 
-\resizebox{\textwidth}{!}{Universität Freiburg -- Mathematisches Institut}
+\resizebox{\textwidth}{!}{
+%% if data["lang"] == "de"
+Universität Freiburg -- Mathematisches Institut
+%% else 
+University of Freiburg -- Mathematical Institute
+%% endif
+}
 
 \medskip
 \resizebox{\textwidth}{!}{\VAR{data["semester"]}}
@@ -49,7 +55,7 @@
 \bigskip
 
 %#\setlength{\baselineskip}{20pt}
-\hfill Version vom \today
+\hfill Version \today
 
 \thispagestyle{empty}
 \clearpage
@@ -95,31 +101,69 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 \VAR{line}\\
 %% endfor 
 
-%% if include_inhalt
+%% if data["include_inhalt"]
 %% if veranstaltung["inhalt"] != ""
-\subsubsection*{\Large Inhalt:}
+\subsubsection*{\Large 
+%% if data["lang"] == "de"
+Inhalt
+%% else
+Content
+%% endif
+:}
 \VAR{veranstaltung["inhalt"]}
 %% endif 
 %% if veranstaltung["literatur"] != ""
-\subsubsection*{\Large Literatur:}
+\subsubsection*{\Large 
+%% if data["lang"] == "de"
+Literatur:
+%% else
+Literature:
+%% endif
+}
 \VAR{veranstaltung["literatur"]}
 %% endif 
 %% if veranstaltung["vorkenntnisse"] != ""
-\subsubsection*{\Large Vorkenntnisse:}
+\subsubsection*{\Large 
+%% if data["lang"] == "de"
+Vorkenntnisse:
+%% else 
+Prerequisites:
+%% endif
+}
 \VAR{veranstaltung["vorkenntnisse"]}
 %% endif
 %% if veranstaltung["kommentar"] != ""
-\subsubsection*{\Large Bemerkungen:}
+\subsubsection*{\Large 
+%% if data["lang"] == "de"
+Bemerkungen:
+%% else 
+Remarks:
+%% endif 
+}
 \VAR{veranstaltung["kommentar"]}
 %% endif 
-\subsubsection*{\Large Verwendbar in folgenden Modulen:}
+%% endif
+%% if data["verw_kurz"]
+\subsubsection*{\Large 
+%% if data["lang"] == "de"
+Verwendbar in folgenden Modulen:
+%% else
+Usable in the following modules:
+%% endif 
+}
 %% for m in veranstaltung["verwendbarkeit_modul"]
 \VAR{m["titel"]}\\
 %% endfor 
 %% endif 
 
-%% if include_verwendbarkeit
-\subsubsection*{\Large Verwendbarkeit, Studien- und Prüfungsleistungen:}
+%% if not data["verw_kurz"]
+\subsubsection*{\Large 
+%% if data["lang"] == "de"
+Verwendbarkeit, Studien- und Prüfungsleistungen:
+%% else 
+Usability and assessments
+%% endif 
+}
 \begin{tabularx}{\textwidth}{ p{.5\textwidth}
     %% for i in veranstaltung["verwendbarkeit_modul"]
     X

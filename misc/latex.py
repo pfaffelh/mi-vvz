@@ -110,7 +110,7 @@ def make_raumzeit(veranstaltung, lang="de"):
     res = [f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}" for x in res]
     return res
 
-def makedata(sem_kurzname, komm_id, lang, alter):
+def makedata(sem_kurzname, komm, lang, alter):
     sem_id = util.semester.find_one({"kurzname": sem_kurzname})["_id"]
     otherlang = "en" if lang == "de" else "de"
 
@@ -127,7 +127,14 @@ def makedata(sem_kurzname, komm_id, lang, alter):
             r_dict["titel"] = rubrik[f"titel_{otherlang}"]
 
         r_dict["veranstaltung"] = []
-        veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
+        # Falls komm == True werden nur Veranstaltungen mit Code komm aufgenommen
+        if komm:
+            sem_id = st.session_state.semester_id
+            komm_id = util.code.find_one({"semester" : sem_id, "name" : { "$eq" : "Komm" }})["_id"]
+            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
+        else:
+            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}))
+
         for veranstaltung in veranstaltungen:
             v_dict = {}
 
