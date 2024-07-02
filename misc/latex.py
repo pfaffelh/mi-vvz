@@ -134,19 +134,19 @@ def makedata(sem_kurzname, komm_id):
             v_dict["verwendbarkeit"] = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in veranstaltung["verwendbarkeit"]]
 
             # Spalten zusammenfassen:
-            rm = []
-            for i in range(1,len(v_dict["verwendbarkeit_modul"])):
-                x = v_dict["verwendbarkeit_modul"][i]
-                xanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == x["id"]]
-                for j in range(i, len(v_dict["verwendbarkeit_modul"])):
-                    y = v_dict["verwendbarkeit_modul"][j]
-                    yanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == y["id"]]
-                    if x != y and set(xanforderungen) == set(yanforderungen):
-                        x["titel"] = ", ".join([x["titel"], y["titel"]])
-                        rm.append(j)
-            rm.reverse
-            for j in rm:
-                v_dict["verwendbarkeit_modul"].pop(j)
+            # rm = []
+            # for i in range(1,len(v_dict["verwendbarkeit_modul"])):
+            #     x = v_dict["verwendbarkeit_modul"][i]
+            #     xanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == x["id"]]
+            #     for j in range(i, len(v_dict["verwendbarkeit_modul"])):
+            #         y = v_dict["verwendbarkeit_modul"][j]
+            #         yanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == y["id"]]
+            #         if x != y and set(xanforderungen) == set(yanforderungen):
+            #             x["titel"] = ", ".join([x["titel"], y["titel"]])
+            #             rm.append(j)
+            # rm.reverse
+            # for j in rm:
+            #     v_dict["verwendbarkeit_modul"].pop(j)
 
             r_dict["veranstaltung"].append(v_dict)
 
