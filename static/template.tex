@@ -93,7 +93,11 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 
 %% for veranstaltung in rubrik["veranstaltung"]
 \clearpage\hrule\vskip1pt\hrule 
+%% if veranstaltung["url"] != ""
+\section*{\Large \href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
+%% else 
 \section*{\Large \VAR{veranstaltung["titel"]}}
+%% endif
 \addcontentsline{toc}{subsection}{\VAR{veranstaltung["titel"]}\ \textcolor{gray}{(\em \VAR{veranstaltung["dozent"]})}}
 \vskip-2ex  
 \VAR{veranstaltung["person"]}\\
@@ -105,11 +109,11 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 %% if veranstaltung["inhalt"] != ""
 \subsubsection*{\Large 
 %% if data["lang"] == "de"
-Inhalt
+Inhalt:
 %% else
-Content
+Content:
 %% endif
-:}
+}
 \VAR{veranstaltung["inhalt"]}
 %% endif 
 %% if veranstaltung["literatur"] != ""
@@ -161,7 +165,7 @@ Usable in the following modules:
 %% if data["lang"] == "de"
 Verwendbarkeit, Studien- und Prüfungsleistungen:
 %% else 
-Usability and assessments
+Usability and assessments:
 %% endif 
 }
 \begin{tabularx}{\textwidth}{ p{.5\textwidth}

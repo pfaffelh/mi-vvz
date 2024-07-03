@@ -159,7 +159,6 @@ if st.session_state.logged_in:
         kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = "Dieser Kommentar erscheint auf www.math...")
         kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = "Dieser Kommentar erscheint auf www.math...")
         url=st.text_input('URL', x["url"], help = "Gemeint ist die URL, auf der Inhalte zur Veranstaltung hinterlegt sind, etwa Skript, Übungsblätter etc.")
-#            suffix=st.text_input('Suffix', x["suffix"], help = "Erscheint als Text auf der www.math... nach der Darstellung der Veranstaltung. Kann allgemeine Hinweise zur Veranstaltung enthalten.")
         ver_updated = {
             "hp_sichtbar": hp_sichtbar,
             "name_de": name_de,
@@ -171,7 +170,6 @@ if st.session_state.logged_in:
             "rubrik": kat,
             "code": code_list,
             "url": url,
-#            "suffix": suffix,
             "kommentar_html_de": kommentar_html_de,
             "kommentar_html_en": kommentar_html_en
         }
@@ -524,6 +522,7 @@ if st.session_state.logged_in:
     if save_all:
         sync_termine()
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
+        ver_updated_all = dict()
         time.sleep(2)
         switch_page("Veranstaltungen")
 

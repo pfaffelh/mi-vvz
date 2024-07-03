@@ -3,6 +3,7 @@ from streamlit_extras.switch_page_button import switch_page
 import pymongo
 import time
 import misc.util as util
+import misc.tools as tools
 from bson import ObjectId
 from misc.config import *
 from collections import OrderedDict
@@ -64,7 +65,7 @@ def make_raumzeit(veranstaltung, lang="de"):
                 # zB Mo, 8-10
                 tag = util.wochentag[termin['wochentag']][lang]
                 # person braucht man, wenn wir dann die Datenbank geupdated haben.
-                #person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
+                # person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
                 kommentar = rf"\newline{termin['kommentar']}" if termin['kommentar'] != "" else ""
                 new = [key, tag, zeit, raum, kommentar]
                 if key in [x[0] for x in res]:
@@ -131,9 +132,9 @@ def makedata(sem_kurzname, komm, lang, alter):
         if komm:
             sem_id = st.session_state.semester_id
             komm_id = util.code.find_one({"semester" : sem_id, "name" : { "$eq" : "Komm" }})["_id"]
-            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
+            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "code" : { "$elemMatch" : { "$eq" : komm_id }}}, sort=[("rang", pymongo.ASCENDING)]))
         else:
-            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}))
+            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}, sort=[("rang", pymongo.ASCENDING)]))
 
         for veranstaltung in veranstaltungen:
             v_dict = {}
@@ -142,6 +143,8 @@ def makedata(sem_kurzname, komm, lang, alter):
             if alter and v_dict["titel"] == "":
                 v_dict["titel"] = veranstaltung[f"name_{otherlang}"]
 
+            v_dict["url"] = veranstaltung["url"].replace("%", "\%")
+         
             v_dict["dozent"] = ", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["dozent"]])
 
             assistent = ", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["assistent"]])
@@ -172,7 +175,14 @@ def makedata(sem_kurzname, komm, lang, alter):
             if alter and v_dict["kommentar"] == "":
                 v_dict["kommentar"] = veranstaltung[f"kommentar_latex_{otherlang}"]
 
-            v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x, lang, alter)} for x in veranstaltung["verwendbarkeit_modul"]]
+            # Module löschen, die in keinem Studiengang des Semesters vorkommen
+            mod_verw = []
+            for m in veranstaltung["verwendbarkeit_modul"]:
+                m1 = util.modul.find_one({"_id": m})
+                if list(util.studiengang.find({"_id": { "$in" : m1["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}})) != []:
+                    mod_verw.append(m)
+
+            v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x, lang, alter)} for x in mod_verw]
             v_dict["verwendbarkeit_anforderung"] = [{"id": str(x), "titel": makeanforderungname(x, lang, alter)} for x in veranstaltung["verwendbarkeit_anforderung"]]
             v_dict["verwendbarkeit"] = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in veranstaltung["verwendbarkeit"]]
 

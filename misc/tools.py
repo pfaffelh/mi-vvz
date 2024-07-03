@@ -12,16 +12,16 @@ def move_up(collection, x, query = {}):
     target = collection.find_one(query, sort = [("rang",pymongo.DESCENDING)])
     if target:
         n= target["rang"]
-        collection.update_one(target, {"$set": {"rang": x["rang"]}})    
-        collection.update_one(x, {"$set": {"rang": n}})    
+        collection.update_one({"_id": target["_id"]}, {"$set": {"rang": x["rang"]}})    
+        collection.update_one({"_id": x["_id"]}, {"$set": {"rang": n}})    
 
 def move_down(collection, x, query = {}):
     query["rang"] = {"$gt": x["rang"]}
     target = collection.find_one(query, sort = [("rang", pymongo.ASCENDING)])
     if target:
         n= target["rang"]
-        collection.update_one(target, {"$set": {"rang": x["rang"]}})    
-        collection.update_one(x, {"$set": {"rang": n}})    
+        collection.update_one({"_id": target["_id"]}, {"$set": {"rang": x["rang"]}})    
+        collection.update_one({"_id": x["_id"]}, {"$set": {"rang": n}})    
 
 def move_up_list(collection, id, field, element):
     list = collection.find_one({"_id": id})[field]
@@ -46,7 +46,7 @@ def remove_from_list(collection, id, field, element):
 
 def update_confirm(collection, x, x_updated, reset = True):
     util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
-    collection.update_one(x, {"$set": x_updated })
+    collection.update_one({"_id" : x["_id"]}, {"$set": x_updated })
     if reset:
         reset_vars("")
     st.toast("🎉 Erfolgreich geändert!")
@@ -137,7 +137,15 @@ def kopiere_veranstaltung_confirm(id, kop_sem_id, kopiere_personen, kopiere_term
 # id ist die id der zu kopierenden Veranstaltung, sem_id die id des Semesters, in das kopiert werden soll.
 def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit):
     v = util.veranstaltung.find_one({"_id": id})
-    k = v["rubrik"] if v["semester"] == sem_id else util.rubrik.find_one({"semester": sem_id, "titel_de": "-"})["_id"]
+    if v["semester"] == sem_id:
+        k = v["rubrik"] 
+    else:
+        # Wenn es die Rubrik im eigenen Semester auch gibt, dann dahin kopieren, ansonsten in leere Rubrik
+        try: 
+            r = util.rubrik.find_one({"_id": v["rubrik"]})["_id"]
+            k = util.rubrik.find_one({"semester": sem_id, "titel_de": r["titel_de"]})
+        except:
+            k = util.rubrik.find_one({"semester": sem_id, "titel_de": "-"})["_id"]
     # Das wird der Rang der kopierten Veranstaltung
     try:
         r = util.veranstaltung.find_one({"semester": sem_id, "rubrik": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
@@ -177,7 +185,7 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
     }
     w = util.veranstaltung.insert_one(v_new)
     util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, sem_id)} kopiert.")
-    util.semester.update_one({"sem": sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
+    util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.rubrik.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
     for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
         util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
@@ -446,7 +454,7 @@ def veranstaltung_anlegen(sem_id, rub_id, v_dict):
         v[key] = value
     w = util.veranstaltung.insert_one(v)
     util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, w.inserted_id)} angelegt.")
-    util.semester.update_one({"sem": st.session_state.semester_id}, {"$push": {"veranstaltung": w.inserted_id}})
+    util.semester.update_one({"_id": st.session_state.semester_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.rubrik.update_one({"_id": rub_id}, {"$push": {"veranstaltung": w.inserted_id}})
     st.session_state.edit = w.inserted_id
     return w.inserted_id
