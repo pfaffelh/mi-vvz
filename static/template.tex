@@ -104,6 +104,9 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 %% for line in veranstaltung["raumzeit"]
 \VAR{line}\\
 %% endfor 
+%% if veranstaltung["url"] != ""
+Webseite: \url{\VAR{veranstaltung["url"]}}
+%% endif
 
 %% if data["include_inhalt"]
 %% if veranstaltung["inhalt"] != ""
