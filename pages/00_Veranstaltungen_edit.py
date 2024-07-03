@@ -152,7 +152,7 @@ if st.session_state.logged_in:
         kat = [g["_id"] for g in list(util.rubrik.find({"semester": x["semester"]}))]
         index = [g for g in kat].index(x["rubrik"])
         kat = st.selectbox("Rubrik", [x for x in kat], index = index, format_func = (lambda a: tools.repr(util.rubrik, a)))
-        code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({"$or": [{"semester": st.session_state.semester_id}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: tools.repr(util.code, a)), placeholder = "Bitte auswählen", help = "Es können nur Codes aus dem ausgewählten Semester verwendet werden.")
+        code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({"$or": [{"semester": st.session_state.semester_id}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: tools.repr(util.code, a, show_collection=False)), placeholder = "Bitte auswählen", help = "Es können nur Codes aus dem ausgewählten Semester verwendet werden.")
         # Sortiere codes nach ihrem Rang 
         co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
         code_list = [c["_id"] for c in co]

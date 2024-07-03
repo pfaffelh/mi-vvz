@@ -86,6 +86,8 @@ if st.session_state.logged_in:
                      "hp_sichtbar": new_hp_sichtbar, 
                      "rubrik": [], 
                      "code": [], 
+                     "prefix_de": "", 
+                     "prefix_en": "", 
                      "veranstaltung": [], 
                      "rang": s[0]["rang"]+1
                      }

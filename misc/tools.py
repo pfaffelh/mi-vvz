@@ -188,10 +188,13 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
 def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_uebernehmen):
     sem = list(util.semester.find({}, sort = [("rang", pymongo.DESCENDING)]))
     s = util.semester.insert_one(x_updated)
-    # sem_id is die id des anzulegenden Semesters
+    # sem_id ist die id des anzulegenden Semesters
     sem_id = s.inserted_id
     # kopien enthält die ids der originalen und kopierten Datensätze
+    id = sem[1]["_id"]
     kopie = {id: sem_id}
+    # Kopiere Studiengänge aus dem letzten Semester
+    util.studiengang.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
     # Kopiere Personen aus dem letzten Semester
     if personen_uebernehmen:
         util.person.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
@@ -201,24 +204,26 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_ueberneh
         for k in list(util.rubrik.find({"semester": sem[1]["_id"]})):
             k_loc = k["_id"]
             del k["_id"] # andernfalls gibt es einen duplicate key error
+            k["semester"] = sem_id
             k_new = util.rubrik.insert_one(k)
-            util.rubrik.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
             kopie[k_loc] = k_new.inserted_id
             util.semester.update_one({"_id": sem_id}, {"$push": {"rubrik": k_new.inserted_id}})
         for k in list(util.codekategorie.find({"semester": sem[1]["_id"]})):
             k_loc = k["_id"]
             del k["_id"]  # andernfalls gibt es einen duplicate key error
+            k["semester"] = sem_id
             k_new = util.codekategorie.insert_one(k)
-            util.codekategorie.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
             kopie[k_loc] = k_new.inserted_id
             util.semester.update_one({"_id": sem_id}, {"$push": {"codekategorie": k_new.inserted_id}})
         for k in list(util.code.find({"semester": sem[1]["_id"]})):
             k_loc = k["_id"]
             del k["_id"]  # andernfalls gibt es einen duplicate key error
+            k["codekategorie"] = kopie[k["codekategorie"]]
+            k["semester"] = sem_id
             k_new = util.code.insert_one(k)
-            util.code.update_one({"_id": k_new.inserted_id}, {"$set": {"semester": sem_id}})
             kopie[k_loc] = k_new.inserted_id
             util.semester.update_one({"_id": sem_id}, {"$push": {"code": k_new.inserted_id}})
+            util.codekategorie.update_one({"_id": k["codekategorie"]}, {"$push": {"code": k_new.inserted_id}})
         # Kopiere Veranstaltungen, übertrage rubrik und Codes
         for index, row in df.iterrows():
             if row["Veranstaltung übernehmen"]:
@@ -236,8 +241,6 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_ueberneh
     st.session_state.edit = ""
     st.session_state.page = "Veranstaltung"
 
-# xxx toast einblenden, zu Übersicht springen
-
 # Lösche ein Semester
 def delete_semester(id):
     x = util.semester.find_one({"_id": id})
@@ -246,11 +249,13 @@ def delete_semester(id):
         util.veranstaltung.delete_one({"_id": v["_id"]})
     
     util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
+    util.studiengang.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
     util.rubrik.delete_many({"semester": id})
     util.code.delete_many({"semester": id})
+    util.codekategorie.delete_many({"semester": id})
     util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, id)} gelöscht.")
     util.semester.delete_one({"_id": id})
-    st.toast("🎉 Semester gelöscht, alle Personen und Veranstaltungen geupdated.")
+    st.toast("🎉 Semester gelöscht, alle Personen, Studiengänge und Veranstaltungen geupdated.")
 
 # Die Authentifizierung gegen den Uni-LDAP-Server
 def authenticate(username, password):
