@@ -106,11 +106,10 @@ University of Freiburg -- Mathematical Institute
 %% endif
 \addcontentsline{toc}{subsection}{\VAR{veranstaltung["titel"]}\ \textcolor{gray}{(\em \VAR{veranstaltung["dozent"]})}}
 \vskip-2ex  
+{\it \VAR{veranstaltung["person"]}}
 %% if veranstaltung["code"] != ""
-\hfill{\VAR{veranstaltung["code"]}}
+\hfill{\VAR{veranstaltung["code"]}}\\
 %% endif
-
-\hfill{\it \VAR{veranstaltung["person"]}}\\
 %% for line in veranstaltung["raumzeit"]
 \VAR{line}\\
 %% endfor 

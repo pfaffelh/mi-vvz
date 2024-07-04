@@ -44,10 +44,10 @@ def makecode(sem_id, veranstaltung):
     codekategorie_list = [x["_id"] for x in list(util.codekategorie.find({"semester": sem_id, "komm_sichtbar": True}))]
     code_list = [util.code.find_one({"_id": c, "codekategorie": {"$in": codekategorie_list}}) for c in veranstaltung["code"]]
     code_list = [x for x in code_list if x is not None]
-    if veranstaltung["ects"] != "":
-        code_list.append(f"{veranstaltung['ects']} ECTS")
     if len(code_list)>0:
         res = ", ".join([c["name"] for c in code_list])
+    if veranstaltung["ects"] != "":
+        res = f"{res}, {veranstaltung['ects']} ECTS"
     return res
 
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
