@@ -61,7 +61,8 @@ if st.session_state.logged_in:
     data["alter"] = alter
     data["komm"] = komm
     data["verw_kurz"] = verw_kurz
-
+    data["includefile"] = includefile
+    
     template = latex.latex_jinja_env.get_template(f"static/template.tex")
     kommentare = template.render(data = data)
 
