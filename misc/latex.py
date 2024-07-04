@@ -13,7 +13,7 @@ import os
 def getraum(raum_id, lang = "de"):
     r = util.raum.find_one({ "_id": raum_id})
     g = util.gebaeude.find_one({ "_id": r["gebaeude"]})
-    return ", ".join([r[f"name_{lang}"], g[f"name_{lang}"]])
+    return ", ".join([r[f"name_{lang}"], f"\href{{{g['url']}}}{{{g[f'name_{lang}']}}}"])
 
 def makemodulname(modul_id, lang = "de", alter = True):
     otherlang = "de" if "lang" == "en" else "en"
@@ -47,7 +47,7 @@ def makecode(sem_id, veranstaltung):
     if len(code_list)>0:
         res = ", ".join([c["name"] for c in code_list])
     if veranstaltung["ects"] != "":
-        res = f"{res}, {veranstaltung['ects']} ECTS"
+        res = ", ".join([res, f"{veranstaltung['ects']} ECTS"])
     return res
 
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
