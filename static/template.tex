@@ -17,7 +17,13 @@
             tabularx,
             xcolor,
 			}
-\usepackage[hidelinks,linkbordercolor={1 1 1}]{hyperref}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true, %Colours links instead of ugly boxes
+  urlcolor = blue, %Colour for external hyperlinks
+  linkcolor = blue, %Colour of internal links
+  citecolor = blue %Colour of citations
+}
 \usepackage{pifont} 
 \newcommand{\xmark}{\ding{55}}
 \usepackage{draftwatermark}
@@ -94,13 +100,13 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 %% for veranstaltung in rubrik["veranstaltung"]
 \clearpage\hrule\vskip1pt\hrule 
 %% if veranstaltung["url"] != ""
-\section*{\Large \href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
+\section*{\large\href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
 %% else 
-\section*{\Large \VAR{veranstaltung["titel"]}}
+\section*{\large\VAR{veranstaltung["titel"]}}
 %% endif
 \addcontentsline{toc}{subsection}{\VAR{veranstaltung["titel"]}\ \textcolor{gray}{(\em \VAR{veranstaltung["dozent"]})}}
 \vskip-2ex  
-\VAR{veranstaltung["person"]}\\
+\hfill{\it \VAR{veranstaltung["person"]}}\\
 %% for line in veranstaltung["raumzeit"]
 \VAR{line}\\
 %% endfor 
