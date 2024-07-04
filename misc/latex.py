@@ -39,6 +39,17 @@ def makeverwendbarkeit(verwendbarkeit):
     res = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in verwendbarkeit]
     return res
 
+def makecode(sem_id, veranstaltung):
+    res = ""
+    codekategorie_list = [x["_id"] for x in list(util.codekategorie.find({"semester": sem_id, "komm_sichtbar": True}))]
+    code_list = [util.code.find_one({"_id": c, "codekategorie": {"$in": codekategorie_list}}) for c in veranstaltung["code"]]
+    code_list = [x for x in code_list if x is not None]
+    if veranstaltung["ects"] != "":
+        code_list.append(f"{veranstaltung['ects']} ECTS")
+    if len(code_list)>0:
+        res = ", ".join([c["name"] for c in code_list])
+    return res
+
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
 # zusammen in
 # Mo, Mi, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21
@@ -46,7 +57,7 @@ def make_raumzeit(veranstaltung, lang="de"):
     res = []
     for termin in veranstaltung["woechentlicher_termin"]:
         ta = util.terminart.find_one({"_id": termin['key']})
-        if ta["hp_sichtbar"]:
+        if ta["komm_sichtbar"]:
             ta = ta[f"name_{lang}"]
             if termin['wochentag'] !="":
                 # key, raum, zeit, person, kommentar
@@ -175,6 +186,7 @@ def makedata(sem_kurzname, komm, lang, alter):
             if alter and v_dict["kommentar"] == "":
                 v_dict["kommentar"] = veranstaltung[f"kommentar_latex_{otherlang}"]
 
+            v_dict["code"] = makecode(sem_id, veranstaltung)
             # Module löschen, die in keinem Studiengang des Semesters vorkommen
             mod_verw = []
             for m in veranstaltung["verwendbarkeit_modul"]:

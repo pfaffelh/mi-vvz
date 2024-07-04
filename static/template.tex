@@ -74,13 +74,10 @@ University of Freiburg -- Mathematical Institute
 \addcontentsline{toc}{section}{{Hinweise}}\addtocontents{toc}{\medskip\hrule\medskip}
 
 %#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%#%% Über dieses Dokument
+%#%% Input eines zusätzlichen Files
 %#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Über dieses Dokument}
-
-\addcontentsline{toc}{subsection}{Über dieses Dokument}
-Dies ist ein automatisch generiertes Dokument aus dem VVZ.
+\input{\VAR{data["includefile"]}}
 
 %#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %#%%  BEGINN VERANSTALTUNGSTEIL
@@ -103,23 +100,27 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 %% for veranstaltung in rubrik["veranstaltung"]
 \clearpage\hrule\vskip1pt\hrule 
 %% if veranstaltung["url"] != ""
-\section*{\large \href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
+\section*{\Large \href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
 %% else 
-\section*{\large \VAR{veranstaltung["titel"]}}
+\section*{\Large \VAR{veranstaltung["titel"]}}
 %% endif
 \addcontentsline{toc}{subsection}{\VAR{veranstaltung["titel"]}\ \textcolor{gray}{(\em \VAR{veranstaltung["dozent"]})}}
 \vskip-2ex  
+%% if veranstaltung["code"] != ""
+\hfill{\VAR{veranstaltung["code"]}}
+%% endif
+
 \hfill{\it \VAR{veranstaltung["person"]}}\\
 %% for line in veranstaltung["raumzeit"]
 \VAR{line}\\
 %% endfor 
 %% if veranstaltung["url"] != ""
-Webseite: \url{\VAR{veranstaltung["url"]}}
+% Webseite: \url{\VAR{veranstaltung["url"]}}
 %% endif
 
 %% if data["include_inhalt"]
 %% if veranstaltung["inhalt"] != ""
-\subsubsection*{\Large 
+\subsubsection*{\large 
 %% if data["lang"] == "de"
 Inhalt:
 %% else
@@ -129,7 +130,7 @@ Content:
 \VAR{veranstaltung["inhalt"]}
 %% endif 
 %% if veranstaltung["literatur"] != ""
-\subsubsection*{\Large 
+\subsubsection*{\large 
 %% if data["lang"] == "de"
 Literatur:
 %% else
@@ -139,7 +140,7 @@ Literature:
 \VAR{veranstaltung["literatur"]}
 %% endif 
 %% if veranstaltung["vorkenntnisse"] != ""
-\subsubsection*{\Large 
+\subsubsection*{\large 
 %% if data["lang"] == "de"
 Vorkenntnisse:
 %% else 
@@ -149,7 +150,7 @@ Prerequisites:
 \VAR{veranstaltung["vorkenntnisse"]}
 %% endif
 %% if veranstaltung["kommentar"] != ""
-\subsubsection*{\Large 
+\subsubsection*{\large 
 %% if data["lang"] == "de"
 Bemerkungen:
 %% else 
@@ -160,7 +161,7 @@ Remarks:
 %% endif 
 %% endif
 %% if data["verw_kurz"]
-\subsubsection*{\Large 
+\subsubsection*{\large 
 %% if data["lang"] == "de"
 Verwendbar in folgenden Modulen:
 %% else
@@ -173,7 +174,7 @@ Usable in the following modules:
 %% endif 
 
 %% if not data["verw_kurz"]
-\subsubsection*{\Large 
+\subsubsection*{\large 
 %% if data["lang"] == "de"
 Verwendbarkeit, Studien- und Prüfungsleistungen:
 %% else 

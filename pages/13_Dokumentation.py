@@ -143,6 +143,9 @@ if st.session_state.logged_in:
     with st.expander("# Change Log"):
         st.markdown("2024/05/01: Version 0.1")
         st.markdown("2024/07/03: Version 0.2  \n Einige Updates, etwa das Generieren von LaTeX-Files. Abjetzt wird das kommentierte Vorlesugnsverzeichnis hieraus generiert. Das bedeutet etwa, dass die Files zur Portierung der alten Datenbanken ...db nicht mehr benötigt werden und aus dem repository entfernt wurden.")
+        st.markdown("2024/07/04: Version 0.21  \n Änderung der Datenbank; neues Feld komm sichtbar in Codekategorie, und entsprechende Änderung der Datenbank und des Kommentierten VVZ.")
+    with st.expander("# TODO"):
+        st.markdown("ECTS-Punkte sollen übersichtlich in der Verwendbarkeit dargestellt werden.")
 
 else: 
     switch_page("VVZ")

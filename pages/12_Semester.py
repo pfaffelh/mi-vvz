@@ -205,13 +205,14 @@ if st.session_state.logged_in:
 
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
+                    komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False)
                     name_de=st.text_input('Titel (de)', x["name_de"], key=f'titel-de-{x["_id"]}')
                     name_en=st.text_input('Titel (en)', x["name_en"], key=f'titel-en-{x["_id"]}')
                     beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}')
                     beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
                     code = []
-                    x_updated = {"hp_sichtbar": hp_sichtbar, "name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
+                    x_updated = {"hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar, "name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )

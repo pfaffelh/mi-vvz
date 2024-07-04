@@ -63,8 +63,8 @@ if st.session_state.logged_in:
         
 
     with st.form(f'ID-{x["_id"]}'):
-        hp_sichtbar = st.checkbox("Auf Homepage sichtbar", x["hp_sichtbar"], disabled = False)
-        komm_sichtbar = st.checkbox("Im kommentierten VVZ sichtbar", x["komm_sichtbar"], disabled = False)
+        hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", x["hp_sichtbar"], disabled = False)
+        komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False)
         name_de=st.text_input('Name (de)', x["name_de"])
         name_en=st.text_input('Name (en)', x["name_en"])
         x_updated = ({"name_de": name_de, "name_en": name_en, "hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar})

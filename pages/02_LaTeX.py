@@ -27,6 +27,9 @@ tools.delete_temporary()
 tools.display_navigation()
 st.session_state.page = "LaTeX"
 
+sem_id = st.session_state.semester_id
+sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
+
 if st.session_state.logged_in:
     st.header("Ausgabe von LaTeX-Files")
     st.write("Hier können LaTeX-Files für das kommentierte Vorlesungsverzeichnis und die Erweiterungen der Modulhandbücher ausgegeben werden.")
@@ -37,13 +40,12 @@ if st.session_state.logged_in:
     include_inhalt = st.toggle("Inhalt der Veranstaltungen anzeigen", value=True, help="Andernfalls werden nur Verwendbarkeiten ausgegeben.")
     verw_kurz = st.toggle("Verwendbarkeiten nur in Kurzform ausgeben", value=True, help="Andernfalls wird die komplette Verwendbarkeitsmatrix für jede Veranstaltung ausgegeben.")
     wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', "", key = "watermark")
+    sem = util.semester.find_one
+    includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann.tex", key = "includefile")
     titel = st.text_input('Titel des Dokuments', ("Kommentiertes Vorlesungsverzeichnis" if verw_kurz else "Ergänzungen des Modulhandbuchs") if not en else ("Comments on the course catalogue" if verw_kurz else "Supplements of the module handbooks"), key = "titel")
 
-    sem_id = st.session_state.semester_id
-    sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
-    sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
-
     if komm:
+        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
         sem_id = st.session_state.semester_id
         komm_id = util.code.find_one({"semester" : sem_id, "name" : { "$eq" : "Komm" }})["_id"]
         ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
