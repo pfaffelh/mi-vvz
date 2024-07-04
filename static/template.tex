@@ -100,9 +100,9 @@ Dies ist ein automatisch generiertes Dokument aus dem VVZ.
 %% for veranstaltung in rubrik["veranstaltung"]
 \clearpage\hrule\vskip1pt\hrule 
 %% if veranstaltung["url"] != ""
-\section*{\large\href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
+\section*{\large \href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
 %% else 
-\section*{\large\VAR{veranstaltung["titel"]}}
+\section*{\large \VAR{veranstaltung["titel"]}}
 %% endif
 \addcontentsline{toc}{subsection}{\VAR{veranstaltung["titel"]}\ \textcolor{gray}{(\em \VAR{veranstaltung["dozent"]})}}
 \vskip-2ex  

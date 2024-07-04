@@ -66,7 +66,7 @@ def make_raumzeit(veranstaltung, lang="de"):
                 tag = util.wochentag[termin['wochentag']][lang]
                 # person braucht man, wenn wir dann die Datenbank geupdated haben.
                 # person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
-                kommentar = rf"\newline{termin['kommentar']}" if termin['kommentar'] != "" else ""
+                kommentar = rf"\newline {termin['kommentar']}" if termin['kommentar'] != "" else ""
                 new = [key, tag, zeit, raum, kommentar]
                 if key in [x[0] for x in res]:
                     new.pop(0)
