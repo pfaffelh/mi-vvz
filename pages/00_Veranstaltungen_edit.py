@@ -446,12 +446,12 @@ if st.session_state.logged_in:
                 st.session_state.translation_tmp = None
             tools.update_confirm(collection, x, ver_updated, reset = False)
         with col2_button:
-            translate = st.button("Übersetzungsvorschlag")
+            translate = st.button("Übersetzungsvorschlag (nur für leere Felder)")
         if translate:
             ver_updated_old = ver_updated.copy()
             for key in ver_updated.keys():
                 if "_en" in key and ver_updated[key] == "":
-                    ver_updated[key] = ts.translate_text(x[key.replace("_en", "_de")], translator="google", from_language="de", to_language="en")
+                    ver_updated[key] = ts.translate_text(x[key.replace("_en", "_de")], translator="deepl", from_language="de", to_language="en")
             st.session_state.expanded = "kommentiertes_VVZ"
             st.session_state.translation_tmp = (ver_updated.copy(), ver_updated_old)
             st.rerun()
