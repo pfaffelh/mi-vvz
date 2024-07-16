@@ -436,13 +436,10 @@ if st.session_state.logged_in:
         col1_button, col2_button = st. columns([2,5])
         with col1_button:
             submit = st.button('Speichern (Kommentiertes Vorlesungsverzeichnis)', type = 'primary')
-        if submit:  # TODO: Update Save all for translation
+        if submit:
             st.session_state.expanded = "kommentiertes_VVZ"
             if st.session_state.translation_tmp is not None:
-                print(x["kommentar_latex_de"], x["kommentar_latex_en"])
                 x.update(st.session_state.translation_tmp[1])
-                print(x["kommentar_latex_de"], x["kommentar_latex_en"])
-                print(ver_updated["kommentar_latex_de"], ver_updated["kommentar_latex_en"])
                 st.session_state.translation_tmp = None
             tools.update_confirm(collection, x, ver_updated, reset = False)
         with col2_button:
@@ -451,7 +448,7 @@ if st.session_state.logged_in:
             ver_updated_old = ver_updated.copy()
             for key in ver_updated.keys():
                 if "_en" in key and ver_updated[key] == "":
-                    ver_updated[key] = ts.translate_text(x[key.replace("_en", "_de")], translator="deepl", from_language="de", to_language="en")
+                    ver_updated[key] = ts.translate_text(ver_updated[key.replace("_en", "_de")], translator="google", from_language="de", to_language="en")
             st.session_state.expanded = "kommentiertes_VVZ"
             st.session_state.translation_tmp = (ver_updated.copy(), ver_updated_old)
             st.rerun()
