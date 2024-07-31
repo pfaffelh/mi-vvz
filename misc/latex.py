@@ -15,7 +15,7 @@ def getraum(raum_id, lang = "de", alter = True):
     r = util.raum.find_one({ "_id": raum_id})
     g = util.gebaeude.find_one({ "_id": r["gebaeude"]})
     name = f"name_{lang}"
-    if alter and name == "":
+    if alter and r[name] == "":
         name = f"name_{otherlang}"
     return ", ".join([r[name], f"\href{{{g['url']}}}{{{g[name]}}}"])
 
