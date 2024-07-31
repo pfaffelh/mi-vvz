@@ -41,7 +41,7 @@ if st.session_state.logged_in:
     verw_kurz = st.toggle("Verwendbarkeiten nur in Kurzform ausgeben", value=True, help="Andernfalls wird die komplette Verwendbarkeitsmatrix für jede Veranstaltung ausgegeben.")
     wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', "", key = "watermark")
     sem = util.semester.find_one
-    includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann.tex", key = "includefile")
+    includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann-{'en' if en else 'de'}.tex", key = "includefile")
     titel = st.text_input('Titel des Dokuments', ("Kommentiertes Vorlesungsverzeichnis" if verw_kurz else "Ergänzungen des Modulhandbuchs") if not en else ("Comments on the course catalogue" if verw_kurz else "Supplements of the module handbooks"), key = "titel")
 
     if komm:
@@ -66,7 +66,7 @@ if st.session_state.logged_in:
     template = latex.latex_jinja_env.get_template(f"static/template.tex")
     kommentare = template.render(data = data)
 
-    st.download_button("Download kommentiertes VVZ", kommentare, file_name=f"Kommentare_{sem_kurzname}.tex", help=None, on_click=None, args=None, kwargs=None)
+    st.download_button("Download kommentiertes VVZ", kommentare, file_name=f"Kommentare_{sem_kurzname}_{data['lang']}.tex", help=None, on_click=None, args=None, kwargs=None)
 
     if komm:
         st.write("Es werden nur Veranstaltungen aufgenommen, die den Code 'Komm' tragen.")

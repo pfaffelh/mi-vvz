@@ -39,8 +39,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/german/ngerman.sty
-INPUT /usr/share/texlive/texmf-dist/tex/generic/german/ngerman.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/units/nicefrac.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/units/nicefrac.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
@@ -64,6 +62,8 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+INPUT /usr/share/texlive/texmf-dist/tex/generic/german/ngerman.sty
+INPUT /usr/share/texlive/texmf-dist/tex/generic/german/ngerman.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty

@@ -10,10 +10,14 @@ from collections import OrderedDict
 import jinja2
 import os
 
-def getraum(raum_id, lang = "de"):
+def getraum(raum_id, lang = "de", alter = True):
+    otherlang = "en" if lang == "de" else "de"
     r = util.raum.find_one({ "_id": raum_id})
     g = util.gebaeude.find_one({ "_id": r["gebaeude"]})
-    return ", ".join([r[f"name_{lang}"], f"\href{{{g['url']}}}{{{g[f'name_{lang}']}}}"])
+    name = f"name_{lang}"
+    if alter and name == "":
+        name = f"name_{otherlang}"
+    return ", ".join([r[name], f"\href{{{g['url']}}}{{{g[name]}}}"])
 
 def makemodulname(modul_id, lang = "de", alter = True):
     otherlang = "de" if "lang" == "en" else "en"
@@ -53,18 +57,22 @@ def makecode(sem_id, veranstaltung):
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
 # zusammen in
 # Mo, Mi, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21
-def make_raumzeit(veranstaltung, lang="de"):
+def make_raumzeit(veranstaltung, lang="de", alter = True):
+    otherlang = "de" if "lang" == "en" else "en"
     res = []
     for termin in veranstaltung["woechentlicher_termin"]:
         ta = util.terminart.find_one({"_id": termin['key']})
         if ta["komm_sichtbar"]:
-            ta = ta[f"name_{lang}"]
+            n = f"name_{lang}"
+            if alter and ta[n] == "":
+                n = f"name_{otherlang}"
+            ta = ta[n]
             if termin['wochentag'] !="":
                 # key, raum, zeit, person, kommentar
                 key = f"{ta}:" if ta != "" else ""
                 # Raum und Gebäude mit Url, zB Hs II.
                 r = util.raum.find_one({ "_id": termin["raum"]})                
-                raum = getraum(r["_id"], lang)
+                raum = getraum(r["_id"], lang, alter)
                 # zB Vorlesung: Montag, 8-10 Uhr, HSII, Albertstr. 23a
                 if termin['start'] is not None:
                     zeit = f"{str(termin['start'].hour)}{': '+str(termin['start'].minute) if termin['start'].minute > 0 else ''}"
@@ -91,7 +99,10 @@ def make_raumzeit(veranstaltung, lang="de"):
     for termin in veranstaltung["einmaliger_termin"]:
         ta = util.terminart.find_one({"_id": termin['key']})
         if ta["hp_sichtbar"]:
-            ta = ta[f"name_{lang}"]
+            n = f"name_{lang}"
+            if alter and ta[n] == "":
+                n = f"name_{otherlang}"
+            ta = ta[n]
             # Raum und Gebäude mit Url.
             raeume = list(util.raum.find({ "_id": { "$in": termin["raum"]}}))
             raum = ", ".join([getraum(r["_id"], lang) for r in raeume])
@@ -125,9 +136,8 @@ def make_raumzeit(veranstaltung, lang="de"):
 def makedata(sem_kurzname, komm, lang, alter):
     sem_id = util.semester.find_one({"kurzname": sem_kurzname})["_id"]
     otherlang = "en" if lang == "de" else "de"
-
     rubriken = list(util.rubrik.find({"semester": sem_id, "hp_sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
-
+    
     data = {}
     data["rubriken"] = []
 
@@ -168,7 +178,7 @@ def makedata(sem_kurzname, komm, lang, alter):
                 v_dict["person"] = v_dict["dozent"]
             # raumzeit ist der Text, der unter der Veranstaltung im kommentierten VVZ steht.
 
-            v_dict["raumzeit"] = make_raumzeit(veranstaltung, lang = lang)
+            v_dict["raumzeit"] = make_raumzeit(veranstaltung, lang = lang, alter = alter)
 
             v_dict["inhalt"] = veranstaltung[f"inhalt_{lang}"]
             if alter and v_dict["inhalt"] == "":
