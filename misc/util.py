@@ -44,7 +44,8 @@ def setup_session_state():
         st.session_state.studiengang = mongo_db["studiengang"]
         st.session_state.terminart = mongo_db["terminart"]
         st.session_state.veranstaltung = mongo_db["veranstaltung"]
-
+        st.session_state.dictionary = mongo_db["dictionary"]
+        
     except: 
         logger.error("Verbindung zur Datenbank nicht möglich!")
         st.write("**Verbindung zur Datenbank nicht möglich!**  \nKontaktieren Sie den Administrator.")
@@ -64,7 +65,8 @@ def setup_session_state():
     studiengang = st.session_state.studiengang
     terminart = st.session_state.terminart
     veranstaltung = st.session_state.veranstaltung
-
+    dictionary = st.session_state.dictionary
+    
     # sem ist ein gewähltes Semester
     if "current_semester_id" not in st.session_state:
         semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
@@ -109,7 +111,8 @@ def setup_session_state():
         semester: "Semester",
         studiengang: "Studiengänge",
         terminart: "Terminart",
-        veranstaltung: "Veranstaltungen"
+        veranstaltung: "Veranstaltungen",
+        dictionary: "Lexikon"
     }
 
     st.session_state.leer = {
@@ -124,6 +127,7 @@ def setup_session_state():
         studiengang: studiengang.find_one({"name": "-"})["_id"],
         rubrik: "",
         terminart: terminart.find_one({"name_de": "-"})["_id"],
+        dictionary: ""
     }
     leer = st.session_state.leer
 
@@ -217,6 +221,11 @@ def setup_session_state():
             "name_en": "",
             "kommentar": "", 
             "sichtbar": True
+        },
+        dictionary: {
+            "de": "",
+            "en": "",
+            "kommentar": ""
         }
     }
     # Für den Raumplan
@@ -269,7 +278,8 @@ def setup_session_state():
         veranstaltung:[{"collection": semester, "field": "veranstaltung", "list": True},
                     {"collection": rubrik, "field": "veranstaltung", "list": True},
                     {"collection": code, "field": "veranstaltung", "list": True},
-                    {"collection": person, "field": "veranstaltung", "list": True}]
+                    {"collection": person, "field": "veranstaltung", "list": True}],
+        dictionary: []
     }
 
     st.session_state.wochentag = {
@@ -299,6 +309,7 @@ semester = st.session_state.semester
 studiengang = st.session_state.studiengang
 terminart = st.session_state.terminart
 veranstaltung = st.session_state.veranstaltung
+dictionary = st.session_state.dictionary
 collection_name = st.session_state.collection_name
 leer = st.session_state.leer
 new = st.session_state.new

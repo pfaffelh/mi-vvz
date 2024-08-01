@@ -305,6 +305,7 @@ def display_navigation():
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/00_Veranstaltungen.py", label="Veranstaltungen")
     st.sidebar.page_link("pages/01_Raumplan.py", label="Raumplan")
+    st.sidebar.page_link("pages/01_Lexikon.py", label="Lexikon")
     #st.sidebar.page_link("pages/02_www.py", label="Vorschau www.math...")
     st.sidebar.page_link("pages/02_LaTeX.py", label="Latex-Files")
     st.sidebar.page_link("pages/02_Veranstaltungen_suchen.py", label="Veranstaltungen suchen")
@@ -365,6 +366,8 @@ def repr(collection, id, show_collection = True, short = False):
         res = x['name_de'] if short else f"{x['name_de']} ({s}, {sem})"
     elif collection == st.session_state.terminart:
         res = f"{x['name_de']}"
+    elif collection == st.session_state.dictionary:
+        res = f"{x['de']}: {x['en']}"
     if show_collection:
         res = f"{util.collection_name[collection]}: {res}"
     return res
