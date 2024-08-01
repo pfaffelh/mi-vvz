@@ -42,7 +42,7 @@ if st.session_state.logged_in:
     with col[0]:
         st.write("")
         st.write("")
-        save = st.button("Speichern", use_container_width=True)
+        save = st.button("Speichern", use_container_width=True, key = f"save_neu")
         if save:
             collection.insert_one({ "de" : neu_de, "en": neu_en, "kommentar": neu_kommentar})
             st.toast("Erfolgreich gespeichert!")
@@ -61,7 +61,7 @@ if st.session_state.logged_in:
             with col[0]:
                 st.write(" ")
                 st.write(" ")
-                save = st.button("Speichern", use_container_width=True)
+                save = st.button("Speichern", use_container_width=True, key = f"save_{x['_id']}")
                 if save:
                     collection.update_one({"_id": st.session_state.edit}, { "$set" : { "de" : de, "en": en, "kommentar": kommentar}})
                     st.session_state.edit = ""
