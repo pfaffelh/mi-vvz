@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 import time
 import pymongo
+from pymongo.collation import Collation
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -28,7 +29,8 @@ collection = util.dictionary
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Lexikon (de / en) wichtiger Fachbegriffe")
-    words = list(collection.find({}, sort=[("de", pymongo.ASCENDING)]))
+    # sort case-insensitive
+    words = list(collection.find({}, collation = Collation(locale = 'en'), sort=[("de", pymongo.ASCENDING)]))
     st.write("### Neuer Eintrag")
     col = st.columns([2,5,5,5,2])
     with col[1]:
@@ -43,11 +45,10 @@ if st.session_state.logged_in:
         save = st.button("Speichern", use_container_width=True)
         if save:
             collection.insert_one({ "de" : neu_de, "en": neu_en, "kommentar": neu_kommentar})
-            st.session_state["de_new"] = ""
             st.toast("Erfolgreich gespeichert!")
             time.sleep(0.5)
             st.rerun()
-        st.divider()
+    st.divider()
     for x in words:
         col = st.columns([2,5,5,5,2])
         if st.session_state.edit == x["_id"]:
