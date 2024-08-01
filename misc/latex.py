@@ -77,7 +77,7 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 if termin['start'] is not None:
                     zeit = f"{str(termin['start'].hour)}{': '+str(termin['start'].minute) if termin['start'].minute > 0 else ''}"
                     if termin['ende'] is not None:
-                        zeit = zeit + f"-{str(termin['ende'].hour)}{': '+str(termin['ende'].minute) if termin['ende'].minute > 0 else ''}"
+                        zeit = zeit + f"--{str(termin['ende'].hour)}{': '+str(termin['ende'].minute) if termin['ende'].minute > 0 else ''}"
                     zeit = zeit + (" Uhr" if lang == "de" else " h")
                 else:
                     zeit = ""
@@ -85,7 +85,10 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 tag = util.wochentag[termin['wochentag']][lang]
                 # person braucht man, wenn wir dann die Datenbank geupdated haben.
                 # person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
-                kommentar = rf"\newline {termin['kommentar']}" if termin['kommentar'] != "" else ""
+                komm = f"kommentar_{lang}"
+                if alter and termin[komm] == "":
+                    komm = f"kommentar_{otherlang}"
+                kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
                 new = [key, tag, zeit, raum, kommentar]
                 if key in [x[0] for x in res]:
                     new.pop(0)
@@ -113,7 +116,7 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 startdatum = termin['startdatum'].strftime("%d.%m.")
                 if termin['startdatum'] != termin['enddatum']:
                     enddatum = termin['enddatum'].strftime("%d.%m.")
-                    datum = " bis ".join([startdatum, enddatum]) if startdatum != enddatum else startdatum
+                    datum = "--".join([startdatum, enddatum]) if startdatum != enddatum else startdatum
                 else:
                     datum = startdatum
             else:
@@ -121,13 +124,16 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
             if termin['startzeit'] is not None:
                 zeit = f"{str(termin['startzeit'].hour)}{': '+str(termin['startzeit'].minute) if termin['startzeit'].minute > 0 else ''}"
                 if termin['endzeit'] is not None:
-                    zeit = zeit + f"-{str(termin['endzeit'].hour)}{': '+str(termin['endzeit'].minute) if termin['endzeit'].minute > 0 else ''}"
+                    zeit = zeit + f"--{str(termin['endzeit'].hour)}{': '+str(termin['endzeit'].minute) if termin['endzeit'].minute > 0 else ''}"
                 zeit = zeit + (" Uhr" if lang == "de" else " h")
             else:
                 zeit = ""
             # person braucht man, wenn wir dann die Datenbank geupdated haben.
             # person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
-            kommentar = rf"{termin['kommentar']}" if termin['kommentar'] != "" else ""
+            komm = f"kommentar_{lang}"
+            if alter and termin[komm] == "":
+                komm = f"kommentar_{otherlang}"
+            kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
             new = [ta, datum, zeit, raum, kommentar]
             res.append(new)
     res = [f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}" for x in res]

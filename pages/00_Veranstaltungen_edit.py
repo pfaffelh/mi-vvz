@@ -251,7 +251,7 @@ if st.session_state.logged_in:
                 if st.button('✕', key=f'close-w-{i}'):
                     termin_remove_id = i
 
-            cols = st.columns([1,1,5,5,15,1])
+            cols = st.columns([1,1,10,15,1])
             with cols[2]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
@@ -259,8 +259,11 @@ if st.session_state.logged_in:
                 w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
             with cols[3]:
                 w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"termin_{i}_person")
-            with cols[4]:
-                w_kommentar = st.text_input("Kommentar", w["kommentar"], key =f"termin_{i}_kommentar")
+            cols = st.columns([1,1,10,10,5,1])
+            with cols[2]:
+                w_kommentar_de = st.text_input("Kommentar (de)", w["kommentar_de"], key =f"termin_{i}_kommentar_de")
+            with cols[3]:
+                w_kommentar_en = st.text_input("Kommentar (en)", w["kommentar_en"], key =f"termin_{i}_kommentar_en")
             #st.divider()
             woechentlicher_termin.append({
                 "key": w_key,
@@ -271,7 +274,8 @@ if st.session_state.logged_in:
                 "start": None if w_start == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_start),
                 "ende": None if w_ende == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_ende),
                 "person": w_person,
-                "kommentar": w_kommentar
+                "kommentar_de": w_kommentar_de,
+                "kommentar_en": w_kommentar_en
             })
         ver_updated = {
             "dozent": doz_list,
@@ -292,7 +296,8 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
-                "kommentar": "",
+                "kommentar_de": "",
+                "kommentar_en": "",
                 "wochentag": "",
                 "raum": util.raum.find_one({"name_de": "-"})["_id"],
                 "person": [],
@@ -318,7 +323,7 @@ if st.session_state.logged_in:
             if i in st.session_state.veranstaltung_tmp["einmaliger_termin_removed"]:
                 continue
 
-            cols = st.columns([1,1,10,5,5,5,1])
+            cols = st.columns([1,1,10,5,5,1])
             disable_move = ((len(st.session_state.veranstaltung_tmp["einmaliger_termin_removed"])) > 0)  or i >= tmp_id_start
             with cols[0]:
                 st.write("")
@@ -340,14 +345,12 @@ if st.session_state.logged_in:
                 w_enddatum = st.date_input("Ende", value = w["enddatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_enddatum")
                 w_enddatum = None if w_enddatum == None else datetime.datetime.combine(w_enddatum, datetime.time(hour = 0, minute = 0))                                           
             with cols[5]:
-                w_kommentar = st.text_input("Kommentar", w["kommentar"], key =f"einmaliger_termin_{i}_kommentar")
-            with cols[6]:
                 st.write("")
                 st.write("")
                 if st.button('✕', key=f'close-e-{i}'):
                     termin_remove_id = i
 
-            cols = st.columns([1,1,5,5,5,5,5,1])
+            cols = st.columns([1,1,5,5,5,5,1])
             with cols[2]:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in termin_raum }
@@ -360,6 +363,12 @@ if st.session_state.logged_in:
             with cols[5]:
                 w_endzeit = st.time_input("", value = w["endzeit"], key = f"einmaliger_termin_{i}_endzeit")
                 w_endzeit = None if w_endzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_endzeit)
+            cols = st.columns([1,1,10,10,1])
+            with cols[2]:
+                w_kommentar_de = st.text_input("Kommentar (de)", w["kommentar_de"], key =f"einmaliger_termin_{i}_kommentar_de")            
+            with cols[3]:
+                w_kommentar_en = st.text_input("Kommentar (en)", w["kommentar_en"], key =f"einmaliger_termin_{i}_kommentar_en")
+
             einmaliger_termin.append({
                 "key": w_key,
                 "raum": w_raum,
@@ -369,7 +378,8 @@ if st.session_state.logged_in:
                 "startzeit": w_startzeit,
                 "enddatum": w_enddatum,
                 "endzeit": w_endzeit,
-                "kommentar": w_kommentar
+                "kommentar_de": w_kommentar_de,
+                "kommentar_en": w_kommentar_en
             })
         ver_updated = {
             "dozent": doz_list,
@@ -392,7 +402,8 @@ if st.session_state.logged_in:
         if neuer_termin:
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
-                "kommentar": "",
+                "kommentar_de": "",
+                "kommentar_en": "",
                 "raum": [],
                 "person": [],
                 "startdatum": None,
