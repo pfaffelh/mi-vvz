@@ -88,6 +88,12 @@ def setup_session_state():
     # Determines which page we are on
     if "page" not in st.session_state:
         st.session_state.page = ""
+    if "de_new" not in st.session_state:
+        st.session_state.de_new = ""
+    if "en_new" not in st.session_state:
+        st.session_state.en_new = ""
+    if "kommentar_new" not in st.session_state:
+        st.session_state.kommentar_new = ""
 
     ### temporary data ###
     ### should be also cleared on every page with tools.

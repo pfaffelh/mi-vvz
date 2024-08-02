@@ -26,6 +26,13 @@ tools.display_navigation()
 # Es geht hier vor allem um diese Collection:
 collection = util.dictionary
 
+def saveneu(ini):
+    collection.insert_one(ini)
+    st.toast("Erfolgreich gespeichert!")
+    st.session_state.de_new = ""
+    st.session_state.en_new = ""
+    st.session_state.kommentar_new = ""
+
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Lexikon (de / en) wichtiger Fachbegriffe")
@@ -34,30 +41,25 @@ if st.session_state.logged_in:
     st.write("### Neuer Eintrag")
     col = st.columns([2,5,5,5,2])
     with col[1]:
-        neu_de = st.text_input('Deutscher Begriff', "", key = f"de_new")
+        neu_de = st.text_input('Deutscher Begriff', "", key = "de_new")
     with col[2]:
-        neu_en = st.text_input('Englischer Begriff', "", key = f"en_new")
+        neu_en = st.text_input('Englischer Begriff', "", key = "en_new")
     with col[3]:
-        neu_kommentar = st.text_input('Kommentar', '', key = f"kommentar_new")
+        neu_kommentar = st.text_input('Kommentar', '', key = "kommentar_new")
     with col[0]:
         st.write("")
         st.write("")
-        save = st.button("Speichern", use_container_width=True, key = f"save_neu")
-        if save:
-            collection.insert_one({ "de" : neu_de, "en": neu_en, "kommentar": neu_kommentar})
-            st.toast("Erfolgreich gespeichert!")
-            time.sleep(0.5)
-            st.rerun()
+        st.button("Speichern", use_container_width=True, key = f"save_neu", on_click=saveneu, args = [{"de": neu_de, "en": neu_en, "kommentar": neu_kommentar}])
     st.divider()
     for x in words:
         col = st.columns([2,5,5,5,2])
         if st.session_state.edit == x["_id"]:
             with col[1]:
-                de  =st.text_input('', x["de"], key = f"de_{x['_id']}")
+                de  =st.text_input("deutsch", x["de"], label_visibility='hidden', key = f"de_{x['_id']}")
             with col[2]:
-                en = st.text_input('', x["en"], key = f"en_{x['_id']}")
+                en = st.text_input("englisch", x["en"], label_visibility='hidden', key = f"en_{x['_id']}")
             with col[3]:
-                kommentar = st.text_input('', x["kommentar"], key = f"kommentar_{x['_id']}")
+                kommentar = st.text_input('kommentar', x["kommentar"], label_visibility='hidden', key = f"kommentar_{x['_id']}")
             with col[0]:
                 st.write(" ")
                 st.write(" ")
