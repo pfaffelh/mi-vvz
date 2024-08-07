@@ -32,6 +32,8 @@ for k in kats:
   i = i+1
   planungkategorie.insert_one({ "name": k, "kommentar": "", "rang": i })
 
+planungkategorie.insert_one({ "name": "-", "kommentar": "", "rang": i+1 })
+
 sems = ["2022SS",	"2022WS", "2023SS", "2023WS", "2024SS", "2024WS", "2025SS", "2025WS", "2026SS", "2026WS", "2027SS"]
 
 for index, row in df.iterrows():

@@ -1,0 +1,11 @@
+In
+Code/mongo-vvz/port2/
+einmal
+python port.py
+aufrufen
+mongodump --db vvz --archive=vvz_backup
+cp vvz_backup ../../mi-vvz/mongo/
+
+Dann vvz aus der mongodb löschen und in mi-vvz/mongo
+
+

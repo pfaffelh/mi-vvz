@@ -6,6 +6,7 @@ import ldap
 import misc.util as util
 from bson import ObjectId
 from misc.config import *
+from datetime import datetime
 
 def move_up(collection, x, query = {}):
     query["rang"] = {"$lt": x["rang"]}
@@ -118,7 +119,7 @@ def delete_item_update_dependent_items(collection, id, switch = True):
                 x["collection"].update_many({x["field"]: id}, { "$set": { x["field"].replace(".", ".$."): util.leer[collection]}})             
         s = ("  \n".join(find_dependent_items(collection, id)))
         if s:
-            s = f"\n{s}  \ngeändert."     
+            s = f"\n{s}  \ngeändert."
         util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} item {repr(collection, id)} gelöscht, und abhängige Felder geändert.")
         collection.delete_one({"_id": id})
         reset_vars("")
@@ -305,9 +306,8 @@ def display_navigation():
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/00_Veranstaltungen.py", label="Veranstaltungen")
     st.sidebar.page_link("pages/01_Raumplan.py", label="Raumplan")
-    st.sidebar.page_link("pages/01_Lexikon.py", label="Lexikon")
+    st.sidebar.page_link("pages/02_Planung.py", label="Zukunftsplanung")
     #st.sidebar.page_link("pages/02_www.py", label="Vorschau www.math...")
-    st.sidebar.page_link("pages/02_LaTeX.py", label="Latex-Files")
     st.sidebar.page_link("pages/02_Veranstaltungen_suchen.py", label="Veranstaltungen suchen")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/03_Personen.py", label="Personen")
@@ -320,7 +320,9 @@ def display_navigation():
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/12_Semester.py", label="Semester")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-    st.sidebar.page_link("pages/13_Dokumentation.py", label="Dokumentation")
+    st.sidebar.page_link("pages/13_LaTeX.py", label="Latex-Files")
+    st.sidebar.page_link("pages/14_Lexikon.py", label="Lexikon")
+    st.sidebar.page_link("pages/15_Dokumentation.py", label="Dokumentation")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
 
 # short Version ohne abhängige Variablen
@@ -368,6 +370,10 @@ def repr(collection, id, show_collection = True, short = False):
         res = f"{x['name_de']}"
     elif collection == st.session_state.dictionary:
         res = f"{x['de']}: {x['en']}"
+    elif collection == st.session_state.planungkategorie:
+        res = f"{x['name']}"
+    elif collection == st.session_state.planung:
+        res = f"{x['name']}"
     if show_collection:
         res = f"{util.collection_name[collection]}: {res}"
     return res
@@ -467,3 +473,14 @@ def delete_temporary(except_field = ""):
     if not except_field == "veranstaltung_tmp":
         st.session_state.veranstaltung_tmp.clear()
         st.session_state.translation_tmp = None
+
+def get_semester_in_years(y = 0):
+    if datetime.now().month < 4:
+        res = f"{datetime.now().year-1+y}WS"
+    elif 3 < datetime.now().month and datetime.now().month < 11:
+        res = f"{datetime.now().year+y}SS"
+    else:
+        res = f"{datetime.now().year+y}WS"
+    return res
+
+    
