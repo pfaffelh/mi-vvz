@@ -53,12 +53,14 @@ def update_confirm(collection, x, x_updated, reset = True):
     st.toast("🎉 Erfolgreich geändert!")
 
 def new(collection, ini = {}, switch = True):
-    z = list(collection.find(sort = [("rang", pymongo.ASCENDING)]))
-    rang = z[0]["rang"]-1
-    util.new[collection]["rang"] = rang    
+    if list(collection.find({ "rang" : { "$exists": True }})) != []:
+        z = list(collection.find(sort = [("rang", pymongo.ASCENDING)]))
+        rang = z[0]["rang"]-1
+        util.new[collection]["rang"] = rang    
     for key, value in ini.items():
         util.new[collection][key] = value
     util.new[collection].pop("_id", None)
+    print(util.new[collection])
     x = collection.insert_one(util.new[collection])
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} ein neues Item angelegt.")
@@ -370,10 +372,10 @@ def repr(collection, id, show_collection = True, short = False):
         res = f"{x['name_de']}"
     elif collection == st.session_state.dictionary:
         res = f"{x['de']}: {x['en']}"
-    elif collection == st.session_state.planungkategorie:
+    elif collection == util.planungveranstaltung:
         res = f"{x['name']}"
-    elif collection == st.session_state.planung:
-        res = f"{x['name']}"
+    elif collection == util.planung:
+        res = f"{", ".join([repr(util.person, y, False, True) for y in x['dozent']])}"
     if show_collection:
         res = f"{util.collection_name[collection]}: {res}"
     return res

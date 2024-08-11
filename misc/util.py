@@ -46,7 +46,7 @@ def setup_session_state():
         st.session_state.veranstaltung = mongo_db["veranstaltung"]
         st.session_state.dictionary = mongo_db["dictionary"]
         st.session_state.planung = mongo_db["planung"]
-        st.session_state.planungkategorie = mongo_db["planungkategorie"]
+        st.session_state.planungveranstaltung = mongo_db["planungveranstaltung"]
         
     except: 
         logger.error("Verbindung zur Datenbank nicht möglich!")
@@ -68,7 +68,7 @@ def setup_session_state():
     terminart = st.session_state.terminart
     veranstaltung = st.session_state.veranstaltung
     dictionary = st.session_state.dictionary
-    planungkategorie = st.session_state.planungkategorie
+    planungveranstaltung = st.session_state.planungveranstaltung
     planung = st.session_state.planung
     
     # sem ist ein gewähltes Semester
@@ -123,7 +123,7 @@ def setup_session_state():
         terminart: "Terminart",
         veranstaltung: "Veranstaltungen",
         dictionary: "Lexikon",
-        planungkategorie: "Planungskategorie",
+        planungveranstaltung: "Planungskategorie",
         planung: "Planung"
     }
 
@@ -140,7 +140,7 @@ def setup_session_state():
         rubrik: "",
         terminart: terminart.find_one({"name_de": "-"})["_id"],
         dictionary: "",
-        planungkategorie: planungkategorie.find_one({"name": "-"})["_id"],
+        planungveranstaltung: planungveranstaltung.find_one({"name": "-"})["_id"],
         planung: ""
     }
     leer = st.session_state.leer
@@ -241,16 +241,17 @@ def setup_session_state():
             "en": "",
             "kommentar": ""
         },
-        planungkategorie: {
+        planungveranstaltung: {
             "name": "",
+            "sws": "",
+            "regel": "Jedes Wintersemester",
             "kommentar": ""
         },
         planung: {
-            "name": "",
-            "sws": "",
-            "semdozent": [],
+            "dozent": [],
+            "sem": "",
             "kommentar": "",
-            "kategorie": leer[planungkategorie]
+            "veranstaltung": leer[planungveranstaltung]
         }
     }
     # Für den Raumplan
@@ -291,7 +292,7 @@ def setup_session_state():
                     {"collection": veranstaltung, "field": "organisation", "list": True}, 
                     {"collection": veranstaltung, "field": "einmaliger_termin.$.person", "list": True}, 
                     {"collection": veranstaltung, "field": "woechentlicher_termin.$.person", "list": True},
-                    {"collection": planung, "field": "semdozent.$.dozent", "list": True}],
+                    {"collection": planung, "field": "dozent", "list": True}],
         studiengang:[{"collection": modul, "field": "studiengang", "list": True}],
         modul:     [{"collection": studiengang, "field": "modul", "list": True}, 
                     {"collection": veranstaltung, "field": "verwendbarkeit_modul", "list": True},
@@ -307,7 +308,7 @@ def setup_session_state():
                     {"collection": person, "field": "veranstaltung", "list": True}],
         dictionary: [],
         planung: [],
-        planungkategorie: [{"collection": planung, "field": "kategorie", "list": False}]
+        planungveranstaltung: [{"collection": planung, "field": "veranstaltung", "list": False}]
     }
 
     st.session_state.wochentag = {
@@ -338,7 +339,7 @@ studiengang = st.session_state.studiengang
 terminart = st.session_state.terminart
 veranstaltung = st.session_state.veranstaltung
 dictionary = st.session_state.dictionary
-planungkategorie = st.session_state.planungkategorie
+planungveranstaltung = st.session_state.planungveranstaltung
 planung = st.session_state.planung
 collection_name = st.session_state.collection_name
 leer = st.session_state.leer

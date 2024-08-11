@@ -23,76 +23,61 @@ mongo_db = cluster["vvz"]
 
 
 # planungkategorie: zB Pflichtvorlesung, Spezialvorlesung
-planungkategorie_validator = {
+planungveranstaltung_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "title": "Eine Kategorie für die weitere Veranstaltungsplanung.",
-        "required": ["name", "rang", "kommentar"],
-        "properties": {
-            "name": {
-                "bsonType": "string",
-                "description": "Name der Kategorie -- required"
-            },
-            "rang": {
-                "bsonType": "int",
-                "description": "Der Rang der Kategorie in der Darstellung -- required"
-            },
-            "kommentar": {
-                "bsonType": "string",
-                "description": "Kommentar zum Begriff."
-            }
-        }
-    }
-}
-
-# planungkategorie: zB Pflichtvorlesung, Spezialvorlesung
-planung_validator = {
-    "$jsonSchema": {
-        "bsonType": "object",
-        "title": "Eine Kategorie für die weitere Veranstaltungsplanung.",
-        "required": ["name", "kategorie", "sws", "kommentar", "semdozent"],
+        "title": "Eine Veranstaltung, die in kommenden Semestern geplant wird.",
+        "required": ["name", "sws", "regel", "rang", "kommentar"],
         "properties": {
             "name": {
                 "bsonType": "string",
                 "description": "Name der Veranstaltung -- required"
             },
-            "kategorie": {
-                "bsonType": "objectId",
-                "description": "objectId der planungkategorie -- required"
-            },
             "sws": {
                 "bsonType": "string",
                 "description": "Die SWS der Veranstaltung -- required"
+            },
+            "regel": {
+                "enum": ["Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"],
+                "description": "Die Regelmäßigkeit."
+            },
+            "rang": {
+                "bsonType": "int",
+                "description": "Der Rang der Veranstaltung in der Darstellung -- required"
+            },
+            "kommentar": {
+                "bsonType": "string",
+                "description": "Kommentar zur Veranstaltung."
+            }
+        }
+    }
+}
+
+# planung: zB Rohde, 2027WS
+planung_validator = {
+    "$jsonSchema": {
+        "bsonType": "object",
+        "title": "Eine Kategorie für die weitere Veranstaltungsplanung.",
+        "required": ["veranstaltung", "sem", "dozent", "kommentar"],
+        "properties": {
+            "veranstaltung": {
+                "bsonType": "objectId",
+                "description": "objectId der planungveranstaltung -- required"
             },
             "kommentar": {
                 "bsonType": "string",
                 "description": "Ein Kommentar -- required"
             },
-            "semdozent": {
+            "sem": {
+                "bsonType": "string",
+                "description": "Das Semester der geplanten Veranstaltung."
+            },
+            "dozent": {
                 "bsonType": "array",
-                "description": "Semester und Dozenten.",
+                "description": "Die Personen, die an dem Termin teilnehmen.",
                 "items": {
-                    "bsonType": "object",
-                    "description": "Beschreibung des Termins.",
-                    "required": ["sem", "dozent", "kommentar"],
-                    "properties": {
-                        "sem": {
-                            "bsonType": "string",
-                            "description": "Das Semester der geplanten Veranstaltung."
-                        },
-                        "dozent": {
-                            "bsonType": "array",
-                            "description": "Die Personen, die an dem Termin teilnehmen.",
-                            "items": {
-                                "bsonType": "objectId",
-                                "description": "Eine Person, die hier unterrichtet."
-                            }
-                        },
-                        "kommentar": {
-                            "bsonType": "string",
-                            "description": "Kommentar zu diesem Termin (de)."
-                        }
-                    }
+                    "bsonType": "objectId",
+                    "description": "Eine Person, die hier unterrichtet."
                 }
             },
         }
