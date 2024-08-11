@@ -375,7 +375,7 @@ def repr(collection, id, show_collection = True, short = False):
     elif collection == util.planungveranstaltung:
         res = f"{x['name']}"
     elif collection == util.planung:
-        res = f"{", ".join([repr(util.person, y, False, True) for y in x['dozent']])}"
+        res = f"{', '.join([repr(util.person, y, False, True) for y in x['dozent']])}"
     if show_collection:
         res = f"{util.collection_name[collection]}: {res}"
     return res
