@@ -261,9 +261,11 @@ if st.session_state.logged_in:
                 w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"termin_{i}_person")
             cols = st.columns([1,1,10,10,5,1])
             with cols[2]:
-                w_kommentar_de = st.text_input("Kommentar (de)", w["kommentar_de"], key =f"termin_{i}_kommentar_de")
+                w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"termin_{i}_kommentar_de_latex")
+                w_kommentar_de_html = st.text_input("Kommentar (de, html)", w["kommentar_de_html"], key =f"termin_{i}_kommentar_de_html")
             with cols[3]:
-                w_kommentar_en = st.text_input("Kommentar (en)", w["kommentar_en"], key =f"termin_{i}_kommentar_en")
+                w_kommentar_en_latex = st.text_input("Kommentar (en, LaTeX)", w["kommentar_en_latex"], key =f"termin_{i}_kommentar_en_latex")
+                w_kommentar_en_html = st.text_input("Kommentar (en, html)", w["kommentar_en_html"], key =f"termin_{i}_kommentar_en_html")
             #st.divider()
             woechentlicher_termin.append({
                 "key": w_key,
@@ -274,8 +276,10 @@ if st.session_state.logged_in:
                 "start": None if w_start == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_start),
                 "ende": None if w_ende == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_ende),
                 "person": w_person,
-                "kommentar_de": w_kommentar_de,
-                "kommentar_en": w_kommentar_en
+                "kommentar_de_latex": w_kommentar_de_latex,
+                "kommentar_en_latex": w_kommentar_en_latex,
+                "kommentar_de_html": w_kommentar_de_html,
+                "kommentar_en_html": w_kommentar_en_html
             })
         ver_updated = {
             "dozent": doz_list,
@@ -296,8 +300,10 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
-                "kommentar_de": "",
-                "kommentar_en": "",
+                "kommentar_de_latex": "",
+                "kommentar_en_latex": "",
+                "kommentar_de_html": "",
+                "kommentar_en_html": "",
                 "wochentag": "",
                 "raum": util.raum.find_one({"name_de": "-"})["_id"],
                 "person": [],
@@ -365,9 +371,11 @@ if st.session_state.logged_in:
                 w_endzeit = None if w_endzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_endzeit)
             cols = st.columns([1,1,10,10,1])
             with cols[2]:
-                w_kommentar_de = st.text_input("Kommentar (de)", w["kommentar_de"], key =f"einmaliger_termin_{i}_kommentar_de")            
+                w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"einmaliger_termin_{i}_kommentar_de_latex")
+                w_kommentar_de_html = st.text_input("Kommentar (de, html)", w["kommentar_de_html"], key =f"einmaliger_termin_{i}_kommentar_de_html")
             with cols[3]:
-                w_kommentar_en = st.text_input("Kommentar (en)", w["kommentar_en"], key =f"einmaliger_termin_{i}_kommentar_en")
+                w_kommentar_en_latex = st.text_input("Kommentar (en, LaTeX)", w["kommentar_en_latex"], key =f"einmaliger_termin_{i}_kommentar_en_latex")
+                w_kommentar_en_html = st.text_input("Kommentar (en, html)", w["kommentar_en_html"], key =f"einmaliger_termin_{i}_kommentar_en_html")
 
             einmaliger_termin.append({
                 "key": w_key,
@@ -378,8 +386,10 @@ if st.session_state.logged_in:
                 "startzeit": w_startzeit,
                 "enddatum": w_enddatum,
                 "endzeit": w_endzeit,
-                "kommentar_de": w_kommentar_de,
-                "kommentar_en": w_kommentar_en
+                "kommentar_de_latex": w_kommentar_de_latex,
+                "kommentar_en_latex": w_kommentar_en_latex,
+                "kommentar_de_html": w_kommentar_de_html,
+                "kommentar_en_html": w_kommentar_en_html
             })
         ver_updated = {
             "dozent": doz_list,
@@ -402,8 +412,10 @@ if st.session_state.logged_in:
         if neuer_termin:
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
-                "kommentar_de": "",
-                "kommentar_en": "",
+                "kommentar_de_latex": "",
+                "kommentar_en_latex": "",
+                "kommentar_de_html": "",
+                "kommentar_en_html": "",
                 "raum": [],
                 "person": [],
                 "startdatum": None,

@@ -85,9 +85,9 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 tag = util.wochentag[termin['wochentag']][lang]
                 # person braucht man, wenn wir dann die Datenbank geupdated haben.
                 # person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
-                komm = f"kommentar_{lang}"
+                komm = f"kommentar_{lang}_latex"
                 if alter and termin[komm] == "":
-                    komm = f"kommentar_{otherlang}"
+                    komm = f"kommentar_{otherlang}_latex"
                 kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
                 new = [key, tag, zeit, raum, kommentar]
                 if key in [x[0] for x in res]:
@@ -130,9 +130,9 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 zeit = ""
             # person braucht man, wenn wir dann die Datenbank geupdated haben.
             # person = ", ".join([f"{util.person.find_one({"_id": x})["vorname"]} {util.person.find_one({"_id": x})["name"]}"for x in termin["person"]])
-            komm = f"kommentar_{lang}"
+            komm = f"kommentar_{lang}_latex"
             if alter and termin[komm] == "":
-                komm = f"kommentar_{otherlang}"
+                komm = f"kommentar_{otherlang}_latex"
             kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
             new = [ta, datum, zeit, raum, kommentar]
             res.append(new)
