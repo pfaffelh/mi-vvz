@@ -708,7 +708,7 @@ veranstaltung_validator = {
         "bsonType": "object",
         "title": "Beschreibung einer Veranstaltung",
         "description": "Hier werden alle Daten einer Veranstaltung hinterlegt, die sowohl für das Modulhandbuch, als auch für die Webpage benötigt werden.",
-        "required": ["name_de", "name_en", "midname_de", "midname_en", "kurzname", "rubrik", "code", "rang", "semester", "ects", "url", "inhalt_de", "inhalt_en", "literatur_de", "literatur_en", "vorkenntnisse_de", "vorkenntnisse_en", "kommentar_latex_de", "kommentar_latex_en", "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit", "dozent", "assistent", "organisation", "woechentlicher_termin", "einmaliger_termin", "kommentar_html_de", "kommentar_html_en", "hp_sichtbar"],
+        "required": ["name_de", "name_en", "midname_de", "midname_en", "kurzname", "rubrik", "code", "rang", "semester", "ects", "url", "bearbeitet", "inhalt_de", "inhalt_en", "literatur_de", "literatur_en", "vorkenntnisse_de", "vorkenntnisse_en", "kommentar_latex_de", "kommentar_latex_en", "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit", "dozent", "assistent", "organisation", "woechentlicher_termin", "einmaliger_termin", "kommentar_html_de", "kommentar_html_en", "hp_sichtbar"],
         "properties": {
             "hp_sichtbar": {
                 "bsonType": "bool",
@@ -761,6 +761,10 @@ veranstaltung_validator = {
             "url": {
                 "bsonType": "string",
                 "description": "Webpage der Veranstaltung."
+            },
+            "bearbeitet": {
+                "bsonType": "string",
+                "description": "Gibt an, wer die Veranstaltung zuletzt wann bearbeitet hat."
             },
             "inhalt_de": {
                 "bsonType": "string",
