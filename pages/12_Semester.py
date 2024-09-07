@@ -123,14 +123,14 @@ if st.session_state.logged_in:
     st.write(" ")
     if st.button('**Neue Rubrik hinzufügen**'):
         tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
-
-    y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
+    query = { "semester": st.session_state.semester_id }
+    y = list(collection.find(query, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
-            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
+            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, query,))
         with co2:
-            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
+            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, query,))
         with co3:
             abk = x['titel_de'].replace(".", ":")
             abk = f"{abk} 😎" if x["hp_sichtbar"] else f"{abk}"
@@ -176,14 +176,15 @@ if st.session_state.logged_in:
     if st.button('**Neue Codekategorie hinzufügen**'):
         tools.new(collection, ini = { "semester": st.session_state.semester_id }, switch = False)
 
-    y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
+    query = { "semester": st.session_state.semester_id }
+    y = list(collection.find(query, sort=[("rang", pymongo.ASCENDING)]))
 
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
-            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
+            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, query, ))
         with co2:
-            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
+            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, query, ))
         with co3:   
             abk = f"{x['name_de'].strip()}"
             abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
@@ -225,13 +226,14 @@ if st.session_state.logged_in:
     if st.button('**Neuen Code hinzufügen**'):
         tools.new(collection, ini = { "semester": st.session_state.semester_id, "codekategorie": util.codekategorie.find_one({"semester": st.session_state.semester_id, "name_de": "Allgemein"})["_id"] }, switch = False)
 
-    y = list(collection.find({ "semester": st.session_state.semester_id }, sort=[("rang", pymongo.ASCENDING)]))
+    query = { "semester": st.session_state.semester_id }
+    y = list(collection.find(query, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
-            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
+            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, query, ))
         with co2:
-            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
+            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, query, ))
         with co3:   
             abk = f"{x['beschreibung_de'].strip()}, {x['name'].strip()}"
             with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
