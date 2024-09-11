@@ -6,6 +6,7 @@ import time
 import pandas as pd
 import translators as ts
 from itertools import chain
+from operator import itemgetter
 from bson import ObjectId
 
 # Seiten-Layout
@@ -18,7 +19,6 @@ if 'logged_in' not in st.session_state:
 # load css styles
 from misc.css_styles import init_css
 init_css()
-
 
 from misc.config import *
 import misc.util as util
@@ -54,6 +54,48 @@ def clear_tmp():
     st.session_state.veranstaltung_tmp["einmaliger_termin"].clear()
     st.session_state.veranstaltung_tmp["woechentlicher_termin_removed"].clear()
     st.session_state.veranstaltung_tmp["einmaliger_termin_removed"].clear()
+
+def get_all_persons(ver):
+    personen = ver["dozent"] + ver["assistent"] + ver["organisation"]
+    for t in ver["woechentlicher_termin"]:
+        personen = personen + t["person"]
+    for t in ver["einmaliger_termin"]:
+        personen = personen + t["person"]
+    return list(set(personen))
+
+def sort_persons(personen_list):
+    loc = [util.person.find_one({"_id" : p_id}) for p_id in personen_list]
+    loc = sorted(loc, key=itemgetter('name', 'vorname'))
+    return [p["_id"] for p in loc]
+
+def sort_deputate(deputate):
+    for d in deputate:
+        p = util.person.find_one({"_id" : d["person"]})
+        d["name"] = p["name"]
+        d["vorname"] = p["vorname"]
+    deputate = sorted(deputate, key=itemgetter('name', 'vorname'))
+    return [{"person" : d["person"], "sws" : d["sws"]} for d in deputate]
+
+def add_to_deputat(ver, p_id):
+    deputat = ver["deputat"]
+    if p_id not in [d["person"] for d in deputat]:
+        deputat.append({ "person": p_id, "sws": 0.0})
+        util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
+
+def remove_from_deputat(ver, person_id):
+    deputat = [{"person" : d["person"], "sws" : d["sws"]} for d in ver["deputat"] if d["person"] != person_id]
+    util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
+
+def correct_deputate(ver):
+    deputate = ver["deputat"]    
+    personen_alt = [d["person"] for d in deputate]
+    personen_neu = get_all_persons(ver)
+    for p in [p for p in personen_neu if p not in personen_alt]:
+        add_to_deputat(ver, p)
+    for p in [p for p in personen_alt if p not in personen_neu]:
+        remove_from_deputat(ver, p)
+    ver = util.veranstaltung.find_one({ "_id" : ver["_id"]})
+    util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : sort_deputate(ver["deputat"])}})
 
 def sync_termine():
     # push not saved termine
@@ -270,7 +312,7 @@ if st.session_state.logged_in:
             woechentlicher_termin.append({
                 "key": w_key,
                 "raum": w_raum,
-                "person": [],
+                "person": sort_persons(w_person),
                 # wochentag muss so gespeichert werden, um das schema nicht zu verletzen.
                 "wochentag": w_wochentag if w_wochentag is not None else "", 
                 "start": None if w_start == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_start),
@@ -282,9 +324,9 @@ if st.session_state.logged_in:
                 "kommentar_en_html": w_kommentar_en_html
             })
         ver_updated = {
-            "dozent": doz_list,
-            "assistent": ass_list,
-            "organisation": org_list,
+            "dozent": sort_persons(doz_list),
+            "assistent": sort_persons(ass_list),
+            "organisation": sort_persons(org_list),
             "woechentlicher_termin": woechentlicher_termin
         }
         ver_updated_all.update(ver_updated)
@@ -380,7 +422,7 @@ if st.session_state.logged_in:
             einmaliger_termin.append({
                 "key": w_key,
                 "raum": w_raum,
-                "person": [],
+                "person": sort_persons(w_person),
                 # wochentag muss so gespeichert werden, um das schema nicht zu verletzen.
                 "startdatum": w_startdatum,
                 "startzeit": w_startzeit,
@@ -404,7 +446,6 @@ if st.session_state.logged_in:
 
         if termin_remove_id >= 0:
             remove_termin(tmp_id_start, termin_remove_id, "einmaliger_termin")
-
 
         neuer_termin = st.button('Neuer Termin', key = "neuer_einmaliger_termin")
         submit = st.button('Speichern (Personen, Termine) ', type = 'primary', key = "speichern_einmaliger_termin")
@@ -430,7 +471,8 @@ if st.session_state.logged_in:
             st.session_state.expanded = "termine"
             sync_termine()
             tools.update_confirm(collection, x, ver_updated, reset = False)
-            time.sleep(0.1) ## to show toast
+            correct_deputate(x)
+            time.sleep(.1) ## to show toast
             st.rerun()
 
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
@@ -486,7 +528,7 @@ if st.session_state.logged_in:
             x_updated = {"verwendbarkeit_modul": v["verwendbarkeit_modul"],
                             "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"],
                             "verwendbarkeit": v["verwendbarkeit"]}
-            ver_updated_all.update(ver_updated)
+            ver_updated_all.update(x_updated)
 
             colu1, colu2 = st.columns([1,1])
             with colu1:
@@ -539,8 +581,27 @@ if st.session_state.logged_in:
             st.session_state.expanded = "verwendbarkeit"
             tools.update_confirm(util.veranstaltung, x, x_updated, False,)
 
+    ## Deputate
+    with st.expander("Deputate", expanded = True if st.session_state.expanded == "deputate" else False):
+        st.subheader("Deputate")
+        deputat = x["deputat"]
+        for d in deputat:
+            cols = st.columns([1,1])
+            with cols[0]:
+                st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d["person"]}")
+            with cols[1]:
+                d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', key = f"sws_{d["person"]}")
+            x_updated = {"deputat" : deputat}
+            ver_updated_all.update(x_updated)
+
+        submit = st.button('Speichern (Deputate)', type = 'primary', key = f"deputate_{x['_id']}")
+        if submit:
+            st.session_state.expanded = "deputate"
+            tools.update_confirm(util.veranstaltung, x, x_updated, False,)
+
     if save_all:
         sync_termine()
+        correct_deputate(x)
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
         ver_updated_all = dict()
         time.sleep(2)
