@@ -588,9 +588,9 @@ if st.session_state.logged_in:
         for d in deputat:
             cols = st.columns([1,1])
             with cols[0]:
-                st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d["person"]}")
+                st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d['person']}")
             with cols[1]:
-                d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', key = f"sws_{d["person"]}")
+                d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', key = f"sws_{d['person']}")
             x_updated = {"deputat" : deputat}
             ver_updated_all.update(x_updated)
 
