@@ -74,16 +74,16 @@ def sort_deputate(deputate):
         d["name"] = p["name"]
         d["vorname"] = p["vorname"]
     deputate = sorted(deputate, key=itemgetter('name', 'vorname'))
-    return [{"person" : d["person"], "sws" : d["sws"]} for d in deputate]
+    return [{"person" : d["person"], "sws" : d["sws"], "kommentar" : d["kommentar"]} for d in deputate]
 
 def add_to_deputat(ver, p_id):
     deputat = ver["deputat"]
     if p_id not in [d["person"] for d in deputat]:
-        deputat.append({ "person": p_id, "sws": 0.0})
+        deputat.append({ "person": p_id, "sws": 0.0, "kommentar" : ""})
         util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
 
 def remove_from_deputat(ver, person_id):
-    deputat = [{"person" : d["person"], "sws" : d["sws"]} for d in ver["deputat"] if d["person"] != person_id]
+    deputat = [{"person" : d["person"], "sws" : d["sws"], "kommentar" : d["kommentar"]} for d in ver["deputat"] if d["person"] != person_id]
     util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
 
 def correct_deputate(ver):
@@ -586,11 +586,13 @@ if st.session_state.logged_in:
         st.subheader("Deputate")
         deputat = x["deputat"]
         for d in deputat:
-            cols = st.columns([1,1])
+            cols = st.columns([1,1,3])
             with cols[0]:
                 st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d['person']}")
             with cols[1]:
                 d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', key = f"sws_{d['person']}")
+            with cols[2]:
+                d["kommentar"] = st.number_input("Kommentar", d["kommentar"], label_visibility='hidden', key = f"kommentar_{d['person']}")
             x_updated = {"deputat" : deputat}
             ver_updated_all.update(x_updated)
 
