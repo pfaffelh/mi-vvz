@@ -168,6 +168,7 @@ def setup_session_state():
                 "name_prefix": "", 
                 "titel": "", 
                 "tel": "", 
+                "kommentar": "", 
                 "email": "", 
                 "sichtbar": True, 
                 "hp_sichtbar": True, 
