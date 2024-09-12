@@ -590,7 +590,7 @@ if st.session_state.logged_in:
             with cols[0]:
                 st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d['person']}")
             with cols[1]:
-                d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', step = 1, key = f"sws_{d['person']}")
+                d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', step = 1.0, key = f"sws_{d['person']}")
             with cols[2]:
                 d["kommentar"] = st.text_input("Kommentar", d["kommentar"], key = f"kommentar_{d['person']}")
             x_updated = {"deputat" : deputat}
