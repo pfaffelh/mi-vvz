@@ -80,10 +80,12 @@ if st.session_state.logged_in:
             email=st.text_input('Email', x["email"])
         with col2:
             tel=st.text_input('Telefonnummer', x["tel"])
+        kommentar=st.text_input('Kommentar', x["kommentar"])
+        
         semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
         semester_list = [s["_id"] for s in se]
-        x_updated = ({"name": name, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "tel": tel, "email": email, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "semester": semester_list})
+        x_updated = ({"name": name, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "tel": tel, "kommentar": kommentar, "email": email, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "semester": semester_list})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             if new_entry:

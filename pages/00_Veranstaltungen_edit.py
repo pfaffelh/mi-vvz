@@ -592,7 +592,7 @@ if st.session_state.logged_in:
             with cols[1]:
                 d["sws"] = st.number_input("SWS", d["sws"], label_visibility='hidden', key = f"sws_{d['person']}")
             with cols[2]:
-                d["kommentar"] = st.number_input("Kommentar", d["kommentar"], label_visibility='hidden', key = f"kommentar_{d['person']}")
+                d["kommentar"] = st.text_input("Kommentar", d["kommentar"], key = f"kommentar_{d['person']}")
             x_updated = {"deputat" : deputat}
             ver_updated_all.update(x_updated)
 

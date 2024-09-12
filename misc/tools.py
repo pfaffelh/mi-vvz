@@ -459,7 +459,9 @@ def veranstaltung_anlegen(sem_id, rub_id, v_dict):
         "assistent": [],
         "organisation": [],
         "woechentlicher_termin": [],
-        "einmaliger_termin": []
+        "einmaliger_termin": [],
+        "bearbeitet": "",
+        "deputat": []
     }
     for key, value in v_dict.items():
         v[key] = value
