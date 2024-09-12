@@ -25,7 +25,7 @@ for a in allver:
     deputat = [{"person" : d["person"], "sws": d["sws"], "kommentar" : ""} for d in deputat]
     ver.update_one({"_id": a["_id"]}, { "$set": {"deputat": deputat}})
 
-allper = list(ver.find({}))
+allper = list(per.find({}))
 for p in allper:
     per.update_one({"_id": p["_id"]}, { "$set": {"kommentar": ""}})
 
