@@ -143,7 +143,10 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                        if x["titel_de"] != "-":
+                            submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                        else:
+                            submit = st.button(label = "Ja", type = 'primary', disabled = True, key = f"delete-{x['_id']}", help = "Diese Rubrik wird beim Kopieren von Veranstaltungen benötigt und kann daher nicht gelöscht werden.")
                     if submit:
                         tools.delete_item_update_dependent_items(collection, x["_id"], False)
                         st.rerun()

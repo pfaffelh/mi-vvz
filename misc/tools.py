@@ -184,7 +184,9 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
         "organisation": [p for p in v["organisation"] if sem_id in util.person.find_one({"_id": p})["semester"]] if kopiere_personen else [],
         "woechentlicher_termin": v["woechentlicher_termin"] if kopiere_termine else [],
         "einmaliger_termin": v["einmaliger_termin"] if kopiere_termine else [],
-        "hp_sichtbar": v["hp_sichtbar"]
+        "hp_sichtbar": v["hp_sichtbar"],
+        "bearbeitet": "",
+        "deputat": v["deputat"] if kopiere_personen else []
     }
     w = util.veranstaltung.insert_one(v_new)
     util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, sem_id)} kopiert.")
