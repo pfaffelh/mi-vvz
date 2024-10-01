@@ -198,7 +198,7 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
 
 # Neues Semester anlegen
 # df ist ein dataframe, wobei "Veranstaltung übernehmen" die ids der aus dem vorlestzten Semester zu übernehmenden Veranstaltungen enthält.
-def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_uebernehmen):
+def semester_anlegen(x_updated, df, personen_uebernehmen, anforderung_uebernehmen, veranstaltung_uebernehmen):
     sem = list(util.semester.find({}, sort = [("rang", pymongo.DESCENDING)]))
     s = util.semester.insert_one(x_updated)
     # sem_id ist die id des anzulegenden Semesters
@@ -211,9 +211,12 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_ueberneh
     # Kopiere Personen aus dem letzten Semester
     if personen_uebernehmen:
         util.person.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
+    # Kopiere Anforderungne aus dem letzten Semester
+    if anforderung_uebernehmen:
+        util.anforderung.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
 
     # Kopiere Rubriken und Codes
-    if veranstaltung_uebernehmen:
+    if veranstaltung_uebernehmen:        
         for k in list(util.rubrik.find({"semester": sem[1]["_id"]})):
             k_loc = k["_id"]
             del k["_id"] # andernfalls gibt es einen duplicate key error
@@ -248,6 +251,7 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, veranstaltung_ueberneh
                                         {"rubrik": kopie[v["rubrik"]],
                                         "code": [kopie[co] for co in v["code"]]}})
             util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": kop_ver_id}})
+
     st.success("Semester erfolgreich angelegt!")
     util.logger.info(f"User {st.session_state.user} hat Semester {repr(util.semester, sem_id)} neu algelegt.")
     time.sleep(2)
@@ -357,7 +361,7 @@ def repr(collection, id, show_collection = True, short = False):
         s = ", ".join(res)
         res = x['name_de'] if short else f"{x['name_de']} ({s})"
     elif collection == util.anforderung:
-        an = util.anforderungkategorie.find_one({"_id": x["anforderungskategorie"]})["name_de"]
+        an = util.anforderungkategorie.find_one({"_id": x["anforderungskategorie"]})["kurzname"]
         if an.strip() == "Kommentar":
             res = f"{x['name_de'].strip()}"
         else:

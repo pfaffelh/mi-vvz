@@ -548,7 +548,10 @@ if st.session_state.logged_in:
         mo_dict = {m["_id"]: tools.repr(util.modul, m["_id"], show_collection = False) for m in mo }
         mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen")
 
-        ver_an = list(util.anforderung.find({"$or": [{"sichtbar": True}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
+        ver_an = []
+        for y in list(util.anforderungkategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
+            ver_an.extend(list(util.anforderung.find({"anforderungskategorie": y["_id"], "$or": [{"semester": {"$elemMatch": {"$eq": st.session_state.semester_id}}}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("rang", pymongo.ASCENDING)])))        
+        # st.write(ver_an)
         an_dict = {a["_id"]: tools.repr(util.anforderung, a["_id"], show_collection = False) for a in ver_an }
         an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen")
         cols = st.columns([15] + [15/len(mod_list) for x in mod_list])

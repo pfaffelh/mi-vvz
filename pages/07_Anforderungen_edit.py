@@ -69,8 +69,11 @@ if st.session_state.logged_in:
         anfkat = [x["_id"] for x in list(util.anforderungkategorie.find())]
         index = anfkat.index(x["anforderungskategorie"])
         anforderungskategorie = st.selectbox("Anforderungskategorie", [x for x in anfkat], index = index, format_func = (lambda a: tools.repr(util.anforderungkategorie, a, show_collection=False)))
+        semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+        se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        semester_list = [s["_id"] for s in se]
         kommentar=st.text_input('Kommentar', x["kommentar"])
-        x_updated = ({"name_de": name_de, "name_en": name_en, "anforderungskategorie": anforderungskategorie, "sichtbar": sichtbar, "kommentar": kommentar})
+        x_updated = ({"name_de": name_de, "name_en": name_en, "anforderungskategorie": anforderungskategorie, "sichtbar": sichtbar, "kommentar": kommentar, "semester": semester_list})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             if new_entry:

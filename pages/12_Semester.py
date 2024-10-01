@@ -78,7 +78,8 @@ if st.session_state.logged_in:
         new_kurzname = st.text_input('Kurzname des angelegten Semesters', d["kurzname"], disabled = True)
         new_hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar", value = False, key=f'kopie-hp_sichtbar')
         personen_uebernehmen = st.checkbox(f"Personen aus {s[0]['name_de']} in die Personenliste des Semesters übernehmen", value = True, key=f'personen_uebernehmen')
-        veranstaltungen_uebernehmen = st.checkbox(f"Veranstaltungen aus {s[1]['name_de']} übernehmen. (Rubriken und Codes von Veranstaltungen werden übernommen, URLs nicht.)", value = True, key=f'veranstaltungen_uebernehmen')
+        anforderung_uebernehmen = st.checkbox(f"Anforderungen aus {s[0]['name_de']} übernehmen", value = True, key=f'anforderung_uebernehmen')
+        veranstaltungen_uebernehmen = st.checkbox(f"Veranstaltungen aus {s[1]['name_de']} übernehmen. (Rubriken und Codes von Veranstaltungen werden übernommen, Anforderungen auch, URLs nicht.)", value = True, key=f'veranstaltungen_uebernehmen')
         last_sem_kurzname = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["kurzname"]
         x_updated = {"name_de": new_name_de, 
                      "name_en": new_name_en, 
@@ -100,7 +101,7 @@ if st.session_state.logged_in:
         if veranstaltungen_uebernehmen:
             df_new = st.data_editor(
                 df, height = None, column_config = {"_id": None}, disabled=["Name"], hide_index = True)
-        st.button("Semester anlegen", on_click=tools.semester_anlegen, args = (x_updated, df_new, personen_uebernehmen, veranstaltungen_uebernehmen), type="primary")
+        st.button("Semester anlegen", on_click=tools.semester_anlegen, args = (x_updated, df_new, personen_uebernehmen, anforderung_uebernehmen, veranstaltungen_uebernehmen), type="primary")
     with st.form(f'ID-{x["_id"]}'):
         name_de = st.text_input('Name (de)', x["name_de"], disabled = True)
         name_en = st.text_input('Name (en)', x["name_en"], disabled = True)

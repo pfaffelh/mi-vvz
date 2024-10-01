@@ -37,21 +37,23 @@ if st.session_state.logged_in:
             st.session_state.edit = "new"
             switch_page("anforderungen edit")
 
-    y = list(collection.find(sort=[("rang", pymongo.ASCENDING)]))
-    for x in y:
-        co1, co2, co3 = st.columns([1,1,23]) 
-        with co1: 
-            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
-        with co2:
-            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
-        with co3:
-            an = util.anforderungkategorie.find_one({"_id": x["anforderungskategorie"]})["name_de"]
-            abk = f"{x['name_de'].strip()} ({an.strip()})"
-            abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
-            submit = st.button(abk, key=f"edit-{x['_id']}")
-        if submit:
-            st.session_state.edit = x["_id"]
-            switch_page("anforderungen edit")
+    y1 = list(util.anforderungkategorie.find(sort=[("rang", pymongo.ASCENDING)]))
+    for x1 in y1:
+        st.header(x1["name_de"])
+        y2 = list(collection.find({"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort=[("rang", pymongo.ASCENDING)]))
+        for x2 in y2:
+            co1, co2, co3 = st.columns([1,1,23]) 
+            with co1: 
+                st.button('↓', key=f'down-{x2["_id"]}', on_click = tools.move_down, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
+            with co2:
+                st.button('↑', key=f'up-{x2["_id"]}', on_click = tools.move_up, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
+            with co3:
+                abk = f"{x2['name_de'].strip()}"
+                abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"
+                submit = st.button(abk, key=f"edit-{x2['_id']}")
+            if submit:
+                st.session_state.edit = x2["_id"]
+                switch_page("anforderungen edit")
 
     st.subheader("Anforderungskategorien")
     collection = util.anforderungkategorie
@@ -89,8 +91,9 @@ if st.session_state.logged_in:
                     sichtbar = st.checkbox("In Auswahlmenüs sichtbar", value = x["sichtbar"], key=f'ID-{x["_id"]}-sichtbar')
                     name_de=st.text_input('Name (de)', x["name_de"], key=f'name_de-{x["_id"]}')
                     name_en=st.text_input('Name (en)', x["name_en"], key=f'name_en-{x["_id"]}')
+                    kurzname=st.text_input('Kurzname', x["kurzname"], key=f'kurzname-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
-                    x_updated = {"sichtbar": sichtbar, "name_de": name_de, "name_en": name_en,"kommentar": kommentar}
+                    x_updated = {"sichtbar": sichtbar, "name_de": name_de, "name_en": name_en, "kurzname": kurzname, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
