@@ -738,7 +738,7 @@ veranstaltung_validator = {
         "bsonType": "object",
         "title": "Beschreibung einer Veranstaltung",
         "description": "Hier werden alle Daten einer Veranstaltung hinterlegt, die sowohl für das Modulhandbuch, als auch für die Webpage benötigt werden.",
-        "required": ["name_de", "name_en", "midname_de", "midname_en", "kurzname", "rubrik", "code", "rang", "semester", "ects", "url", "inhalt_de", "inhalt_en", "literatur_de", "literatur_en", "vorkenntnisse_de", "vorkenntnisse_en", "kommentar_latex_de", "kommentar_latex_en", "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit", "dozent", "assistent", "organisation", "woechentlicher_termin", "einmaliger_termin", "kommentar_html_de", "kommentar_html_en", "hp_sichtbar", "deputat"],
+        "required": ["name_de", "name_en", "midname_de", "midname_en", "kurzname", "rubrik", "code", "rang", "semester", "ects", "url", "inhalt_de", "inhalt_en", "literatur_de", "literatur_en", "vorkenntnisse_de", "vorkenntnisse_en", "kommentar_latex_de", "kommentar_latex_en", "verwendbarkeit_modul", "verwendbarkeit_anforderung", "verwendbarkeit", "kommentar_verwendbarkeit_de", "kommentar_verwendbarkeit_en", "dozent", "assistent", "organisation", "woechentlicher_termin", "einmaliger_termin", "kommentar_html_de", "kommentar_html_en", "hp_sichtbar", "deputat"],
         "properties": {
             "hp_sichtbar": {
                 "bsonType": "bool",
@@ -785,7 +785,7 @@ veranstaltung_validator = {
                 "description": "_id des Semesters, in der die Veranstaltung abgehalten wird."
             },
             "ects": {
-                "bsonType": "string",
+                "bsonType": "double",
                 "description": "Typische ECTS-Punktzahl, die bei erfolgreicher Belegung verbucht werden."
             },
             "url": {
@@ -862,6 +862,14 @@ veranstaltung_validator = {
                         },
                     }
                 }
+            },
+            "kommentar_verwendbarkeit_de": {
+                "bsonType": "string",
+                "description": "Kommentar zu den Verwendbarkeiten (de)."
+            },
+            "kommentar_verwendbarkeit_en": {
+                "bsonType": "string",
+                "description": "Kommentar zu den Verwendbarkeiten (en)."
             },
             "dozent": {
                 "bsonType": "array",

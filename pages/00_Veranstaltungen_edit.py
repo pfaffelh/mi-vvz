@@ -191,7 +191,8 @@ if st.session_state.logged_in:
         midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
         midname_en=st.text_input('Mittelkurzer Name (en)', x["midname_en"])
         kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
-        ects=st.text_input('ECTS', x["ects"], help = "Bitte eine typische Anzahl angeben, die genaue Zahl kann vom verwendeten Modul abhängen.")
+        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 6, 7, 7.5, 8, 9, 10, 11, 12] 
+        ects = st.selectbox("Typische Anzahl an ECTS-Punkten.", ects_all, index = ects_all.index(x["ects"]), placeholder = "Bitte auswählen!")
         kat = [g["_id"] for g in list(util.rubrik.find({"semester": x["semester"]}))]
         index = [g for g in kat].index(x["rubrik"])
         kat = st.selectbox("Rubrik", [x for x in kat], index = index, format_func = (lambda a: tools.repr(util.rubrik, a)))
@@ -454,7 +455,7 @@ if st.session_state.logged_in:
         if neuer_termin:
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
-                "kommentar_de_latex": "",
+                "ar_de_latex": "",
                 "kommentar_en_latex": "",
                 "kommentar_de_html": "",
                 "kommentar_en_html": "",
@@ -528,7 +529,7 @@ if st.session_state.logged_in:
             v = util.veranstaltung.find_one({"_id": verwendbarkeit_import})
             x_updated = {"verwendbarkeit_modul": v["verwendbarkeit_modul"],
                             "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"],
-                            "verwendbarkeit": v["verwendbarkeit"]}
+                            "verwendbarkeit": v["verwendbarkeit"], "kommentar_verwendbarkeit_de" : v["kommentar_verwendbarkeit_de"], "kommentar_verwendbarkeit_en" : v["kommentar_verwendbarkeit_en"]}
             ver_updated_all.update(x_updated)
 
             colu1, colu2 = st.columns([1,1])
@@ -546,38 +547,62 @@ if st.session_state.logged_in:
                 x["verwendbarkeit_modul"].remove(m)
             
         mo_dict = {m["_id"]: tools.repr(util.modul, m["_id"], show_collection = False) for m in mo }
-        mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen")
+        mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen", key = f"anf_mod_{x['_id']}")
 
+        ects = {}
+        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 6, 7, 7.5, 8, 9, 10, 11, 12] 
+        for m in mod_list:
+            ects[m] = st.multiselect(f"Mögliche ECTS-Punkte im Modul {mo_dict[m]}", ects_all, sorted(list(set([y["ects"] for y in x["verwendbarkeit"] if y["modul"] == m]))), placeholder = "Bitte auswählen", key = f"anf_ects_{x['_id']}_{m}")
+
+        mod_ects_list = []
+        for m in mod_list:
+            mod_ects_list.extend([(m, i) for i in ects[m]])
+        
         ver_an = []
         for y in list(util.anforderungkategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
             ver_an.extend(list(util.anforderung.find({"anforderungskategorie": y["_id"], "$or": [{"semester": {"$elemMatch": {"$eq": st.session_state.semester_id}}}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("rang", pymongo.ASCENDING)])))        
         # st.write(ver_an)
         an_dict = {a["_id"]: tools.repr(util.anforderung, a["_id"], show_collection = False) for a in ver_an }
-        an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen")
-        cols = st.columns([15] + [15/len(mod_list) for x in mod_list])
-        for i, m in enumerate(mod_list):
+        an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen", key = f"anf_{x['_id']}")
+        no_cols = sum([len(ects[m]) for m in mod_list])
+        cols = st.columns([15] + [15/len(mod_ects_list) for x in mod_ects_list])
+        previous_m = ""
+        for i, m in enumerate(mod_ects_list):
             with cols[i+1]:
                 co1, co2 = st.columns([1,1])
                 with co1:
-                    st.button('←', key=f'left-m-{m}', on_click = tools.move_up_list, args = (collection, x["_id"], "verwendbarkeit_modul", m,))
+                    if m[0] != previous_m:
+                        st.button('←', key=f'left-m-{m[0]}', on_click = tools.move_up_list, args = (collection, x["_id"], "verwendbarkeit_modul", m[0],))
                 with co2:
-                    st.button('→', key=f'right-m-{m}', on_click = tools.move_down_list, args = (collection, x["_id"], "verwendbarkeit_modul", m,))
-                st.write(mo_dict[m])
-        data = {str(m) : [] for m in mod_list}
+                    if m[0] != previous_m:
+                        st.button('→', key=f'right-m-{m[0]}', on_click = tools.move_down_list, args = (collection, x["_id"], "verwendbarkeit_modul", m[0],))
+                    previous_m = m[0]
+        cols = st.columns([15] + [15/len(mod_ects_list) for x in mod_ects_list])
+        for i, m in enumerate(mod_ects_list):
+            with cols[i+1]:
+                st.write(mo_dict[m[0]])
+        cols = st.columns([15] + [15/len(mod_ects_list) for x in mod_ects_list])
+        for i, m in enumerate(mod_ects_list):
+            with cols[i+1]:
+                st.write(f"{m[1]} ECTS")
+        data = {f"{str(m[0])}_{m[1]}" : [] for m in mod_ects_list}
         g = pd.DataFrame(data)
         for a in an_list:
-            cols = st.columns([1,1,13] + [15/len(mod_list) for x in mod_list])
+            cols = st.columns([1,1,13] + [15/len(mod_ects_list) for x in mod_ects_list])
             with cols[0]:
                 st.button('↓', key=f'down-a-{a}', on_click = tools.move_down_list, args = (collection, x["_id"], "verwendbarkeit_anforderung", a,))
             with cols[1]:
                 st.button('↑', key=f'up-a-{a}', on_click = tools.move_up_list, args = (collection, x["_id"], "verwendbarkeit_anforderung", a,))
             with cols[2]:
                 st.write(an_dict[a])
-            for i, m in enumerate(mod_list):
+            for i, m in enumerate(mod_ects_list):
                 with cols[i+3]:
-                    g.loc[str(a),str(m)] = float(st.checkbox(f"{m}_{a}", True if { "modul": m, "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m}", label_visibility="collapsed"))
-        verwendbarkeit = [{"modul": m, "anforderung": a} for m in mod_list for a in an_list if g.loc[str(a),str(m)] == True]
-        x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit }
+                    g.loc[str(a),f"{str(m[0])}_{m[1]}"] = float(st.checkbox(f"{m[0]}_{m[1]}_{a}", True if { "modul": m[0], "ects": float(m[1]), "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m[0]}_ects_{m[1]}", label_visibility="collapsed"))
+        verwendbarkeit = [{"modul": m[0], "ects": float(m[1]), "anforderung": a} for m in mod_ects_list for a in an_list if g.loc[str(a),f"{str(m[0])}_{m[1]}"] == True]
+        kommentar_verwendbarkeit_de = st.text_area('Kommentar zur Verwendbarkeit (de)', x["kommentar_verwendbarkeit_de"])
+        kommentar_verwendbarkeit_en = st.text_area('Kommentar zur Verwendbarkeit (en)', x["kommentar_verwendbarkeit_en"])
+
+        x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit, "kommentar_verwendbarkeit_de": kommentar_verwendbarkeit_de, "kommentar_verwendbarkeit_en": kommentar_verwendbarkeit_en }
         ver_updated_all.update(x_updated)
 
         submit = st.button('Speichern (Verwendbarkeit)', type = 'primary', key = f"verwendbarkeit_{x['_id']}")

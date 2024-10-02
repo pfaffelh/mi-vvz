@@ -7,9 +7,6 @@ cluster = MongoClient("mongodb://127.0.0.1:27017")
 mongo_db = cluster["vvz"]
 
 ver = mongo_db["veranstaltung"]
-anfkat = mongo_db["anforderungkategorie"]
-anf = mongo_db["anforderung"]
-sem = mongo_db["semester"]
 
 # Diesem Schema soll die Datenbank am Ende der Änderung folgen
 import schema20241001
