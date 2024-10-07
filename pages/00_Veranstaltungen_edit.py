@@ -210,7 +210,7 @@ if st.session_state.logged_in:
             "midname_de": midname_de,
             "midname_en": midname_en,
             "kurzname": kurzname,
-            "ects": ects,
+            "ects": float(ects),
             "rubrik": kat,
             "code": code_list,
             "url": url,
