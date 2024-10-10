@@ -60,7 +60,7 @@ def new(collection, ini = {}, switch = True):
     for key, value in ini.items():
         util.new[collection][key] = value
     util.new[collection].pop("_id", None)
-    print(util.new[collection])
+    # print(util.new[collection])
     x = collection.insert_one(util.new[collection])
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} ein neues Item angelegt.")
@@ -367,7 +367,7 @@ def repr(collection, id, show_collection = True, short = False):
         if an.strip() == "Kommentar":
             res = f"{x['name_de'].strip()}"
         else:
-            res = f"{x['name_de'].strip()} ({an.strip()})"
+            res = f"{an.strip()}: {x['name_de'].strip()}"
     elif collection == util.anforderungkategorie:
         res = x['name_de']
     elif collection == util.codekategorie:
@@ -411,6 +411,11 @@ def next_semester_kurzname(kurzname):
     a = int(kurzname[:4])
     b = kurzname[4:]
     return f"{a+1}SS" if b == "WS" else f"{a}WS"
+
+def last_semester_kurzname(kurzname):
+    a = int(kurzname[:4])
+    b = kurzname[4:]
+    return f"{a}SS" if b == "WS" else f"{a-1}WS"
 
 def semester_name_de(kurzname):
     a = int(kurzname[:4])

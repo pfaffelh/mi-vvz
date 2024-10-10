@@ -523,8 +523,15 @@ if st.session_state.logged_in:
     ## Verwendbarkeiten
     with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
         st.subheader("Verwendbarkeit")
-        with st.popover("Aus anderer Veranstaltung importieren", help = "Es wird eine Auswahlliste angezeigt, bestehend aus Veranstaltungen der selben Rubrik, und Veranstaltungen derselben Dozent*innen."):
-            ver_auswahl = list(util.veranstaltung.find({"$or": [{"rubrik": x["rubrik"]}, {"dozent": {"$in": x["dozent"]}}]}))
+        with st.popover("Aus anderer Veranstaltung importieren", help = "Es wird eine Auswahlliste angezeigt, bestehend aus Veranstaltungen der selben Rubrik im aktuellen und vergangenen Semester."):
+            semester_kurzname = util.semester.find_one({"_id": st.session_state.semester_id})["kurzname"]
+            letztes_semester_id = util.semester.find_one({"kurzname": tools.last_semester_kurzname(semester_kurzname)})["_id"]
+            rubrik_name = util.rubrik.find_one({"_id" : x["rubrik"]})["titel_de"]
+            rubrik_letztes_semester = util.rubrik.find_one({"semester" : letztes_semester_id, "titel_de": rubrik_name})
+            if rubrik_letztes_semester:
+                ver_auswahl = list(util.veranstaltung.find({"$or": [{"rubrik": x["rubrik"]}, {"rubrik": rubrik_letztes_semester["_id"]}]}, sort = [("name_de", pymongo.ASCENDING)]))
+            else:  
+                ver_auswahl = list(util.veranstaltung.find({"rubrik": x["rubrik"]}, sort = [("name_de", pymongo.ASCENDING)]))
             verwendbarkeit_import = st.selectbox("Veranstaltung", [v["_id"] for v in ver_auswahl], format_func = (lambda a: tools.repr(util.veranstaltung, a, show_collection=False)))
             v = util.veranstaltung.find_one({"_id": verwendbarkeit_import})
             x_updated = {"verwendbarkeit_modul": v["verwendbarkeit_modul"],
@@ -550,7 +557,7 @@ if st.session_state.logged_in:
         mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen", key = f"anf_mod_{x['_id']}")
 
         ects = {}
-        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 6, 7, 7.5, 8, 9, 10, 11, 12] 
+        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12] 
         for m in mod_list:
             ects[m] = st.multiselect(f"Mögliche ECTS-Punkte im Modul {mo_dict[m]}", ects_all, sorted(list(set([y["ects"] for y in x["verwendbarkeit"] if y["modul"] == m]))), placeholder = "Bitte auswählen", key = f"anf_ects_{x['_id']}_{m}")
 

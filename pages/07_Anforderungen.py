@@ -39,21 +39,21 @@ if st.session_state.logged_in:
 
     y1 = list(util.anforderungkategorie.find(sort=[("rang", pymongo.ASCENDING)]))
     for x1 in y1:
-        st.header(x1["name_de"])
-        y2 = list(collection.find({"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort=[("rang", pymongo.ASCENDING)]))
-        for x2 in y2:
-            co1, co2, co3 = st.columns([1,1,23]) 
-            with co1: 
-                st.button('↓', key=f'down-{x2["_id"]}', on_click = tools.move_down, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
-            with co2:
-                st.button('↑', key=f'up-{x2["_id"]}', on_click = tools.move_up, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
-            with co3:
-                abk = f"{x2['name_de'].strip()}"
-                abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"
-                submit = st.button(abk, key=f"edit-{x2['_id']}")
-            if submit:
-                st.session_state.edit = x2["_id"]
-                switch_page("anforderungen edit")
+        with st.expander(x1["name_de"]):
+            y2 = list(collection.find({"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort=[("rang", pymongo.ASCENDING)]))
+            for x2 in y2:
+                co1, co2, co3 = st.columns([1,1,23]) 
+                with co1: 
+                    st.button('↓', key=f'down-{x2["_id"]}', on_click = tools.move_down, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
+                with co2:
+                    st.button('↑', key=f'up-{x2["_id"]}', on_click = tools.move_up, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
+                with co3:
+                    abk = f"{x2['name_de'].strip()}"
+                    abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"
+                    submit = st.button(abk, key=f"edit-{x2['_id']}")
+                if submit:
+                    st.session_state.edit = x2["_id"]
+                    switch_page("anforderungen edit")
 
     st.subheader("Anforderungskategorien")
     collection = util.anforderungkategorie

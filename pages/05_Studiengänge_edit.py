@@ -76,9 +76,12 @@ if st.session_state.logged_in:
         if submit:
             if new_entry:
                 tools.new(collection, ini = x_updated, switch=False)
+                util.modul.update_many({"_id": { "$in": modul_list}}, { "$push" : { "studiengang": st.session_state.edit}})
             else:
+                util.modul.update_many({"_id": { "$in": modul_list}}, { "$push" : { "studiengang": x["_id"]}})
+                util.modul.update_many({"_id": { "$nin": modul_list}}, { "$pull" : { "studiengang": x["_id"]}})
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(2)
+            time.sleep(.1)
             st.session_state.edit = ""
             switch_page("studiengänge")
 
