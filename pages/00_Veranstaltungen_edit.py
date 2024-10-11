@@ -563,8 +563,12 @@ if st.session_state.logged_in:
 
         ects = {}
         ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12] 
+        
+        st.write("Mögliche ECTS-Punkte in den einzelnen Modulen")
+        col = st.columns([1 for i in mod_list])
         for m in mod_list:
-            ects[m] = st.multiselect(f"Mögliche ECTS-Punkte im Modul {mo_dict[m]}", ects_all, sorted(list(set([y["ects"] for y in x["verwendbarkeit"] if y["modul"] == m]))), placeholder = "Bitte auswählen", key = f"anf_ects_{x['_id']}_{m}")
+            with col[mod_list.index(m)]:
+                ects[m] = st.multiselect(mo_dict[m], ects_all, sorted(list(set([y["ects"] for y in x["verwendbarkeit"] if y["modul"] == m]))), placeholder = "Bitte auswählen", key = f"anf_ects_{x['_id']}_{m}")
 
         mod_ects_list = []
         for m in mod_list:

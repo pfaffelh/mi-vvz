@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
+import pandas as pd
 import time
 import pymongo
 
@@ -52,7 +53,17 @@ if st.session_state.logged_in:
             st.session_state.edit = x["_id"]
             switch_page("studiengänge edit")
 
+    with st.expander("Studiengang-Modul-Matrix"):
+        st.write("Es werden nur Studiengänge des aktuellen Semesters angezeigt.")
+        allstu = util.studiengang.find({"semester" : { "$elemMatch" : { "$eq": st.session_state.semester_id}}}, sort=[("rang", pymongo.ASCENDING)])
+        records = [{"studiengang": s["kurzname"], "modul": tools.repr(util.modul, m, False, True)} for s in allstu for m in s["modul"] ]
+        df = pd.DataFrame.from_records(records)
+        df_crosstab = pd.crosstab(df["modul"], df["studiengang"]) > 0
+        df_crosstab = df_crosstab.sort_index(axis=1)
+        st.write(df_crosstab)
+
 else: 
     switch_page("VVZ")
 
 st.sidebar.button("logout", on_click = tools.logout)
+
