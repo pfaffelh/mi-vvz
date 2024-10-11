@@ -37,7 +37,8 @@ def makeanforderungname(anforderung_id, lang = "de", alter = True):
     k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})[f"name_{lang}"]
     if alter and k == "":
         k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})[f"name_{otherlang}"]
-    return f"{aname} ({k})"
+    res = aname if k == "Kommentar" else f"{k}: {aname}"
+    return res
 
 def makeverwendbarkeit(verwendbarkeit):
     res = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in verwendbarkeit]
@@ -205,10 +206,30 @@ def makedata(sem_kurzname, komm, lang, alter):
             v_dict["code"] = makecode(sem_id, veranstaltung)
             # Module löschen, die in keinem Studiengang des Semesters vorkommen
             mod_verw = []
+
+            
+
+            ects={}
+            for m in veranstaltung["verwendbarkeit_modul"]:
+                ects[m] = list(set([y["ects"] for y in v_dict["verwendbarkeit"] if v_dict["modul"] == m]))
+                for m in mod_list:
+
+
+
+
+
+
+
             for m in veranstaltung["verwendbarkeit_modul"]:
                 m1 = util.modul.find_one({"_id": m})
                 if list(util.studiengang.find({"_id": { "$in" : m1["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}})) != []:
                     mod_verw.append(m)
+
+
+            ects[m] = list(set([y["ects"] for y in v_dict["verwendbarkeit"] if v_dict["modul"] == m]))
+            for m in mod_list:
+                mod_ects_list.extend([(m, i) for i in ects[m]])
+
 
             v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x, lang, alter)} for x in mod_verw]
             v_dict["verwendbarkeit_anforderung"] = [{"id": str(x), "titel": makeanforderungname(x, lang, alter)} for x in veranstaltung["verwendbarkeit_anforderung"]]
