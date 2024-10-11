@@ -65,8 +65,10 @@ if st.session_state.logged_in:
         name=st.text_input('Name', x["name"], disabled = (True if x["_id"] == util.leer[collection] else False))
         kurzname=st.text_input('Kurzname', x["kurzname"])
         kommentar=st.text_input('Kommentar', x["kommentar"])
-        modul_list = st.multiselect("Module", [x["_id"] for x in util.modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: tools.repr(util.modul, a, False)), placeholder = "Bitte auswählen")
-        mo = list(util.modul.find({"_id": {"$in": modul_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        #modul_list = st.multiselect("Module", [x["_id"] for x in util.modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: tools.repr(util.modul, a, False)), placeholder = "Bitte auswählen")
+        modul_list = st.multiselect("Module", [x["_id"] for x in util.modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("name_de", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: tools.repr(util.modul, a, False)), placeholder = "Bitte auswählen")
+#        mo = list(util.modul.find({"_id": {"$in": modul_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        mo = list(util.modul.find({"_id": {"$in": modul_list}}, sort=[("name_de", pymongo.ASCENDING)]))
         modul_list = [m["_id"] for m in mo]
         semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))

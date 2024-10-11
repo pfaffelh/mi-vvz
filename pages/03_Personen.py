@@ -34,7 +34,7 @@ if st.session_state.logged_in:
         st.session_state.edit = "new"
         switch_page("personen edit")
 
-    y = list(collection.find({"semester": { "$elemMatch": {"$eq": st.session_state.semester_id}}}, sort=[("name", pymongo.ASCENDING)]))
+    y = list(collection.find({"semester": { "$elemMatch": {"$eq": st.session_state.semester_id}}}, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
     for x in y:
         abk = f"{x['name'].strip()}, {x['vorname'].strip()}".strip()
         submit = st.button(abk, key=f"edit-{x['_id']}")

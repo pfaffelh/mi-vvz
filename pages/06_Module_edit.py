@@ -64,8 +64,10 @@ if st.session_state.logged_in:
         name_en=st.text_input('Name (en)', x["name_en"])
         kurzname=st.text_input('Kurzname', x["kurzname"])
         kommentar=st.text_input('Kommentar', x["kommentar"])
-        stu_list = st.multiselect("Studiengänge", [x["_id"] for x in util.studiengang.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["studiengang"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["studiengang"], format_func = (lambda a: tools.repr(util.studiengang, a, False)), placeholder = "Bitte auswählen")
-        stu = list(util.studiengang.find({"_id": {"$in": stu_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        #stu_list = st.multiselect("Studiengänge", [x["_id"] for x in util.studiengang.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["studiengang"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["studiengang"], format_func = (lambda a: tools.repr(util.studiengang, a, False)), placeholder = "Bitte auswählen")
+        stu_list = st.multiselect("Studiengänge", [x["_id"] for x in util.studiengang.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["studiengang"]}}]}, sort = [("name", pymongo.ASCENDING)])], x["studiengang"], format_func = (lambda a: tools.repr(util.studiengang, a, False)), placeholder = "Bitte auswählen")
+        # stu = list(util.studiengang.find({"_id": {"$in": stu_list}}, sort=[("rang", pymongo.ASCENDING)]))
+        stu = list(util.studiengang.find({"_id": {"$in": stu_list}}, sort=[("name", pymongo.ASCENDING)]))
         stu_list = [s["_id"] for s in stu]
         x_updated = ({"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "sichtbar": sichtbar, "kommentar": kommentar, "studiengang": stu_list})
         submit = st.form_submit_button('Speichern', type = 'primary')
