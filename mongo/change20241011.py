@@ -36,13 +36,13 @@ for m in allmod:
     for s_id in m["studiengang"]:
         s = stu.find_one({"_id": s_id})
         if m["_id"] not in s["modul"]:
-            print(f"Modul {m["kurzname"]} nicht in Studiengang {s["kurzname"]}")
+            print(f"Modul {m['kurzname']} nicht in Studiengang {s['kurzname']}")
             stu.update_one({"_id": s["_id"]}, { "$push" : { "modul" : m["_id"]}})
 for s in allstu:
     for m_id in s["modul"]:
         m = mod.find_one({"_id": m_id})
         if m and s["_id"] not in m["studiengang"]:
-            print(f"Studiengang {s["kurzname"]} nicht in Modul {m["kurzname"]}")
+            print(f"Studiengang {s['kurzname']} nicht in Modul {m['kurzname']}")
             mod.update_one({"_id": m["_id"]}, { "$push" : { "studiengang" : s["_id"]}})
 
 
