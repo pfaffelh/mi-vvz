@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 import pymongo
+import pandas as pd
 import time
 import misc.util as util
 import misc.tools as tools
@@ -8,7 +9,25 @@ from bson import ObjectId
 from misc.config import *
 from collections import OrderedDict
 import jinja2
-import os
+import itertools, os
+
+# Combine columns in a dataframe which have the same content.
+# Replace identical columns with one column with a combined name.
+def combine_columns(df):
+    # Durch die Paare iterieren
+    cont = True
+    while cont:
+        column_pairs = itertools.combinations(df.columns, 2)    
+        cont = False
+        for col1, col2 in column_pairs:
+            print(col1, col2)
+            if (df[col1] == df[col2]).all():
+                df.rename(columns = { col1 : ", ".join([col1, col2])}, inplace = True)
+                df.drop(columns = col2, inplace = True)
+                cont = True
+                break
+    return df
+
 
 def getraum(raum_id, lang = "de", alter = True):
     otherlang = "en" if lang == "de" else "de"
@@ -141,11 +160,16 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
     return res
 
 def makedata(sem_kurzname, komm, lang, alter):
-    sem_id = util.semester.find_one({"kurzname": sem_kurzname})["_id"]
+    semester = util.semester.find_one({"kurzname": sem_kurzname})
+    sem_id = semester["_id"]
+    
     otherlang = "en" if lang == "de" else "de"
     rubriken = list(util.rubrik.find({"semester": sem_id, "hp_sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
     
     data = {}
+
+    data["vorspann"] = semester[f"vorspann_kommentare_{lang}"]
+    
     data["rubriken"] = []
 
     for rubrik in rubriken:
@@ -205,50 +229,24 @@ def makedata(sem_kurzname, komm, lang, alter):
 
             v_dict["code"] = makecode(sem_id, veranstaltung)
             # Module löschen, die in keinem Studiengang des Semesters vorkommen
+
             mod_verw = []
-
-            
-
-            ects={}
-            for m in veranstaltung["verwendbarkeit_modul"]:
-                ects[m] = list(set([y["ects"] for y in v_dict["verwendbarkeit"] if v_dict["modul"] == m]))
-                for m in mod_list:
-
-
-
-
-
-
-
             for m in veranstaltung["verwendbarkeit_modul"]:
                 m1 = util.modul.find_one({"_id": m})
                 if list(util.studiengang.find({"_id": { "$in" : m1["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}})) != []:
                     mod_verw.append(m)
 
-
-            ects[m] = list(set([y["ects"] for y in v_dict["verwendbarkeit"] if v_dict["modul"] == m]))
-            for m in mod_list:
-                mod_ects_list.extend([(m, i) for i in ects[m]])
-
-
             v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x, lang, alter)} for x in mod_verw]
             v_dict["verwendbarkeit_anforderung"] = [{"id": str(x), "titel": makeanforderungname(x, lang, alter)} for x in veranstaltung["verwendbarkeit_anforderung"]]
             v_dict["verwendbarkeit"] = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in veranstaltung["verwendbarkeit"]]
 
-            # Spalten zusammenfassen:
-            # rm = []
-            # for i in range(1,len(v_dict["verwendbarkeit_modul"])):
-            #     x = v_dict["verwendbarkeit_modul"][i]
-            #     xanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == x["id"]]
-            #     for j in range(i, len(v_dict["verwendbarkeit_modul"])):
-            #         y = v_dict["verwendbarkeit_modul"][j]
-            #         yanforderungen = [(value for key, value in z if key == "anforderung") for z in v_dict["verwendbarkeit"] if z["modul"] == y["id"]]
-            #         if x != y and set(xanforderungen) == set(yanforderungen):
-            #             x["titel"] = ", ".join([x["titel"], y["titel"]])
-            #             rm.append(j)
-            # rm.reverse
-            # for j in rm:
-            #     v_dict["verwendbarkeit_modul"].pop(j)
+            verwendbarkeit = veranstaltung["verwendbarkeit"]
+            for v in verwendbarkeit:
+                v["modul_ects"] = f"{repr(util.modul, v["modul"])} ({v["ects"]})"
+                v["anforderung"] = repr(util.anforderung, v["anforderung"])
+            df = pd.DataFrame.from_records(v)
+            crosstab = pd.crosstab(df["anforderung"], df["modul_ects"]) > 0
+            v_dict["verwendbarkeit"] = combine_columns(crosstab)
 
             r_dict["veranstaltung"].append(v_dict)
 
