@@ -244,7 +244,7 @@ def makedata(sem_kurzname, komm, lang, alter):
             verwendbarkeit = [{"modul": makemodulname(x["modul"], lang, alter), "anforderung": makeanforderungname(x["anforderung"], lang, alter), "ects" : x["ects"]} for x in veranstaltung["verwendbarkeit"]]
 
             for v in verwendbarkeit:
-                v["modul_ects"] = f"{v["modul"]} ({v["ects"]} ECTS)"
+                v["modul_ects"] = f"{v['modul']} ({v['ects']} ECTS)"
 
             try:
                 df = pd.DataFrame.from_records(verwendbarkeit)
