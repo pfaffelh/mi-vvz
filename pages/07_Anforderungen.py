@@ -40,13 +40,14 @@ if st.session_state.logged_in:
     y1 = list(util.anforderungkategorie.find(sort=[("rang", pymongo.ASCENDING)]))
     for x1 in y1:
         with st.expander(x1["name_de"]):
-            y2 = list(collection.find({"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort=[("rang", pymongo.ASCENDING)]))
+#            y2 = list(collection.find({"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort=[("rang", pymongo.ASCENDING)]))
+            y2 = list(collection.find({"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort=[("name_de", pymongo.ASCENDING)]))
             for x2 in y2:
                 co1, co2, co3 = st.columns([1,1,23]) 
-                with co1: 
-                    st.button('↓', key=f'down-{x2["_id"]}', on_click = tools.move_down, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
-                with co2:
-                    st.button('↑', key=f'up-{x2["_id"]}', on_click = tools.move_up, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
+#                with co1: 
+#                    st.button('↓', key=f'down-{x2["_id"]}', on_click = tools.move_down, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
+#                with co2:
+#                    st.button('↑', key=f'up-{x2["_id"]}', on_click = tools.move_up, args = (collection, x2, {"anforderungskategorie" : x1["_id"], "semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}))
                 with co3:
                     abk = f"{x2['name_de'].strip()}"
                     abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"

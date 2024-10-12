@@ -272,7 +272,8 @@ if st.session_state.logged_in:
                 disable = False if tmp_id_start > i else True 
                 st.button('↑', key=f'up-w-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "woechentlicher_termin", w,), disabled=disable_move)
             with cols[2]:
-                terminart_list = list(util.terminart.find({}, sort = [("rang", pymongo.ASCENDING)]))
+#                terminart_list = list(util.terminart.find({}, sort = [("rang", pymongo.ASCENDING)]))
+                terminart_list = list(util.terminart.find({}, sort = [("name_de", pymongo.ASCENDING)]))
                 terminart_dict = {r["_id"]: tools.repr(util.terminart, r["_id"], show_collection = False) for r in terminart_list}
                 index = [g["_id"] for g in terminart_list].index(w["key"])
                 w_key = st.selectbox("Art des Termins", terminart_dict.keys(), index, format_func = (lambda a: terminart_dict[a]), key = f"wt_{i}")
@@ -297,7 +298,8 @@ if st.session_state.logged_in:
 
             cols = st.columns([1,1,10,15,1])
             with cols[2]:
-                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
+#                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("rang", pymongo.ASCENDING)]))
+                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("name_de", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
                 index = [g["_id"] for g in termin_raum].index(w["raum"])
                 w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
@@ -384,7 +386,8 @@ if st.session_state.logged_in:
                 st.write("")
                 st.button('↑', key=f'up-e-{i}', on_click = tools.move_up_list, args = (collection, x["_id"], "einmaliger_termin", w,), disabled=disable_move)
             with cols[2]:
-                ta = [g["_id"] for g in list(st.session_state.terminart.find(sort=[("rang", pymongo.ASCENDING)]))]
+#                ta = [g["_id"] for g in list(st.session_state.terminart.find(sort=[("rang", pymongo.ASCENDING)]))]
+                ta = [g["_id"] for g in list(st.session_state.terminart.find(sort=[("name_de", pymongo.ASCENDING)]))]
                 index = ta.index(w["key"])
                 w_key = st.selectbox("", ta, index = index, format_func = (lambda a: tools.repr(st.session_state.terminart, a)), key = f"et_{i}")
             with cols[3]:
@@ -402,7 +405,8 @@ if st.session_state.logged_in:
 
             cols = st.columns([1,1,5,5,5,5,1])
             with cols[2]:
-                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
+#                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
+                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("name_de", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in termin_raum }
                 w_raum = st.multiselect("Raum", termin_raum_dict.keys(), w["raum"], format_func = (lambda a: termin_raum_dict[a]), placeholder = "Bitte auswählen", key = f"einmaliger_termin_{i}_raum")
             with cols[3]:
@@ -545,7 +549,8 @@ if st.session_state.logged_in:
             with colu2: 
                 st.button(label="Abbrechen", on_click = st.rerun, args=(), key = f"not-imported-{x['_id']}")
 
-        mo = list(util.modul.find({"$or": [{"sichtbar": True}, {"_id": { "$elemMatch": { "$eq": x["verwendbarkeit_modul"]}}}]}, sort = [("rang", pymongo.ASCENDING)]))
+#        mo = list(util.modul.find({"$or": [{"sichtbar": True}, {"_id": { "$elemMatch": { "$eq": x["verwendbarkeit_modul"]}}}]}, sort = [("rang", pymongo.ASCENDING)]))
+        mo = list(util.modul.find({"$or": [{"sichtbar": True}, {"_id": { "$elemMatch": { "$eq": x["verwendbarkeit_modul"]}}}]}, sort = [("name_de", pymongo.ASCENDING)]))
 
         for m in x["verwendbarkeit_modul"]:
             m1 = util.modul.find_one({"_id" : m})
@@ -571,7 +576,8 @@ if st.session_state.logged_in:
         
         ver_an = []
         for y in list(util.anforderungkategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
-            ver_an.extend(list(util.anforderung.find({"anforderungskategorie": y["_id"], "$or": [{"semester": {"$elemMatch": {"$eq": st.session_state.semester_id}}}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("rang", pymongo.ASCENDING)])))        
+#            ver_an.extend(list(util.anforderung.find({"anforderungskategorie": y["_id"], "$or": [{"semester": {"$elemMatch": {"$eq": st.session_state.semester_id}}}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("rang", pymongo.ASCENDING)])))        
+            ver_an.extend(list(util.anforderung.find({"anforderungskategorie": y["_id"], "$or": [{"semester": {"$elemMatch": {"$eq": st.session_state.semester_id}}}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("name_de", pymongo.ASCENDING)])))        
         # st.write(ver_an)
         an_dict = {a["_id"]: tools.repr(util.anforderung, a["_id"], show_collection = False) for a in ver_an }
         an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen", key = f"anf_{x['_id']}")

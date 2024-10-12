@@ -28,7 +28,8 @@ collection = util.raum
 
 new_entry = False
 
-geb = list(util.gebaeude.find({"sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
+#geb = list(util.gebaeude.find({"sichtbar": True}, sort=[("rang", pymongo.ASCENDING)]))
+geb = list(util.gebaeude.find({"sichtbar": True}, sort=[("name_de", pymongo.ASCENDING)]))
 gebaeude_sichtbar = [ x["_id"]  for x in geb ]
 
 # Ab hier wird die Webseite erzeugt

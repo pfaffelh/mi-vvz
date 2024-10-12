@@ -33,13 +33,14 @@ if st.session_state.logged_in:
             st.session_state.edit = "new"
             switch_page("gebäude edit")
 
-    y = list(collection.find(sort=[("rang", pymongo.ASCENDING)]))
+#    y = list(collection.find(sort=[("rang", pymongo.ASCENDING)]))
+    y = list(collection.find(sort=[("name_de", pymongo.ASCENDING)]))
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
-        with co1: 
-            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
-        with co2:
-            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
+#        with co1: 
+#            st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, ))
+#        with co2:
+#            st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, ))
         with co3:
             abk = f"{x['name_de'].strip()}"
             abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
