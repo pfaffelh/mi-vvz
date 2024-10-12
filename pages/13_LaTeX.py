@@ -9,6 +9,7 @@ from bson import ObjectId
 from misc.config import *
 import pandas as pd
 import json, jinja2
+import subprocess
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -28,21 +29,50 @@ tools.display_navigation()
 st.session_state.page = "LaTeX"
 
 sem_id = st.session_state.semester_id
-sem_kurzname = util.semester.find_one({"_id" : sem_id})["kurzname"]
+sem = util.semester.find_one({"_id" : sem_id})
+sem_kurzname = sem["kurzname"]
 
 if st.session_state.logged_in:
     st.header("Ausgabe von LaTeX-Files")
     st.write("Hier können LaTeX-Files für das kommentierte Vorlesungsverzeichnis und die Erweiterungen der Modulhandbücher ausgegeben werden.")
     # Zunächst ein paar Einstellungen
-    en = st.toggle("Englische Inhalte verwenden", value=False, key=None, help="Andernfalls werden die deutschen Inhalte verwendet")
-    alter = st.toggle("Andere Sprache verwenden, falls Kommentare nicht verfügbar", value=True, help="Andernfalls bleibt der Inhalt im Kommentierten Vorlesungsverzeichnis leer.")
-    komm = st.toggle("Nur Veranstaltungen ausgeben, die den Code _Komm_ tragen", value=True, help="Andernfalls werden alle Veranstaltungen des Semesters ausgegeben.")
-    include_inhalt = st.toggle("Inhalt der Veranstaltungen anzeigen", value=True, help="Andernfalls werden nur Verwendbarkeiten ausgegeben.")
-    verw_kurz = st.toggle("Verwendbarkeiten nur in Kurzform ausgeben", value=True, help="Andernfalls wird die komplette Verwendbarkeitsmatrix für jede Veranstaltung ausgegeben.")
+
+    col0, col1 = st.columns([1,1])
+    with col0:
+        which = st.selectbox("Was soll erstellt werden?", ["Kommentiertes Vorlesungsverzeichnis", "Erweiterung der Modulhandbücher"], index = None, placeholder = "Bitte auswählen")
+        kommentare = True if which == "Kommentiertes Vorlesungsverzeichnis" else False
+        erweiterung = not kommentare
+    with col1: 
+        la = st.selectbox("Sprache", ["deutsch", "englisch"], index = None, placeholder = "Bitte auswählen")
+
+    en = True if la == "englisch" else False
+    lang = "en" if en else "de"
+
+    #alter = st.toggle("Andere Sprache verwenden, falls Kommentare nicht verfügbar", value=True, help="Andernfalls bleibt der Inhalt im Kommentierten Vorlesungsverzeichnis leer.")
+    alter = True
+
+    # komm = st.toggle("Nur Veranstaltungen ausgeben, die den Code _Komm_ tragen", value=True, help="Andernfalls werden alle Veranstaltungen des Semesters ausgegeben.")
+    komm = True
+
+    # include_inhalt = st.toggle("Inhalt der Veranstaltungen anzeigen", value=True, help="Andernfalls werden nur Verwendbarkeiten ausgegeben.")
+    include_inhalt = True
+
+    # verw_kurz = st.toggle("Verwendbarkeiten nur in Kurzform ausgeben", value=True, help="Andernfalls wird die komplette Verwendbarkeitsmatrix für jede Veranstaltung ausgegeben.")
+
+    verw_kurz = True if kommentare else False
+
     wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', "", key = "watermark")
-    sem = util.semester.find_one
-    includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann-{'en' if en else 'de'}.tex", key = "includefile")
-    titel = st.text_input('Titel des Dokuments', ("Kommentiertes Vorlesungsverzeichnis" if verw_kurz else "Ergänzungen des Modulhandbuchs") if not en else ("Comments on the course catalogue" if verw_kurz else "Supplements of the module handbooks"), key = "titel")
+
+    with st.expander("Vorspann (LaTeX)"):
+        vorspann = st.text_area("Vorspann mit LaTeX-Befehlen", sem[f"vorspann_kommentare_{lang}"], height = 200 )
+        submit = st.button("Speichern")
+        if submit:
+            util.semester.update_one({"_id" : sem_id}, { "$set" : {f"vorspann_kommentare_{lang}" : vorspann }})
+            st.success("Vorspann gespeichert.")
+
+    # includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann-{'en' if en else 'de'}.tex", key = "includefile")
+
+    titel = ("Kommentiertes Vorlesungsverzeichnis" if kommentare else "Ergänzungen des Modulhandbuchs") if not en else ("Comments on the course catalogue" if kommentare else "Supplements of the module handbooks")
 
     if komm:
         sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
@@ -61,12 +91,34 @@ if st.session_state.logged_in:
     data["alter"] = alter
     data["komm"] = komm
     data["verw_kurz"] = verw_kurz
-    data["includefile"] = includefile
+    data["vorspann"] = vorspann
     
     template = latex.latex_jinja_env.get_template(f"static/template.tex")
     kommentare = template.render(data = data)
 
-    st.download_button("Download kommentiertes VVZ", kommentare, file_name=f"Kommentare_{sem_kurzname}_{data['lang']}.tex", help=None, on_click=None, args=None, kwargs=None)
+    file_name = f"{sem_kurzname}_{data['lang']}" if kommentare else f"{sem_kurzname}mh_{data['lang']}"
+
+    # Beides muss ausgewählt sein, bevor ein tex erzeugt wird
+    if which and la:
+
+        col0, col1 = st.columns([1,1])
+        col0.download_button("Download (.tex)", kommentare, file_name=file_name + ".tex", help=None, on_click=None, args=None, kwargs=None, type = 'primary')
+        with open('texfiles/' + file_name + '.tex', 'w') as file:
+            file.write(kommentare) 
+
+        command = ['pdflatex', '-interaction=nonstopmode', '-output-directory', 'texfiles', f'texfiles/{file_name}.tex']
+        result = subprocess.run(command, capture_output=True, text = True)
+
+        try:
+            with open('texfiles/' + file_name + '.pdf', 'rb') as file:
+                pdf = file.read()
+                col1.download_button("Download (.pdf)", pdf, file_name=file_name + '.pdf', help=None, on_click=None, args=None, kwargs=None, type = 'primary', mime='pdf')
+        except FileNotFoundError:
+            st.error("pdf-Datei nicht vorhanden.")
+
+        with st.expander("LaTeX output"):
+            st.write(result.stdout)  # This prints the output from pdflatex
+            st.write(result.stderr)  # 
 
     if komm:
         st.write("Es werden nur Veranstaltungen aufgenommen, die den Code 'Komm' tragen.")

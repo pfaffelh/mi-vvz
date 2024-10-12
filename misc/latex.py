@@ -11,9 +11,18 @@ from collections import OrderedDict
 import jinja2
 import itertools, os
 
+# Soll dazu führen, dass latex-Befehle korrekt behandelt werden.
+def latex(s):
+    # ersetzt " durch ''
+    s = s.replace('"', "''")
+    # führt dazu, dass nie mehr %, sondern immer \% steht
+    s = s.replace("\%", "%")
+    s = s.replace("%", "\%")
+    return s
+
 # Combine columns in a dataframe which have the same content.
 # Replace identical columns with one column with a combined name.
-def combine_columns(df):
+def combine_columns(df, sep = ", "):
     # Durch die Paare iterieren
     cont = True
     while cont:
@@ -22,7 +31,7 @@ def combine_columns(df):
         for col1, col2 in column_pairs:
             print(col1, col2)
             if (df[col1] == df[col2]).all():
-                df.rename(columns = { col1 : ", ".join([col1, col2])}, inplace = True)
+                df.rename(columns = { col1 : sep.join([col1, col2])}, inplace = True)
                 df.drop(columns = col2, inplace = True)
                 cont = True
                 break
@@ -36,7 +45,7 @@ def getraum(raum_id, lang = "de", alter = True):
     name = f"name_{lang}"
     if alter and r[name] == "":
         name = f"name_{otherlang}"
-    return ", ".join([r[name], f"\href{{{g['url']}}}{{{g[name]}}}"])
+    return latex(", ".join([r[name], f"\href{{{g['url']}}}{{{g[name]}}}"]))
 
 def makemodulname(modul_id, lang = "de", alter = True):
     otherlang = "de" if "lang" == "en" else "en"
@@ -45,7 +54,7 @@ def makemodulname(modul_id, lang = "de", alter = True):
     if alter and mname == "":
         mname = m[f"name_{otherlang}"]    
     s = ", ".join([x["kurzname"] for x in list(util.studiengang.find({"_id": { "$in" : m["studiengang"]}, "semester" : { "$elemMatch" : { "$eq" : st.session_state.semester_id}}}))])
-    return f"{mname} ({s})"
+    return latex(f"{mname} ({s})")
 
 def makeanforderungname(anforderung_id, lang = "de", alter = True):
     otherlang = "de" if "lang" == "en" else "en"
@@ -53,15 +62,9 @@ def makeanforderungname(anforderung_id, lang = "de", alter = True):
     aname = a[f"name_{lang}"]
     if alter and aname == "":
         aname = a[f"name_{otherlang}"]
-    k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})[f"name_{lang}"]
-    if alter and k == "":
-        k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})[f"name_{otherlang}"]
+    k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})["kurzname"]
     res = aname if k == "Kommentar" else f"{k}: {aname}"
-    return res
-
-def makeverwendbarkeit(verwendbarkeit):
-    res = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in verwendbarkeit]
-    return res
+    return latex(res)
 
 def makecode(sem_id, veranstaltung):
     res = ""
@@ -72,7 +75,7 @@ def makecode(sem_id, veranstaltung):
         res = ", ".join([c["name"] for c in code_list])
     if veranstaltung["ects"] != "":
         res = ", ".join([res, f"{veranstaltung['ects']} ECTS"])
-    return res
+    return latex(res)
 
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
 # zusammen in
@@ -156,7 +159,7 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
             kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
             new = [ta, datum, zeit, raum, kommentar]
             res.append(new)
-    res = [f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}" for x in res]
+    res = [latex(f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}") for x in res]
     return res
 
 def makedata(sem_kurzname, komm, lang, alter):
@@ -175,9 +178,9 @@ def makedata(sem_kurzname, komm, lang, alter):
     for rubrik in rubriken:
         r_dict = {}
 
-        r_dict["titel"] = rubrik[f"titel_{lang}"] 
+        r_dict["titel"] = latex(rubrik[f"titel_{lang}"])
         if alter and r_dict["titel"] == "":
-            r_dict["titel"] = rubrik[f"titel_{otherlang}"]
+            r_dict["titel"] = latex(rubrik[f"titel_{otherlang}"])
 
         r_dict["veranstaltung"] = []
         # Falls komm == True werden nur Veranstaltungen mit Code komm aufgenommen
@@ -191,15 +194,15 @@ def makedata(sem_kurzname, komm, lang, alter):
         for veranstaltung in veranstaltungen:
             v_dict = {}
 
-            v_dict["titel"] = veranstaltung[f"name_{lang}"]
+            v_dict["titel"] = latex(veranstaltung[f"name_{lang}"])
             if alter and v_dict["titel"] == "":
-                v_dict["titel"] = veranstaltung[f"name_{otherlang}"]
+                v_dict["titel"] = latex(veranstaltung[f"name_{otherlang}"])
 
-            v_dict["url"] = veranstaltung["url"].replace("%", "\%")
+            v_dict["url"] = latex(veranstaltung["url"])
          
-            v_dict["dozent"] = ", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["dozent"]])
+            v_dict["dozent"] = latex(", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["dozent"]]))
 
-            assistent = ", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["assistent"]])
+            assistent = latex(", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["assistent"]]))
             if assistent:
                 if lang == "de":
                     v_dict["person"] = ", Assistenz: ".join([v_dict["dozent"], assistent])
@@ -238,15 +241,18 @@ def makedata(sem_kurzname, komm, lang, alter):
 
             v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x, lang, alter)} for x in mod_verw]
             v_dict["verwendbarkeit_anforderung"] = [{"id": str(x), "titel": makeanforderungname(x, lang, alter)} for x in veranstaltung["verwendbarkeit_anforderung"]]
-            v_dict["verwendbarkeit"] = [{"modul": str(x["modul"]), "anforderung": str(x["anforderung"])} for x in veranstaltung["verwendbarkeit"]]
+            verwendbarkeit = [{"modul": makemodulname(x["modul"], lang, alter), "anforderung": makeanforderungname(x["anforderung"], lang, alter), "ects" : x["ects"]} for x in veranstaltung["verwendbarkeit"]]
 
-            verwendbarkeit = veranstaltung["verwendbarkeit"]
             for v in verwendbarkeit:
-                v["modul_ects"] = f"{repr(util.modul, v["modul"])} ({v["ects"]})"
-                v["anforderung"] = repr(util.anforderung, v["anforderung"])
-            df = pd.DataFrame.from_records(v)
-            crosstab = pd.crosstab(df["anforderung"], df["modul_ects"]) > 0
-            v_dict["verwendbarkeit"] = combine_columns(crosstab)
+                v["modul_ects"] = f"{v["modul"]} ({v["ects"]} ECTS)"
+
+            try:
+                df = pd.DataFrame.from_records(verwendbarkeit)
+                crosstab = pd.crosstab(df["anforderung"], df["modul_ects"]) > 0
+                v_dict["verwendbarkeit"] = combine_columns(crosstab, sep = " \\newline ")
+#                st.write(combine_columns(crosstab))
+            except:
+                v_dict["verwendbarkeit"] = pd.DataFrame()
 
             r_dict["veranstaltung"].append(v_dict)
 

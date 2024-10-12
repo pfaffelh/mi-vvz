@@ -1,0 +1,65 @@
+\contentsline {section}{{Hinweise}}{4}{section*.1}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {section}{\textbf {1a. Einführende Pflichtvorlesungen der verschiedenen Studiengänge}}{4}{section*.2}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Analysis I\ \textcolor {gray}{(\em Michael Růžička)}}{5}{section*.3}%
+\contentsline {subsection}{Lineare Algebra I\ \textcolor {gray}{(\em Stefan Kebekus)}}{6}{section*.9}%
+\contentsline {subsection}{Numerik I\ \textcolor {gray}{(\em Sören Bartels)}}{7}{section*.15}%
+\contentsline {subsection}{Stochastik I\ \textcolor {gray}{(\em Angelika Rohde)}}{9}{section*.21}%
+\contentsline {subsection}{Erweiterung der Analysis\ \textcolor {gray}{(\em Nadine Große)}}{11}{section*.27}%
+\contentsline {subsection}{Basics in Applied Mathematics\ \textcolor {gray}{(\em Moritz Diehl, Patrick Dondl, Angelika Rohde)}}{12}{section*.33}%
+\contentsline {section}{\textbf {1b. Weiterführende vierstündige Vorlesungen}}{13}{section*.37}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Algebra und Zahlentheorie\ \textcolor {gray}{(\em Wolfgang Soergel)}}{14}{section*.38}%
+\contentsline {subsection}{Algebraische Zahlentheorie\ \textcolor {gray}{(\em Abhishek Oswal)}}{16}{section*.44}%
+\contentsline {subsection}{Analysis III\ \textcolor {gray}{(\em Patrick Dondl)}}{17}{section*.50}%
+\contentsline {subsection}{Differentialgeometrie\ \textcolor {gray}{(\em Sebastian Goette)}}{18}{section*.55}%
+\contentsline {subsection}{Einführung in partielle Differentialgleichungen\ \textcolor {gray}{(\em Guofang Wang)}}{19}{section*.61}%
+\contentsline {subsection}{Einführung in Theorie und Numerik Partieller Differentialgleichungen\ \textcolor {gray}{(\em Sören Bartels)}}{20}{section*.67}%
+\contentsline {subsection}{Mathematische Statistik\ \textcolor {gray}{(\em Ernst August v. Hammerstein)}}{21}{section*.73}%
+\contentsline {subsection}{Wahrscheinlichkeitstheorie II (Stochastische Prozesse)\ \textcolor {gray}{(\em Peter Pfaffelhuber)}}{22}{section*.79}%
+\contentsline {subsection}{Wahrscheinlichkeitstheorie III (Stochastische Integration und Finanzmathematik)\ \textcolor {gray}{(\em Thorsten Schmidt)}}{24}{section*.85}%
+\contentsline {subsection}{Semi-algebraische Geometrie\ \textcolor {gray}{(\em Annette Huber-Klawitter, Amador Martín Pizarro)}}{26}{section*.91}%
+\contentsline {subsection}{Mengenlehre: Unabhängigkeitsbeweise\ \textcolor {gray}{(\em Maxwell Levine)}}{27}{section*.97}%
+\contentsline {subsection}{Theorie und Numerik for Partieller Differentialgleichungen – Nichtlineare Probleme\ \textcolor {gray}{(\em Sören Bartels, Patrick Dondl)}}{28}{section*.103}%
+\contentsline {subsection}{Lesekurse „Wissenschaftliches Arbeiten“ \ \textcolor {gray}{(\em Alle Dozent:inn:en der Mathematik)}}{29}{section*.109}%
+\contentsline {section}{\textbf {1c. Weiterführende zweistündige Vorlesungen}}{30}{section*.112}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Futures and Options\ \textcolor {gray}{(\em Eva Lütkebohmert-Holtz)}}{31}{section*.113}%
+\contentsline {subsection}{Lie-Gruppen und symmetrische Räume\ \textcolor {gray}{(\em Maximilian Stegemeyer)}}{32}{section*.119}%
+\contentsline {subsection}{Markov-Ketten\ \textcolor {gray}{(\em David Criens)}}{33}{section*.125}%
+\contentsline {subsection}{Maßtheorie\ \textcolor {gray}{(\em Peter Pfaffelhuber)}}{34}{section*.131}%
+\contentsline {subsection}{Numerische Approximation stochastischer Differentialgleichungen\ \textcolor {gray}{(\em Diyora Salimova)}}{35}{section*.137}%
+\contentsline {subsection}{Numerical Optimal Control\ \textcolor {gray}{(\em Moritz Diehl)}}{36}{section*.142}%
+\contentsline {section}{\textbf {2a. Fachdidaktik}}{37}{section*.148}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Einführung in die Fachdidaktik der Mathematik\ \textcolor {gray}{(\em Katharina Böcherer-Linder)}}{38}{section*.149}%
+\contentsline {subsection}{Didaktik der Funktionen und der Analysis\ \textcolor {gray}{(\em Katharina Böcherer-Linder)}}{39}{section*.154}%
+\contentsline {subsection}{Didaktik der Stochastik und der Algebra\ \textcolor {gray}{(\em Anika Dreher)}}{40}{section*.160}%
+\contentsline {subsection}{Fachdidaktikseminar: Medieneinsatz im Mathematikunterricht\ \textcolor {gray}{(\em Jürgen Kury)}}{41}{section*.166}%
+\contentsline {subsection}{Fachdidaktikseminare der PH Freiburg\ \textcolor {gray}{(\em Dozent:inn:en der PH Freiburg)}}{42}{section*.170}%
+\contentsline {subsection}{Modul ''Fachdidaktische Forschung'':\ \textcolor {gray}{(\em Dozent:inn:en der PH Freiburg)}}{43}{section*.175}%
+\contentsline {subsection}{Teil 1: Fachdidaktische Entwicklungsforschung zu ausgewählten Schwerpunkten\ \textcolor {gray}{(\em Frank Reinhold)}}{44}{section*.179}%
+\contentsline {subsection}{Teil 2: Methoden der mathematikdidaktischen Forschung\ \textcolor {gray}{(\em Frank Reinhold)}}{45}{section*.183}%
+\contentsline {subsection}{Teil 3: Entwicklung und Optimierung eines fachdidaktischen Forschungsprojekts\ \textcolor {gray}{(\em Dozent:inn:en der PH Freiburg)}}{46}{section*.186}%
+\contentsline {section}{\textbf {2b. Tutoratsmodul}}{47}{section*.190}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Lernen durch Lehren\ \textcolor {gray}{(\em Susanne Knies)}}{48}{section*.191}%
+\contentsline {section}{\textbf {2c. Praktische Übungen}}{49}{section*.195}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Praktische Übung zu Einführung in Theorie und Numerik Partieller Differentialgleichungen\ \textcolor {gray}{(\em Sören Bartels)}}{50}{section*.196}%
+\contentsline {subsection}{Praktische Übung zu Numerik\ \textcolor {gray}{(\em Sören Bartels)}}{51}{section*.201}%
+\contentsline {section}{\textbf {3a. Proseminare}}{52}{section*.206}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Gewöhnliche Differentialgleichungen und Anwendungen\ \textcolor {gray}{(\em Susanne Knies, Ludwig Striet)}}{53}{section*.207}%
+\contentsline {subsection}{Ein Streifzug durch die Mathematik\ \textcolor {gray}{(\em Angelika Rohde)}}{54}{section*.213}%
+\contentsline {subsection}{Proseminar zur Algebra\ \textcolor {gray}{(\em Wolfgang Soergel)}}{55}{section*.219}%
+\contentsline {section}{\textbf {3b. Seminare}}{56}{section*.224}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{Knotentheorie\ \textcolor {gray}{(\em Ernst August v. Hammerstein)}}{57}{section*.225}%
+\contentsline {subsection}{Maschinelles Lernen und Stochastische Analysis\ \textcolor {gray}{(\em Thorsten Schmidt)}}{59}{section*.231}%
+\contentsline {subsection}{Machine-Learning Methods in the Approximation of PDEs\ \textcolor {gray}{(\em Sören Bartels)}}{61}{section*.236}%
+\contentsline {subsection}{Medical Data Science\ \textcolor {gray}{(\em Harald Binder)}}{63}{section*.242}%
+\contentsline {subsection}{Minimalflächen\ \textcolor {gray}{(\em Guofang Wang)}}{65}{section*.248}%
+\contentsline {subsection}{Seminar zur algebraischen Topologie\ \textcolor {gray}{(\em Sebastian Goette)}}{67}{section*.254}%
+\contentsline {subsection}{Theorie der nicht-kommutativen Algebren\ \textcolor {gray}{(\em Annette Huber-Klawitter)}}{69}{section*.259}%

@@ -14,8 +14,12 @@
             pifont,
             rotating,
             tabularx,
-            xcolor,
+            colortbl
 			}
+\usepackage[table]{xcolor}
+\arrayrulecolor{lightgray} % Ändert die Farbe der Linien
+% \arrayrulewidth=1pt   % Setzt die Dicke der Linien
+
 %% if data["lang"] == "de"
 \usepackage{ngerman}
 %% endif
@@ -183,35 +187,38 @@
     Usability and assessments:
     %% endif 
 }
+
 \begin{tabularx}{\textwidth}{ p{.5\textwidth}
-        %% for i in veranstaltung["verwendbarkeit_modul"]
-        X
-        %% endfor
-    }
-    %% for y in veranstaltung["verwendbarkeit_modul"]
-     &
-    \makecell[c]{\rotatebox[origin=l]{90}{\parbox{
-                %% if veranstaltung["verwendbarkeit_modul"] | length > 3 
-                8
-                %% else 
-                4
-                %%endif
-                cm}{\begin{flushleft}
-                    \VAR{y["titel"]}
-                \end{flushleft} }}}
+    %% for i in range(veranstaltung["verwendbarkeit"].shape[1])
+    |X
     %% endfor
-    \\[2ex] \hline
-    %% for x in veranstaltung["verwendbarkeit_anforderung"]
-    \rule[0mm]{0cm}{.6cm}\VAR{x["titel"]} \rule[-3mm]{0cm}{0cm}
-    %% for y in veranstaltung["verwendbarkeit_modul"]    
-     &
-    %% if {"modul": y["id"], "anforderung": x["id"]} in veranstaltung["verwendbarkeit"]
-    \makecell[c]{\xmark}
-    %% endif 
-    %% endfor
-    \\
-    %% endfor
+}
+%% for y in veranstaltung["verwendbarkeit"].columns
+ &
+\makecell[c]{\rotatebox[origin=l]{90}{\parbox{
+            %% if veranstaltung["verwendbarkeit"].columns | length > 3 
+            8
+            %% else 
+            4
+            %%endif
+            cm}{\begin{flushleft}
+                \VAR{y}
+            \end{flushleft} }}}
+%% endfor
+\\[2ex] \hline
+%% for index, row in veranstaltung["verwendbarkeit"].iterrows()
+\hline \rule[0mm]{0cm}{.6cm}\VAR{index} \rule[-3mm]{0cm}{0cm}
+%% for y in veranstaltung["verwendbarkeit"].columns
+ &
+%% if row[y] 
+\makecell[c]{\xmark}
+%% endif 
+%% endfor
+\\
+%% endfor
 \end{tabularx}
+
+
 %% endif 
 %% endfor
 %% endfor
