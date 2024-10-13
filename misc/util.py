@@ -229,13 +229,15 @@ def setup_session_state():
                     "name_en": "",
                     "anforderungskategorie": leer[anforderungkategorie],
                     "kommentar": "", 
-                    "sichtbar": True
+                    "sichtbar": True,
+                    "semester": [st.session_state.semester_id]
         },
         anforderungkategorie: {
             "name_de": "Neu",
             "name_en": "",
             "kommentar": "", 
-            "sichtbar": True
+            "sichtbar": True,
+            "kurzname" : ""
         },
         dictionary: {
             "de": "",

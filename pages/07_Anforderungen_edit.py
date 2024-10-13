@@ -60,7 +60,6 @@ if st.session_state.logged_in:
                     tools.delete_item_update_dependent_items(collection, x["_id"])
                 with colu3: 
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
-        
 
     with st.form(f'ID-{x["_id"]}'):
         sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
@@ -80,7 +79,7 @@ if st.session_state.logged_in:
                 tools.new(collection, ini = x_updated, switch=False)
             else:
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(2)
+            time.sleep(.1)
             st.session_state.edit = ""
             switch_page("anforderungen")
 
