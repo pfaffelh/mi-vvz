@@ -98,7 +98,7 @@ if st.session_state.logged_in:
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
-                        time.sleep(2)
+                        time.sleep(.1)
                         st.session_state.expanded = ""
                         st.session_state.edit = ""
                         st.rerun()

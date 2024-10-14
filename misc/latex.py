@@ -37,7 +37,6 @@ def combine_columns(df, sep = ", "):
                 break
     return df
 
-
 def getraum(raum_id, lang = "de", alter = True):
     otherlang = "en" if lang == "de" else "de"
     r = util.raum.find_one({ "_id": raum_id})
@@ -63,7 +62,8 @@ def makeanforderungname(anforderung_id, lang = "de", alter = True):
     if alter and aname == "":
         aname = a[f"name_{otherlang}"]
     k = util.anforderungkategorie.find_one({ "_id": a["anforderungskategorie"]})["kurzname"]
-    res = aname if k == "Kommentar" else f"{k}: {aname}"
+    #res = aname if k == "Kommentar" else f"{k}: {aname}"
+    res = f"{k}: {aname}"
     return latex(res)
 
 def makecode(sem_id, veranstaltung):

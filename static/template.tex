@@ -205,8 +205,13 @@
                 \VAR{y}
             \end{flushleft} }}}
 %% endfor
+\\
+%% for y in veranstaltung["verwendbarkeit"].columns
+& \Var{veranstaltung["verwendbarkeit"].columns.index(y)}
+%% endfor
 \\[2ex] \hline
 %% for index, row in veranstaltung["verwendbarkeit"].iterrows()
+%% if index.split(" ")[0] != "Kommentar:"
 \hline \rule[0mm]{0cm}{.6cm}\VAR{index} \rule[-3mm]{0cm}{0cm}
 %% for y in veranstaltung["verwendbarkeit"].columns
  &
@@ -215,8 +220,11 @@
 %% endif 
 %% endfor
 \\
+%% endif
 %% endfor
 \end{tabularx}
+
+
 
 
 %% endif 
