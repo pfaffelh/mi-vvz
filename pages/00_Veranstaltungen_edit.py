@@ -564,15 +564,17 @@ if st.session_state.logged_in:
         ects = {}
         ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12] 
         
-        st.write("Mögliche ECTS-Punkte in den einzelnen Modulen")
-        col = st.columns([1 for i in mod_list])
-        for m in mod_list:
-            with col[mod_list.index(m)]:
-                ects[m] = st.multiselect(mo_dict[m], ects_all, sorted(list(set([y["ects"] for y in x["verwendbarkeit"] if y["modul"] == m]))), placeholder = "Bitte auswählen", key = f"anf_ects_{x['_id']}_{m}")
+        if mod_list != []:
+            st.write("Mögliche ECTS-Punkte in den einzelnen Modulen")
+            col = st.columns([1 for i in mod_list])
+            for m in mod_list:
+                with col[mod_list.index(m)]:                    
+                    ects[m] = st.multiselect(tools.repr(util.modul, m, show_collection = False), ects_all, sorted(list(set([y["ects"] for y in x["verwendbarkeit"] if y["modul"] == m]))), placeholder = "Bitte auswählen", key = f"anf_ects_{x['_id']}_{m}")
 
         mod_ects_list = []
         for m in mod_list:
             mod_ects_list.extend([(m, i) for i in ects[m]])
+        st.write(mod_ects_list)
         
         ver_an = []
         for y in list(util.anforderungkategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):

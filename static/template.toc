@@ -1,0 +1,5 @@
+\contentsline {section}{{Hinweise}}{3}{section*.1}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {section}{\textbf {{rubrik['titel']}}}{4}{section*.2}%
+\vspace \medskipamount \hrule \vspace \medskipamount 
+\contentsline {subsection}{{veranstaltung[\active@dq \dq@prtct {t}itel\errhelp {Use `` for a simple double quote character.}\errmessage {ngerman: The command "] is undefined}``]}\ \leavevmode {\color {gray}(\em {veranstaltung[\errhelp {Use `` for a simple double quote character.}\errmessage {ngerman: The command "d is undefined}``dozent\errhelp {Use `` for a simple double quote character.}\errmessage {ngerman: The command "] is undefined}``]})}}{5}{section*.4}%
