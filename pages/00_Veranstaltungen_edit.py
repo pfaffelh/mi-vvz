@@ -459,7 +459,7 @@ if st.session_state.logged_in:
         if neuer_termin:
             leerer_termin = {
                 "key": util.terminart.find_one({"name_de": "-"})["_id"],
-                "ar_de_latex": "",
+                "kommentar_de_latex": "",
                 "kommentar_en_latex": "",
                 "kommentar_de_html": "",
                 "kommentar_en_html": "",
