@@ -180,6 +180,7 @@
 %% endif 
 
 %% if not data["verw_kurz"]
+\cleardoublepage
 \subsubsection*{\large
     %% if data["lang"] == "de"
     Verwendbarkeit, Studien- und Prüfungsleistungen:
@@ -188,27 +189,30 @@
     %% endif 
 }
 
-\begin{tabularx}{\textwidth}{ p{.5\textwidth}
+\begin{tabularx}{\textwidth}{ X
     %% for i in range(veranstaltung["verwendbarkeit"].shape[1])
-    |X
+    |c
     %% endfor
 }
 %% for y in veranstaltung["verwendbarkeit"].columns
  &
 \makecell[c]{\rotatebox[origin=l]{90}{\parbox{
-            %% if veranstaltung["verwendbarkeit"].columns | length > 3 
+            %% if veranstaltung["verwendbarkeit"].columns | length == 1
             8
             %% else 
-            4
+            10
             %%endif
-            cm}{\begin{flushleft}
-                \VAR{y}
-            \end{flushleft} }}}
+            cm}{\raggedright
+                \begin{itemize}\item
+                    \VAR{y} 
+                \end{itemize}             }}}
 %% endfor
+%% if veranstaltung["verwendbarkeit_hat_kommentar"]
 \\
 %% for y in veranstaltung["verwendbarkeit"].columns
-& \Var{veranstaltung["verwendbarkeit"].columns.index(y)}
+& \makecell[c]{\ding{\VAR{veranstaltung["verwendbarkeit"].columns.get_loc(y)+172}}}
 %% endfor
+%% endif
 \\[2ex] \hline
 %% for index, row in veranstaltung["verwendbarkeit"].iterrows()
 %% if index.split(" ")[0] != "Kommentar:"
@@ -220,12 +224,26 @@
 %% endif 
 %% endfor
 \\
-%% endif
+%% endif 
 %% endfor
+\hline
 \end{tabularx}
 
+\medskip
 
+%% for index, row in veranstaltung["verwendbarkeit"].iterrows()
+    %% if index.split(" ")[0] == "Kommentar:"
+        %% for y in veranstaltung["verwendbarkeit"].columns
+            %% if row[y] 
+            \ding{\VAR{veranstaltung["verwendbarkeit"].columns.get_loc(y)+172}}
+            %% endif 
+        %% endfor
+        \VAR{index[11:]} 
 
+    %% endif 
+%% endfor
+
+\VAR{veranstaltung["kommentar_verwendbarkeit"]}
 
 %% endif 
 %% endfor

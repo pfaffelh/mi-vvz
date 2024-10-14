@@ -566,6 +566,16 @@ if st.session_state.logged_in:
         
         if mod_list != []:
             st.write("Mögliche ECTS-Punkte in den einzelnen Modulen")
+
+            cols = st.columns([1 for i in mod_list])
+            for i, m in enumerate(mod_list):
+                with cols[i]:
+                    co1, co2 = st.columns([1,5])
+                    with co1:
+                        st.button('←', key=f'left1-m-{m}', on_click = tools.move_up_list, args = (collection, x["_id"], "verwendbarkeit_modul", m,))
+                    with co2:
+                        st.button('→', key=f'right1-m-{m}', on_click = tools.move_down_list, args = (collection, x["_id"], "verwendbarkeit_modul", m,))
+        
             col = st.columns([1 for i in mod_list])
             for m in mod_list:
                 with col[mod_list.index(m)]:                    
@@ -574,7 +584,7 @@ if st.session_state.logged_in:
         mod_ects_list = []
         for m in mod_list:
             mod_ects_list.extend([(m, i) for i in ects[m]])
-        st.write(mod_ects_list)
+        # st.write(mod_ects_list)
         
         ver_an = []
         for y in list(util.anforderungkategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):

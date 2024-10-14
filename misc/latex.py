@@ -73,8 +73,8 @@ def makecode(sem_id, veranstaltung):
     code_list = [x for x in code_list if x is not None]
     if len(code_list)>0:
         res = ", ".join([c["name"] for c in code_list])
-    if veranstaltung["ects"] != "":
-        res = ", ".join([res, f"{veranstaltung['ects']} ECTS"])
+    #if veranstaltung["ects"] != "":
+    #    res = ", ".join([res, f"{veranstaltung['ects']} ECTS"])
     return latex(res)
 
 # Die Funktion fasst zB Mo, 8-10, HS Rundbau, Albertstr. 21 \n Mi, 8-10, HS Rundbau, Albertstr. 21 \n 
@@ -244,16 +244,19 @@ def makedata(sem_kurzname, komm, lang, alter):
             verwendbarkeit = [{"modul": makemodulname(x["modul"], lang, alter), "anforderung": makeanforderungname(x["anforderung"], lang, alter), "ects" : x["ects"]} for x in veranstaltung["verwendbarkeit"]]
 
             for v in verwendbarkeit:
-                v["modul_ects"] = f"{v['modul']} ({v['ects']} ECTS)"
+                v["modul_ects"] = f"{v['modul']} -- {v['ects']:.3g} ECTS"
 
             try:
                 df = pd.DataFrame.from_records(verwendbarkeit)
                 crosstab = pd.crosstab(df["anforderung"], df["modul_ects"]) > 0
-                v_dict["verwendbarkeit"] = combine_columns(crosstab, sep = " \\newline ")
+                #v_dict["verwendbarkeit"] = "\\begin{itemize} " + combine_columns(crosstab, sep = " \\item ") + " \\end{itemize}"
+                v_dict["verwendbarkeit"] = combine_columns(crosstab, sep = " \\item ")
 #                st.write(combine_columns(crosstab))
             except:
                 v_dict["verwendbarkeit"] = pd.DataFrame()
 
+            v_dict["verwendbarkeit_hat_kommentar"] = any([item[0:10] == "Kommentar:" for item in v_dict["verwendbarkeit"].index])
+            v_dict["kommentar_verwendbarkeit"] = latex(veranstaltung[f"kommentar_verwendbarkeit_{lang}"])
             r_dict["veranstaltung"].append(v_dict)
 
         # Rubrik nur dann hinzufügen, wenn hier auch Veranstaltungen sind

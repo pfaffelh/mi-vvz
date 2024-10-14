@@ -1,5 +1,0 @@
-\contentsline {section}{{Hinweise}}{3}{section*.1}%
-\vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {section}{\textbf {{rubrik['titel']}}}{4}{section*.2}%
-\vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{{veranstaltung[\grmn@active@dq@ titel\grmn@active@dq@ ]}\ \textcolor {gray}{(\em {veranstaltung[\grmn@active@dq@ dozent\grmn@active@dq@ ]})}}{5}{section*.4}%

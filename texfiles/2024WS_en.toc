@@ -2,66 +2,66 @@
 \vspace \medskipamount \hrule \vspace \medskipamount 
 \contentsline {section}{\textbf {1a. Mandatory Lectures of the Study Programmes}}{3}{section*.2}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Analysis I\ \textcolor {gray}{(\em Michael Růžička)}}{4}{section*.3}%
-\contentsline {subsection}{Linear Algebra I\ \textcolor {gray}{(\em Stefan Kebekus)}}{5}{section*.9}%
-\contentsline {subsection}{Numerics I\ \textcolor {gray}{(\em Sören Bartels)}}{6}{section*.15}%
-\contentsline {subsection}{Elementary Probability Theory I\ \textcolor {gray}{(\em Angelika Rohde)}}{7}{section*.21}%
-\contentsline {subsection}{Additions to Analysis\ \textcolor {gray}{(\em Nadine Große)}}{8}{section*.27}%
-\contentsline {subsection}{Basics in Applied Mathematics\ \textcolor {gray}{(\em Moritz Diehl, Patrick Dondl, Angelika Rohde)}}{9}{section*.33}%
-\contentsline {section}{\textbf {1b. Advanced 4-hour Lectures}}{10}{section*.37}%
+\contentsline {subsection}{Analysis I\ \leavevmode {\color {gray}(\em Michael Růžička)}}{4}{section*.3}%
+\contentsline {subsection}{Linear Algebra I\ \leavevmode {\color {gray}(\em Stefan Kebekus)}}{5}{section*.9}%
+\contentsline {subsection}{Numerics I\ \leavevmode {\color {gray}(\em Sören Bartels)}}{6}{section*.15}%
+\contentsline {subsection}{Elementary Probability Theory I\ \leavevmode {\color {gray}(\em Angelika Rohde)}}{7}{section*.21}%
+\contentsline {subsection}{Additions to Analysis\ \leavevmode {\color {gray}(\em Nadine Große)}}{9}{section*.27}%
+\contentsline {subsection}{Basics in Applied Mathematics\ \leavevmode {\color {gray}(\em Moritz Diehl, Patrick Dondl, Angelika Rohde)}}{10}{section*.33}%
+\contentsline {section}{\textbf {1b. Advanced 4-hour Lectures}}{11}{section*.37}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Algebra and Number Theory\ \textcolor {gray}{(\em Wolfgang Soergel)}}{11}{section*.38}%
-\contentsline {subsection}{Algebraic Number Theory\ \textcolor {gray}{(\em Abhishek Oswal)}}{12}{section*.44}%
-\contentsline {subsection}{Analysis III\ \textcolor {gray}{(\em Patrick Dondl)}}{13}{section*.50}%
-\contentsline {subsection}{Differential Geometry\ \textcolor {gray}{(\em Sebastian Goette)}}{14}{section*.55}%
-\contentsline {subsection}{Introduction to Partial Differential Equations\ \textcolor {gray}{(\em Guofang Wang)}}{15}{section*.61}%
-\contentsline {subsection}{Complex Analysis\ \textcolor {gray}{(\em David Criens)}}{16}{section*.67}%
-\contentsline {subsection}{Introduction to Theory and Numerics of Partial Differential Equations\ \textcolor {gray}{(\em Sören Bartels)}}{17}{section*.72}%
-\contentsline {subsection}{Mathematical Statistics\ \textcolor {gray}{(\em Ernst August v. Hammerstein)}}{18}{section*.78}%
-\contentsline {subsection}{Stochastic Processes (Probability Theory II)\ \textcolor {gray}{(\em Peter Pfaffelhuber)}}{20}{section*.84}%
-\contentsline {subsection}{Stochastic Integration and Financial Mathematics (Probability Theory III)\ \textcolor {gray}{(\em Thorsten Schmidt)}}{21}{section*.90}%
-\contentsline {subsection}{Semi-Algebraic Geometry\ \textcolor {gray}{(\em Annette Huber-Klawitter, Amador Martín Pizarro)}}{22}{section*.96}%
-\contentsline {subsection}{Set Theory – Independence Proofs\ \textcolor {gray}{(\em Maxwell Levine)}}{24}{section*.102}%
-\contentsline {subsection}{Theory and Numerics for Partial Differential Equations – Nonlinear Problems\ \textcolor {gray}{(\em Sören Bartels, Patrick Dondl)}}{25}{section*.108}%
-\contentsline {subsection}{Reading courses\ \textcolor {gray}{(\em Alle Dozent:inn:en der Mathematik)}}{26}{section*.114}%
-\contentsline {section}{\textbf {1c. Advanced 2-hour Lectures}}{27}{section*.117}%
+\contentsline {subsection}{Algebra and Number Theory\ \leavevmode {\color {gray}(\em Wolfgang Soergel)}}{12}{section*.38}%
+\contentsline {subsection}{Algebraic Number Theory\ \leavevmode {\color {gray}(\em Abhishek Oswal)}}{13}{section*.44}%
+\contentsline {subsection}{Analysis III\ \leavevmode {\color {gray}(\em Patrick Dondl)}}{14}{section*.50}%
+\contentsline {subsection}{Differential Geometry\ \leavevmode {\color {gray}(\em Sebastian Goette)}}{15}{section*.55}%
+\contentsline {subsection}{Introduction to Partial Differential Equations\ \leavevmode {\color {gray}(\em Guofang Wang)}}{16}{section*.61}%
+\contentsline {subsection}{Complex Analysis\ \leavevmode {\color {gray}(\em David Criens)}}{17}{section*.67}%
+\contentsline {subsection}{Introduction to Theory and Numerics of Partial Differential Equations\ \leavevmode {\color {gray}(\em Sören Bartels)}}{18}{section*.72}%
+\contentsline {subsection}{Mathematical Statistics\ \leavevmode {\color {gray}(\em Ernst August v. Hammerstein)}}{19}{section*.78}%
+\contentsline {subsection}{Stochastic Processes (Probability Theory II)\ \leavevmode {\color {gray}(\em Peter Pfaffelhuber)}}{21}{section*.84}%
+\contentsline {subsection}{Stochastic Integration and Financial Mathematics (Probability Theory III)\ \leavevmode {\color {gray}(\em Thorsten Schmidt)}}{22}{section*.90}%
+\contentsline {subsection}{Semi-Algebraic Geometry\ \leavevmode {\color {gray}(\em Annette Huber-Klawitter, Amador Martín Pizarro)}}{23}{section*.96}%
+\contentsline {subsection}{Set Theory – Independence Proofs\ \leavevmode {\color {gray}(\em Maxwell Levine)}}{25}{section*.102}%
+\contentsline {subsection}{Theory and Numerics for Partial Differential Equations – Nonlinear Problems\ \leavevmode {\color {gray}(\em Sören Bartels, Patrick Dondl)}}{26}{section*.108}%
+\contentsline {subsection}{Reading courses\ \leavevmode {\color {gray}(\em Alle Dozent:inn:en der Mathematik)}}{27}{section*.114}%
+\contentsline {section}{\textbf {1c. Advanced 2-hour Lectures}}{28}{section*.117}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Functions of Bounded Variation and Sets of Finite Perimeter\ \textcolor {gray}{(\em Xuwen Zhang)}}{28}{section*.118}%
-\contentsline {subsection}{Futures and Options\ \textcolor {gray}{(\em Eva Lütkebohmert-Holtz)}}{29}{section*.123}%
-\contentsline {subsection}{Lie Groups and Symmetric Spaces\ \textcolor {gray}{(\em Maximilian Stegemeyer)}}{30}{section*.129}%
-\contentsline {subsection}{Markov Chains\ \textcolor {gray}{(\em David Criens)}}{32}{section*.135}%
-\contentsline {subsection}{Measure Theory\ \textcolor {gray}{(\em Peter Pfaffelhuber)}}{33}{section*.141}%
-\contentsline {subsection}{Numerical Approximation of Stochastic Differential Equations\ \textcolor {gray}{(\em Diyora Salimova)}}{34}{section*.147}%
-\contentsline {subsection}{Numerical Optimal Control\ \textcolor {gray}{(\em Moritz Diehl)}}{35}{section*.152}%
-\contentsline {section}{\textbf {2a. Mathematics Education}}{37}{section*.158}%
+\contentsline {subsection}{Functions of Bounded Variation and Sets of Finite Perimeter\ \leavevmode {\color {gray}(\em Xuwen Zhang)}}{29}{section*.118}%
+\contentsline {subsection}{Futures and Options\ \leavevmode {\color {gray}(\em Eva Lütkebohmert-Holtz)}}{30}{section*.123}%
+\contentsline {subsection}{Lie Groups and Symmetric Spaces\ \leavevmode {\color {gray}(\em Maximilian Stegemeyer)}}{31}{section*.129}%
+\contentsline {subsection}{Markov Chains\ \leavevmode {\color {gray}(\em David Criens)}}{33}{section*.135}%
+\contentsline {subsection}{Measure Theory\ \leavevmode {\color {gray}(\em Peter Pfaffelhuber)}}{34}{section*.141}%
+\contentsline {subsection}{Numerical Approximation of Stochastic Differential Equations\ \leavevmode {\color {gray}(\em Diyora Salimova)}}{35}{section*.147}%
+\contentsline {subsection}{Numerical Optimal Control\ \leavevmode {\color {gray}(\em Moritz Diehl)}}{36}{section*.152}%
+\contentsline {section}{\textbf {2a. Mathematics Education}}{38}{section*.158}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Introduction to Mathematics Education\ \textcolor {gray}{(\em Katharina Böcherer-Linder)}}{38}{section*.159}%
-\contentsline {subsection}{Mathematics Education ‒ Functions and Analysis\ \textcolor {gray}{(\em Katharina Böcherer-Linder)}}{39}{section*.164}%
-\contentsline {subsection}{Mathematics Education ‒ Probability Theory and Algebra\ \textcolor {gray}{(\em Anika Dreher)}}{40}{section*.170}%
-\contentsline {subsection}{Mathematics education seminar: Media Use in Teaching Mathematics\ \textcolor {gray}{(\em Jürgen Kury)}}{41}{section*.176}%
-\contentsline {subsection}{Mathematics education seminars at Freiburg University of Education\ \textcolor {gray}{(\em Dozent:inn:en der PH Freiburg)}}{42}{section*.180}%
-\contentsline {subsection}{Module ''Research in Mathematics Education'':\ \textcolor {gray}{(\em Dozent:inn:en der PH Freiburg)}}{43}{section*.185}%
-\contentsline {subsection}{Part 1: Development Research in Selected Focus Areas of Mathematics Education\ \textcolor {gray}{(\em Frank Reinhold)}}{44}{section*.189}%
-\contentsline {subsection}{Part 2: Research Methods in Mathematics Education\ \textcolor {gray}{(\em Frank Reinhold)}}{45}{section*.193}%
-\contentsline {subsection}{Part 3: Developing and Optimising a Research Project in Mathematics Education\ \textcolor {gray}{(\em Dozent:inn:en der PH Freiburg)}}{46}{section*.196}%
-\contentsline {section}{\textbf {2b. Tutorial Module}}{47}{section*.200}%
+\contentsline {subsection}{Introduction to Mathematics Education\ \leavevmode {\color {gray}(\em Katharina Böcherer-Linder)}}{39}{section*.159}%
+\contentsline {subsection}{Mathematics Education ‒ Functions and Analysis\ \leavevmode {\color {gray}(\em Katharina Böcherer-Linder)}}{40}{section*.164}%
+\contentsline {subsection}{Mathematics Education ‒ Probability Theory and Algebra\ \leavevmode {\color {gray}(\em Anika Dreher)}}{41}{section*.170}%
+\contentsline {subsection}{Mathematics education seminar: Media Use in Teaching Mathematics\ \leavevmode {\color {gray}(\em Jürgen Kury)}}{42}{section*.176}%
+\contentsline {subsection}{Mathematics education seminars at Freiburg University of Education\ \leavevmode {\color {gray}(\em Dozent:inn:en der PH Freiburg)}}{43}{section*.180}%
+\contentsline {subsection}{Module ''Research in Mathematics Education'':\ \leavevmode {\color {gray}(\em Dozent:inn:en der PH Freiburg)}}{44}{section*.185}%
+\contentsline {subsection}{Part 1: Development Research in Selected Focus Areas of Mathematics Education\ \leavevmode {\color {gray}(\em Frank Reinhold)}}{45}{section*.189}%
+\contentsline {subsection}{Part 2: Research Methods in Mathematics Education\ \leavevmode {\color {gray}(\em Frank Reinhold)}}{46}{section*.193}%
+\contentsline {subsection}{Part 3: Developing and Optimising a Research Project in Mathematics Education\ \leavevmode {\color {gray}(\em Dozent:inn:en der PH Freiburg)}}{47}{section*.196}%
+\contentsline {section}{\textbf {2b. Tutorial Module}}{48}{section*.200}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Learning by Teaching\ \textcolor {gray}{(\em Susanne Knies)}}{48}{section*.201}%
-\contentsline {section}{\textbf {2c. Computer Exercises}}{49}{section*.205}%
+\contentsline {subsection}{Learning by Teaching\ \leavevmode {\color {gray}(\em Susanne Knies)}}{49}{section*.201}%
+\contentsline {section}{\textbf {2c. Computer Exercises}}{50}{section*.205}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Computer exercises for Introduction to Theory and Numerics of Partial Differential Equations\ \textcolor {gray}{(\em Sören Bartels)}}{50}{section*.206}%
-\contentsline {subsection}{Computer exercises in Numerics\ \textcolor {gray}{(\em Sören Bartels)}}{51}{section*.211}%
-\contentsline {section}{\textbf {3a. Undergraduate Seminars}}{52}{section*.216}%
+\contentsline {subsection}{Computer exercises for Introduction to Theory and Numerics of Partial Differential Equations\ \leavevmode {\color {gray}(\em Sören Bartels)}}{51}{section*.206}%
+\contentsline {subsection}{Computer exercises in Numerics\ \leavevmode {\color {gray}(\em Sören Bartels)}}{52}{section*.211}%
+\contentsline {section}{\textbf {3a. Undergraduate Seminars}}{53}{section*.216}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Ordinary Differential Equations and Applications\ \textcolor {gray}{(\em Susanne Knies, Ludwig Striet)}}{53}{section*.217}%
-\contentsline {subsection}{A Ramble through Mathematics\ \textcolor {gray}{(\em Angelika Rohde)}}{54}{section*.223}%
-\contentsline {subsection}{Undergraduate seminar in Algebra\ \textcolor {gray}{(\em Wolfgang Soergel)}}{55}{section*.229}%
-\contentsline {section}{\textbf {3b. Seminars}}{56}{section*.234}%
+\contentsline {subsection}{Ordinary Differential Equations and Applications\ \leavevmode {\color {gray}(\em Susanne Knies, Ludwig Striet)}}{54}{section*.217}%
+\contentsline {subsection}{A Ramble through Mathematics\ \leavevmode {\color {gray}(\em Angelika Rohde)}}{55}{section*.223}%
+\contentsline {subsection}{Undergraduate seminar in Algebra\ \leavevmode {\color {gray}(\em Wolfgang Soergel)}}{56}{section*.229}%
+\contentsline {section}{\textbf {3b. Seminars}}{57}{section*.234}%
 \vspace \medskipamount \hrule \vspace \medskipamount 
-\contentsline {subsection}{Knot Theory\ \textcolor {gray}{(\em Ernst August v. Hammerstein)}}{57}{section*.235}%
-\contentsline {subsection}{Machine Learning and Stochastic Analysis\ \textcolor {gray}{(\em Thorsten Schmidt)}}{58}{section*.241}%
-\contentsline {subsection}{Machine-Learning Methods in the Approximation of PDEs\ \textcolor {gray}{(\em Sören Bartels)}}{59}{section*.246}%
-\contentsline {subsection}{Medical Data Science\ \textcolor {gray}{(\em Harald Binder)}}{60}{section*.252}%
-\contentsline {subsection}{Minimal Surfaces\ \textcolor {gray}{(\em Guofang Wang)}}{61}{section*.258}%
-\contentsline {subsection}{Seminar on Algebraic Topology\ \textcolor {gray}{(\em Sebastian Goette)}}{62}{section*.264}%
-\contentsline {subsection}{Theory of Non-Commutative Algebras\ \textcolor {gray}{(\em Annette Huber-Klawitter)}}{63}{section*.269}%
+\contentsline {subsection}{Knot Theory\ \leavevmode {\color {gray}(\em Ernst August v. Hammerstein)}}{58}{section*.235}%
+\contentsline {subsection}{Machine Learning and Stochastic Analysis\ \leavevmode {\color {gray}(\em Thorsten Schmidt)}}{59}{section*.241}%
+\contentsline {subsection}{Machine-Learning Methods in the Approximation of PDEs\ \leavevmode {\color {gray}(\em Sören Bartels)}}{60}{section*.246}%
+\contentsline {subsection}{Medical Data Science\ \leavevmode {\color {gray}(\em Harald Binder)}}{61}{section*.252}%
+\contentsline {subsection}{Minimal Surfaces\ \leavevmode {\color {gray}(\em Guofang Wang)}}{62}{section*.258}%
+\contentsline {subsection}{Seminar on Algebraic Topology\ \leavevmode {\color {gray}(\em Sebastian Goette)}}{63}{section*.264}%
+\contentsline {subsection}{Theory of Non-Commutative Algebras\ \leavevmode {\color {gray}(\em Annette Huber-Klawitter)}}{64}{section*.269}%
