@@ -191,7 +191,7 @@ if st.session_state.logged_in:
         midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
         midname_en=st.text_input('Mittelkurzer Name (en)', x["midname_en"])
         kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
-        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 6, 7, 7.5, 8, 9, 10, 11, 12] 
+        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12, 15, 18] 
         ects = st.selectbox("Typische Anzahl an ECTS-Punkten.", ects_all, index = ects_all.index(x["ects"]), placeholder = "Bitte auswählen!")
         kat = [g["_id"] for g in list(util.rubrik.find({"semester": x["semester"]}))]
         index = [g for g in kat].index(x["rubrik"])
@@ -562,7 +562,7 @@ if st.session_state.logged_in:
         mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen", key = f"anf_mod_{x['_id']}")
 
         ects = {}
-        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12] 
+        ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12, 15, 18] 
         
         if mod_list != []:
             st.write("Mögliche ECTS-Punkte in den einzelnen Modulen")
