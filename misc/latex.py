@@ -66,13 +66,16 @@ def makeanforderungname(anforderung_id, lang = "de", alter = True):
     res = f"{k}: {aname}"
     return latex(res)
 
-def makecode(sem_id, veranstaltung):
+def makecode(sem_id, veranstaltung, lang = "de"):
+    otherlang = "de" if "lang" == "en" else "en"
     res = ""
     codekategorie_list = [x["_id"] for x in list(util.codekategorie.find({"semester": sem_id, "komm_sichtbar": True}))]
     code_list = [util.code.find_one({"_id": c, "codekategorie": {"$in": codekategorie_list}}) for c in veranstaltung["code"]]
     code_list = [x for x in code_list if x is not None]
+    #if len(code_list)>0:
+    #    res = ", ".join([c["name"] for c in code_list])
     if len(code_list)>0:
-        res = ", ".join([c["name"] for c in code_list])
+        res = ", ".join([c[f"beschreibung_{lang}"] for c in code_list])
     #if veranstaltung["ects"] != "":
     #    res = ", ".join([res, f"{veranstaltung['ects']} ECTS"])
     return latex(res)
@@ -230,9 +233,9 @@ def makedata(sem_kurzname, komm, lang, alter):
             if alter and v_dict["kommentar"] == "":
                 v_dict["kommentar"] = veranstaltung[f"kommentar_latex_{otherlang}"]
 
-            v_dict["code"] = makecode(sem_id, veranstaltung)
+            v_dict["code"] = makecode(sem_id, veranstaltung, lang)
+            
             # Module löschen, die in keinem Studiengang des Semesters vorkommen
-
             mod_verw = []
             for m in veranstaltung["verwendbarkeit_modul"]:
                 m1 = util.modul.find_one({"_id": m})
