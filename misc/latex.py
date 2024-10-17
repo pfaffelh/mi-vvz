@@ -20,6 +20,27 @@ def latex(s):
     s = s.replace("%", "\%")
     return s
 
+def try_combine_columns(df, sep = ", "):
+    column_pairs = itertools.combinations(df.columns, 2)    
+    for col1, col2 in column_pairs:
+        if (df[col1] == df[col2]).all():
+            df.rename(columns = { col1 : sep.join([col1, col2])}, inplace = True)
+            df.drop(columns = col2, inplace = True)
+            break
+    print(df)
+    return df
+# Combine columns in a dataframe which have the same content.
+# Replace identical columns with one column with a combined name.
+def combine_columns2(df, sep = ", "):
+    cont = True
+    while cont:
+        df2 = try_combine_columns(df, sep)
+        if df.shape[1] == df2.shape[1]:
+            cont = False
+        else:
+            df = df2
+    return df
+
 # Combine columns in a dataframe which have the same content.
 # Replace identical columns with one column with a combined name.
 def combine_columns(df, sep = ", "):
@@ -36,6 +57,8 @@ def combine_columns(df, sep = ", "):
                 cont = True
                 break
     return df
+
+
 
 def getraum(raum_id, lang = "de", alter = True):
     otherlang = "en" if lang == "de" else "de"
@@ -241,17 +264,32 @@ def makedata(sem_kurzname, komm, lang, alter):
 
             v_dict["verwendbarkeit_modul"] = [{"id": str(x), "titel": makemodulname(x, lang, alter)} for x in mod_verw]
             v_dict["verwendbarkeit_anforderung"] = [{"id": str(x), "titel": makeanforderungname(x, lang, alter)} for x in veranstaltung["verwendbarkeit_anforderung"]]
-            verwendbarkeit = [{"modul": makemodulname(x["modul"], lang, alter), "anforderung": makeanforderungname(x["anforderung"], lang, alter), "ects" : x["ects"]} for x in veranstaltung["verwendbarkeit"]]
 
-            for v in verwendbarkeit:
-                v["modul_ects"] = f"{v['modul']} -- {v['ects']:.3g} ECTS"
-
+            for x in veranstaltung["verwendbarkeit"]:
+                x["modulname"] = makemodulname(x["modul"], lang, alter)
+                x["anforderungname"] = makeanforderungname(x["anforderung"], lang, alter)
+                x["modulname_ects"] = f"{x['modulname']} -- {x['ects']:.3g} ECTS"
+                x["modul_index"] = veranstaltung["verwendbarkeit_modul"].index(x["modul"])
+                x["modul"] = str(x["modul"])
+                x["anforderung_index"] = veranstaltung["verwendbarkeit_anforderung"].index(x["anforderung"])
+                x["anforderung"] = str(x["anforderung"])
+                x["modulname_ects"] = f"{x['modulname']} -- {x['ects']:.3g}~ECTS"
             try:
-                df = pd.DataFrame.from_records(verwendbarkeit)
-                crosstab = pd.crosstab(df["anforderung"], df["modul_ects"]) > 0
-                #v_dict["verwendbarkeit"] = "\\begin{itemize} " + combine_columns(crosstab, sep = " \\item ") + " \\end{itemize}"
+                df = pd.DataFrame.from_records(veranstaltung["verwendbarkeit"])
+                # andernfalls werden die Spalten alphabetisch sortiert.
+                df["modulname_ects"] = pd.Categorical(df["modulname_ects"], categories=df["modulname_ects"].unique(), ordered=True)
+                
+                df.sort_values(by = ["modul_index", "ects", "anforderung_index"], inplace=True)
+                df["modulname_ects"] = pd.Categorical(df["modulname_ects"], categories=df["modulname_ects"].unique(), ordered=True)
+                crosstab = pd.crosstab(df["anforderungname"], df["modulname_ects"]) > 0
+                anforderungname = [makeanforderungname(x, lang, alter) for x in veranstaltung["verwendbarkeit_anforderung"]]
+
+                crosstab["reorder"] = [anforderungname.index(a) for a in crosstab.index]                
+                crosstab.sort_values(by = "reorder", inplace=True)
+                crosstab.drop(columns = "reorder", inplace=True)
+
+#                v_dict["verwendbarkeit"] = crosstab
                 v_dict["verwendbarkeit"] = combine_columns(crosstab, sep = " \\item ")
-#                st.write(combine_columns(crosstab))
             except:
                 v_dict["verwendbarkeit"] = pd.DataFrame()
 

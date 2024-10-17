@@ -197,22 +197,16 @@
 %% for y in veranstaltung["verwendbarkeit"].columns
  &
 \makecell[c]{\rotatebox[origin=l]{90}{\parbox{
-            %% if veranstaltung["verwendbarkeit"].columns | length == 1
-            8
+            %% if veranstaltung["verwendbarkeit"].columns | length < 2
+            5
             %% else 
-            10
+            7
             %%endif
             cm}{\raggedright
                 \begin{itemize}\item
                     \VAR{y} 
                 \end{itemize}             }}}
 %% endfor
-%% if veranstaltung["verwendbarkeit_hat_kommentar"]
-\\
-%% for y in veranstaltung["verwendbarkeit"].columns
-& \makecell[c]{\ding{\VAR{veranstaltung["verwendbarkeit"].columns.get_loc(y)+172}}}
-%% endfor
-%% endif
 \\[2ex] \hline
 %% for index, row in veranstaltung["verwendbarkeit"].iterrows()
 %% if index.split(" ")[0] != "Kommentar:"
@@ -227,6 +221,12 @@
 %% endif 
 %% endfor
 \hline
+%% if veranstaltung["verwendbarkeit_hat_kommentar"]
+%% for y in veranstaltung["verwendbarkeit"].columns
+& \makecell[c]{\vphantom{$\displaystyle\int$}\ding{\VAR{veranstaltung["verwendbarkeit"].columns.get_loc(y)+172}}}
+%% endfor
+%% endif
+\\
 \end{tabularx}
 
 \medskip
