@@ -27,7 +27,7 @@ def try_combine_columns(df, sep = ", "):
             df.rename(columns = { col1 : sep.join([col1, col2])}, inplace = True)
             df.drop(columns = col2, inplace = True)
             break
-    print(df)
+    # print(df)
     return df
 # Combine columns in a dataframe which have the same content.
 # Replace identical columns with one column with a combined name.
@@ -50,7 +50,7 @@ def combine_columns(df, sep = ", "):
         column_pairs = itertools.combinations(df.columns, 2)    
         cont = False
         for col1, col2 in column_pairs:
-            print(col1, col2)
+            # print(col1, col2)
             if (df[col1] == df[col2]).all():
                 df.rename(columns = { col1 : sep.join([col1, col2])}, inplace = True)
                 df.drop(columns = col2, inplace = True)
