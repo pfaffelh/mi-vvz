@@ -22,7 +22,7 @@ allver = list(ver.find({"semester" : ss25id}))
 for v in allver:
     if v["rang"] == 0:
         minrang = min([w["rang"] for w in list(ver.find({"semester" : ss25id}))])
-        ver.update_one({"_id": v["_id"]}, {"$set" : {"rang" : minrang - 1}})
+        ver.update_one({"_id": v["_id"]}, {"$set" : {"rang" : minrang - 1, "verwendbarkeit_modul" : [], "verwendbarkeit_anforderung" : [], "verwendbarkeit" : []}})
 
 rubss25namen = [r["titel_de"] for r in list(rub.find({"semester" : ss25id}))]
 rubws24 = list(rub.find({"semester" : ws24id}))
