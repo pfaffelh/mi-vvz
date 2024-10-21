@@ -246,7 +246,7 @@ if st.session_state.logged_in:
         with co3:   
             abk = f"{x['beschreibung_de'].strip()}, {x['name'].strip()}"
             ck = util.codekategorie.find_one({"_id" : x["codekategorie"]})
-            abk = abk + f" ({ck["name_de"]})"
+            abk = abk + f" ({ck['name_de']})"
             with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
                 st.subheader(tools.repr(collection, x["_id"]))
                 with st.popover('Code löschen'):
