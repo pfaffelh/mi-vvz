@@ -218,7 +218,8 @@ def setup_session_state():
                 "hp_sichtbar": True,
                 "code": [],
                 "semester": [],
-                "kommentar": ""
+                "kommentar": "",
+                "komm_sichtbar" : False
         },
         terminart: {"name_de": "Neu",
                     "name_en": "",
