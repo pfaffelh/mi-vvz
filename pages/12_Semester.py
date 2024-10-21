@@ -178,6 +178,7 @@ if st.session_state.logged_in:
 
     st.write("### Kategorie von Codes")
     st.write('Dies ist z.B. "Sprache". Dann kann in den Codes dieser Codekategorie so etwas stehen wie "Vorlesung in englischer Sprache". Ein anderes Beispiel ist eine Codekategorie "Evaluation". Hier könnte eine Code angeben, ob die entsprechende Veranstaltung evaluiert werden soll.' )
+    st.write('😎: Auf Homepage sichtbar; 🤓: In den Kommentaren sichtbar')
     collection = util.codekategorie
     st.write(" ")
     if st.button('**Neue Codekategorie hinzufügen**'):
@@ -195,6 +196,7 @@ if st.session_state.logged_in:
         with co3:   
             abk = f"{x['name_de'].strip()}"
             abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
+            abk = f"{abk.strip()} {'🤓' if x['komm_sichtbar'] else ''}"
             with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
                 with st.popover('Codekategorie löschen'):
                     s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
@@ -243,6 +245,8 @@ if st.session_state.logged_in:
             st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, query, ))
         with co3:   
             abk = f"{x['beschreibung_de'].strip()}, {x['name'].strip()}"
+            ck = util.codekategorie.find_one({"_id" : x["codekategorie"]})
+            abk = abk + f" ({ck["name_de"]})"
             with st.expander(abk, (True if x["_id"] == st.session_state.edit else False)):
                 st.subheader(tools.repr(collection, x["_id"]))
                 with st.popover('Code löschen'):
