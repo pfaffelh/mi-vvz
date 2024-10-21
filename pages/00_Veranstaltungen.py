@@ -59,6 +59,7 @@ if st.session_state.logged_in:
                 col1, col2, col3 = st.columns([1,1,23]) 
                 with col1:
                     st.button('↓', key=f'down-{v["_id"]}', on_click = tools.move_down, args = (collection, v,{"rubrik": v["rubrik"]}, ))
+#                    st.write(v["rang"])
                 with col2:
                     st.button('↑', key=f'up-{v["_id"]}', on_click = tools.move_up, args = (collection, v, {"rubrik": v["rubrik"]},))
                 with col3:

@@ -145,8 +145,8 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
     else:
         # Wenn es die Rubrik im eigenen Semester auch gibt, dann dahin kopieren, ansonsten in leere Rubrik
         try: 
-            r = util.rubrik.find_one({"_id": v["rubrik"]})["_id"]
-            k = util.rubrik.find_one({"semester": sem_id, "titel_de": r["titel_de"]})
+            r = util.rubrik.find_one({"_id": v["rubrik"]})
+            k = util.rubrik.find_one({"semester": sem_id, "titel_de": r["titel_de"]})["_id"]
         except:
             k = util.rubrik.find_one({"semester": sem_id, "titel_de": "-"})["_id"]
     # Das wird der Rang der kopierten Veranstaltung

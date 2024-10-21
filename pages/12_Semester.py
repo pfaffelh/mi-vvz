@@ -131,6 +131,7 @@ if st.session_state.logged_in:
     for x in y:
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
+#            st.write(x["rang"])
             st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, query,))
         with co2:
             st.button('↑', key=f'up-{x["_id"]}', on_click = tools.move_up, args = (collection, x, query,))

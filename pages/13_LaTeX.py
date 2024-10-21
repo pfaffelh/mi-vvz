@@ -41,7 +41,7 @@ if st.session_state.logged_in:
     with col0:
         which = st.selectbox("Was soll erstellt werden?", ["Kommentiertes Vorlesungsverzeichnis", "Erweiterung der Modulhandbücher"], index = None, placeholder = "Bitte auswählen")
         kommentare = True if which == "Kommentiertes Vorlesungsverzeichnis" else False
-        erweiterung = not kommentare
+        modulhandbuch = not kommentare
     with col1: 
         la = st.selectbox("Sprache", ["deutsch", "englisch"], index = None, placeholder = "Bitte auswählen")
 
@@ -94,7 +94,7 @@ if st.session_state.logged_in:
     data["vorspann"] = vorspann
     
     template = latex.latex_jinja_env.get_template(f"static/template.tex")
-    kommentare = template.render(data = data)
+    texfile = template.render(data = data)
 
     file_name = f"{sem_kurzname}_{data['lang']}" if kommentare else f"{sem_kurzname}mh_{data['lang']}"
 
@@ -102,10 +102,11 @@ if st.session_state.logged_in:
     if which and la:
 
         col0, col1 = st.columns([1,1])
-        col0.download_button("Download (.tex)", kommentare, file_name=file_name + ".tex", help=None, on_click=None, args=None, kwargs=None, type = 'primary')
+        col0.download_button("Download (.tex)", texfile, file_name=file_name + ".tex", help=None, on_click=None, args=None, kwargs=None, type = 'primary')
         with open('texfiles/' + file_name + '.tex', 'w') as file:
-            file.write(kommentare) 
+            file.write(texfile) 
 
+        command = ['pdflatex', '-interaction=nonstopmode', '-output-directory', 'texfiles', f'texfiles/{file_name}.tex']
         command = ['pdflatex', '-interaction=nonstopmode', '-output-directory', 'texfiles', f'texfiles/{file_name}.tex']
         result = subprocess.run(command, capture_output=True, text = True)
 
