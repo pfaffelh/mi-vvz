@@ -79,7 +79,7 @@ if st.session_state.logged_in:
         new_hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar", value = False, key=f'kopie-hp_sichtbar')
         personen_uebernehmen = st.checkbox(f"Personen aus {s[0]['name_de']} in die Personenliste des Semesters übernehmen", value = True, key=f'personen_uebernehmen')
         anforderung_uebernehmen = st.checkbox(f"Anforderungen aus {s[0]['name_de']} übernehmen", value = True, key=f'anforderung_uebernehmen')
-        veranstaltungen_uebernehmen = st.checkbox(f"Veranstaltungen aus {s[1]['name_de']} übernehmen. (Rubriken und Codes von Veranstaltungen werden übernommen, Anforderungen auch, URLs nicht.)", value = True, key=f'veranstaltungen_uebernehmen')
+        veranstaltungen_uebernehmen = st.checkbox(f"Veranstaltungen aus {s[1]['name_de']} übernehmen. (Rubriken und Codes von Veranstaltungen werden übernommen, Anforderungen, Zeiten wöchentlicher Termine auch, URLs nicht.)", value = True, key=f'veranstaltungen_uebernehmen')
         last_sem_kurzname = list(util.semester.find(sort = [("rang", pymongo.DESCENDING)]))[0]["kurzname"]
         x_updated = {"name_de": new_name_de, 
                      "name_en": new_name_en, 
@@ -98,7 +98,7 @@ if st.session_state.logged_in:
         ver_list = []
         for r in rub_list:
             ver_list.extend([v["_id"] for v in list(util.veranstaltung.find({"rubrik": r["_id"]}, sort = [("rang", pymongo.ASCENDING)]))])
-        g = [{"_id": v, "Name": tools.repr(util.veranstaltung, v, False), "Veranstaltung übernehmen": veranstaltungen_uebernehmen, "...mit Dozenten/Assistenten": False, "...mit Terminen": False, "...mit Kommentaren": False, "...mit Verwendbarkeit": True} for v in ver_list]
+        g = [{"_id": v, "Name": tools.repr(util.veranstaltung, v, False), "Veranstaltung übernehmen": veranstaltungen_uebernehmen, "...mit Dozenten/Assistenten": False, "...mit Terminen": True, "...mit Kommentaren": False, "...mit Verwendbarkeit": True} for v in ver_list]
         df = df_new = pd.DataFrame.from_records(g)
         if veranstaltungen_uebernehmen:
             df_new = st.data_editor(
