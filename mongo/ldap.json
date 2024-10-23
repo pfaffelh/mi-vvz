@@ -1,0 +1,1327 @@
+[
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": "http://logik.mathematik.uni-freiburg.de/personen.html zur Personenseite der Abteilung f\u00fcr Mathematische Logik",
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/Institut/Dprofessorships.html zur Personenseite der Abteilung f\u00fcr Angewandte Mathematik",
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": "http://www.stochastik.uni-freiburg.de/personen.html zur Personenseite der Abteilung f\u00fcr Mathematische Stochastik",
+        "givenName": null
+    },
+    {
+        "cn": "hde",
+        "sn": "Ebbinghaus",
+        "mail": ".",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/hde",
+        "givenName": "Heinz-Dieter"
+    },
+    {
+        "cn": "rose",
+        "sn": "R\u016f\u017ei\u010dka",
+        "mail": "rose@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/agru/index.html",
+        "givenName": "Michael"
+    },
+    {
+        "cn": "fachschaft",
+        "sn": [
+            "Fachschaft",
+            "Mathematik"
+        ],
+        "mail": "Fachschaft@math.uni-freiburg.de",
+        "labeledURI": "http://fachschaft.mathematik.uni-freiburg.de/",
+        "givenName": null
+    },
+    {
+        "cn": "flum",
+        "sn": "Flum",
+        "mail": "joerg.flum@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/flum/Flum.html",
+        "givenName": "J\u00f6rg"
+    },
+    {
+        "cn": "faxam",
+        "sn": [
+            "FAX",
+            "Angewandte",
+            "Mathematik"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "fried",
+        "sn": "Fried",
+        "mail": "micha@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Michael"
+    },
+    {
+        "cn": "lais",
+        "sn": "Lais",
+        "mail": "lais@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Thomas"
+    },
+    {
+        "cn": "hausmeister",
+        "sn": [
+            "Hausmeister",
+            "Institutsviertel"
+        ],
+        "mail": "hausmiv@verwaltung.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "dziuk",
+        "sn": "Dziuk",
+        "mail": "gerd@mathematik.uni-freiburg.de",
+        "labeledURI": "http://aam.uni-freiburg.de/emeriti/agdz/",
+        "givenName": "Gerhard"
+    },
+    {
+        "cn": "burri",
+        "sn": "Burri",
+        "mail": "burriad@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Adrian"
+    },
+    {
+        "cn": "bibliothekmi",
+        "sn": "Bibliothek Mathematisches Institut",
+        "mail": "mathbib@ub.uni-freiburg.de",
+        "labeledURI": "https://www.ub.uni-freiburg.de/standorte/fachbibliotheken/bibliothek-des-mathematischen-instituts/",
+        "givenName": null
+    },
+    {
+        "cn": "dedner",
+        "sn": "Dedner",
+        "mail": "dedner@mathematik.uni-freiburg.de",
+        "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/dedner/dedner.html",
+        "givenName": "Andreas"
+    },
+    {
+        "cn": "riecke",
+        "sn": "Riecke",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": "Clemens"
+    },
+    {
+        "cn": "junker",
+        "sn": "Junker",
+        "mail": "markus.junker@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/junker/",
+        "givenName": "Markus"
+    },
+    {
+        "cn": "computerraum",
+        "sn": "Computerraum - Fachschaftspool-Pool EG",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "gaeste",
+        "sn": "G\u00e4stezimmer",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "demlow",
+        "sn": "Demlow",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": "Alan"
+    },
+    {
+        "cn": "diening",
+        "sn": "Diening",
+        "mail": "diening@mathematik.uni-freiburg.de",
+        "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/diening/",
+        "givenName": "Lars"
+    },
+    {
+        "cn": "lerche",
+        "sn": "Lerche",
+        "mail": "lerche@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/emeriti/lerche",
+        "givenName": "Hans Rudolf"
+    },
+    {
+        "cn": "dietmar",
+        "sn": "Kr\u00f6ner",
+        "mail": "dietmar@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/agkr/index.html",
+        "givenName": "Dietmar"
+    },
+    {
+        "cn": "ziegler",
+        "sn": "Ziegler",
+        "mail": "ziegler@uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/ziegler/",
+        "givenName": "Martin"
+    },
+    {
+        "cn": "faxmst",
+        "sn": [
+            "FAX",
+            "Mathematische",
+            "Stochastik"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "haasdonk",
+        "sn": "Haasdonk",
+        "mail": null,
+        "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/haasdonk/",
+        "givenName": "Bernard"
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "faxdekanat",
+        "sn": [
+            "FAX",
+            "Dekanat"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "eberlein",
+        "sn": "Eberlein",
+        "mail": "eberlein@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/emeriti/eberlein",
+        "givenName": "Ernst"
+    },
+    {
+        "cn": "ohlberger",
+        "sn": "Ohlberger",
+        "mail": null,
+        "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/mario/dmario.html",
+        "givenName": "Mario"
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "fakultraum",
+        "sn": "Fakult\u00e4tsraum",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "diplommst",
+        "sn": [
+            "Diplomandenzimmer",
+            "MSt"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "systemadmin",
+        "sn": "IT Systemadministration",
+        "mail": "sysadm@email.mathematik.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
+        "givenName": null
+    },
+    {
+        "cn": "bibliothekdi",
+        "sn": [
+            "Bibliothek",
+            "Didaktik"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "frei",
+        "sn": "Frei",
+        "mail": "ludmila.frei@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ludmila"
+    },
+    {
+        "cn": "kuwert",
+        "sn": "Kuwert",
+        "mail": "ernst.kuwert@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/kuwert/",
+        "givenName": "Ernst"
+    },
+    {
+        "cn": "bangert",
+        "sn": "Bangert",
+        "mail": "victor.bangert@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/geometrie/bangert/",
+        "givenName": "Victor"
+    },
+    {
+        "cn": "schneider",
+        "sn": "Schneider",
+        "mail": "rolf.schneider@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/rschnei/",
+        "givenName": "Rolf"
+    },
+    {
+        "cn": "moessner",
+        "sn": "M\u00f6ssner",
+        "mail": null,
+        "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/moessner/",
+        "givenName": "Bernhard"
+    },
+    {
+        "cn": "goette",
+        "sn": "Goette",
+        "mail": "sebastian.goette@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/goette/",
+        "givenName": "Sebastian"
+    },
+    {
+        "cn": "junker",
+        "sn": "Junker",
+        "mail": "studienberatung@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/junker/",
+        "givenName": "Markus"
+    },
+    {
+        "cn": "pfaffelhuber",
+        "sn": "Pfaffelhuber",
+        "mail": "peter.pfaffelhuber@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/pfaffelhuber",
+        "givenName": "Peter"
+    },
+    {
+        "cn": "computer",
+        "sn": [
+            "Computer-",
+            "und",
+            "Druckerraum"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "computer",
+        "sn": [
+            "Computer-",
+            "und",
+            "Druckerraum"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "computer",
+        "sn": [
+            "Computerraum",
+            "und",
+            "Druckerraum"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "rueschen",
+        "sn": "R\u00fcschendorf",
+        "mail": "ruschen@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/profs/ruschen",
+        "givenName": "Ludger"
+    },
+    {
+        "cn": "pruefsek",
+        "sn": "Pr\u00fcfungsamt",
+        "mail": "pruefungsamt@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/pruefungsamt/index.html",
+        "givenName": null
+    },
+    {
+        "cn": "pruefvorsitz",
+        "sn": "Pr\u00fcfungsamtsvorsitz",
+        "mail": "pruefungsamt@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/pruefungsamt/index.html",
+        "givenName": null
+    },
+    {
+        "cn": "wuerth",
+        "sn": "W\u00fcrth",
+        "mail": "mathbib@ub.uni-freiburg.de",
+        "labeledURI": "http://www.ub.uni-freiburg.de/?id=3413",
+        "givenName": "Marlies"
+    },
+    {
+        "cn": "wang",
+        "sn": "Wang",
+        "mail": "Guofang.Wang@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/wang/",
+        "givenName": "Guofang"
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "spilker",
+        "sn": "Spilker",
+        "mail": "Juergen.Spilker@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/spilker/",
+        "givenName": "J\u00fcrgen"
+    },
+    {
+        "cn": "huber",
+        "sn": "Huber-Klawitter",
+        "mail": "annette.huber@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/arithmetische-geometrie/huber.html",
+        "givenName": "Annette"
+    },
+    {
+        "cn": "kegel",
+        "sn": "Kegel",
+        "mail": "otto.h.kegel@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/RM/alagzt/algebra?l=de",
+        "givenName": "Otto"
+    },
+    {
+        "cn": "fiebig",
+        "sn": "Fiebig",
+        "mail": "fiebig@mi.uni-erlangen.de",
+        "labeledURI": null,
+        "givenName": "Peter"
+    },
+    {
+        "cn": "soergel",
+        "sn": "Soergel",
+        "mail": "wolfgang.soergel@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/soergel/",
+        "givenName": "Wolfgang"
+    },
+    {
+        "cn": "kebekus",
+        "sn": "Kebekus",
+        "mail": "stefan.kebekus@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/kebekus/",
+        "givenName": "Stefan"
+    },
+    {
+        "cn": "mildenberger",
+        "sn": "Mildenberger",
+        "mail": "heike.mildenberger@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/mildenberger/",
+        "givenName": "Heike"
+    },
+    {
+        "cn": "daube",
+        "sn": "Daube",
+        "mail": null,
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/daube/index.html",
+        "givenName": "Johannes"
+    },
+    {
+        "cn": "rauscher",
+        "sn": "Rauscher",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": "Sebastian"
+    },
+    {
+        "cn": "dplzim",
+        "sn": [
+            "Diplomandenzimmer",
+            "AM"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "schumacher",
+        "sn": "Schumacher",
+        "mail": "martin.schumacher@uniklinik-freiburg.de",
+        "labeledURI": "https://www.uniklinik-freiburg.de/imbi/team.html",
+        "givenName": "Martin"
+    },
+    {
+        "cn": "bartels",
+        "sn": "Bartels",
+        "mail": "bartels@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/agba/index.html",
+        "givenName": "S\u00f6ren"
+    },
+    {
+        "cn": "diplomanden",
+        "sn": [
+            "Diplomandenzimmer",
+            "RM"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "papathanassopoulos",
+        "sn": "Papathanassopoulos",
+        "mail": "alexis@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/pap/index.html",
+        "givenName": "Alexis"
+    },
+    {
+        "cn": "diplomandenzimmer",
+        "sn": [
+            "Diplomandenzimmer",
+            "ML"
+        ],
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "knies",
+        "sn": "Knies",
+        "mail": "susanne.knies@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/knies/",
+        "givenName": "Susanne"
+    },
+    {
+        "cn": "frei",
+        "sn": "Frei",
+        "mail": "ludmila.frei@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ludmila"
+    },
+    {
+        "cn": "schmidtth",
+        "sn": "Schmidt",
+        "mail": "thorsten.schmidt@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/profs/schmidt",
+        "givenName": "Thorsten"
+    },
+    {
+        "cn": "dondl",
+        "sn": "Dondl",
+        "mail": "patrick.dondl@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/agdo/index.html",
+        "givenName": "Patrick"
+    },
+    {
+        "cn": "grosse",
+        "sn": "Gro\u00dfe",
+        "mail": "nadine.grosse@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/ngrosse/",
+        "givenName": "Nadine"
+    },
+    {
+        "cn": "diehl",
+        "sn": "Diehl",
+        "mail": "moritz.diehl@imtek.uni-freiburg.de",
+        "labeledURI": "https://www.syscop.de/people/moritz-diehl",
+        "givenName": "Moritz"
+    },
+    {
+        "cn": "lh",
+        "sn": "L\u00fctkebohmert-Holtz",
+        "mail": "eva.luetkebohmert@finance.uni-freiburg.de",
+        "labeledURI": "http://www.finance.uni-freiburg.de/mitarbeiter/prof.-dr.-e.-luetkebohmert-holtz",
+        "givenName": "Eva"
+    },
+    {
+        "cn": "brunner",
+        "sn": "Brunner",
+        "mail": "irina.brunner@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Irina"
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "co",
+        "sn": "Olveira",
+        "mail": "erasmus@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Christina"
+    },
+    {
+        "cn": "hammer",
+        "sn": "Hammerstein",
+        "mail": "ernst.august.hammerstein@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/hammerstein",
+        "givenName": "Ernst August"
+    },
+    {
+        "cn": "rohde",
+        "sn": "Rohde",
+        "mail": "angelika.rohde@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/professoren/rohde",
+        "givenName": "Angelika"
+    },
+    {
+        "cn": "zwang",
+        "sn": "Wang",
+        "mail": "zhangxian.wang@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/wang/index.html",
+        "givenName": "Zhangxian"
+    },
+    {
+        "cn": "pizarro",
+        "sn": "Martin-Pizarro",
+        "mail": "pizarro@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/pizarro/",
+        "givenName": "Amador"
+    },
+    {
+        "cn": "bihler",
+        "sn": "Bihler",
+        "mail": "michael.bihler@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Michael"
+    },
+    {
+        "cn": "brutschej",
+        "sn": "Brutsche",
+        "mail": "johannes.brutsche@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/brutsche?set_language=de",
+        "givenName": "Johannes"
+    },
+    {
+        "cn": "binder",
+        "sn": "Binder",
+        "mail": "binderh@imbi.uni-freiburg.de",
+        "labeledURI": "https://www.uniklinik-freiburg.de/imbi/team.html",
+        "givenName": "Harald"
+    },
+    {
+        "cn": "palus",
+        "sn": "Palus",
+        "mail": "christian.palus@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/palus/index.html?l=de",
+        "givenName": "Christian"
+    },
+    {
+        "cn": "keck",
+        "sn": "Keck",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": "Jakob"
+    },
+    {
+        "cn": "boecherer",
+        "sn": "B\u00f6cherer-Linder",
+        "mail": "boecherer-linder@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/didaktik/",
+        "givenName": "Katharina"
+    },
+    {
+        "cn": "hoegerle",
+        "sn": "H\u00f6gerle",
+        "mail": "daniela.hoegerle@mathphys.uni-freiburg.de",
+        "labeledURI": "http://www.mathphys.uni-freiburg.de/dekanat.de.html",
+        "givenName": "Daniela"
+    },
+    {
+        "cn": "zeinhofer",
+        "sn": "Zeinhofer",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": "Marius"
+    },
+    {
+        "cn": "anguige",
+        "sn": "Angiuge",
+        "mail": null,
+        "labeledURI": null,
+        "givenName": "Keith"
+    },
+    {
+        "cn": "cf",
+        "sn": "Hounkpe",
+        "mail": "coffi.hounkpe@mathematik.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/AM?l=en",
+        "givenName": "Coffi Aristide"
+    },
+    {
+        "cn": "demleitner",
+        "sn": "Demleitner",
+        "mail": "andreas.demleitner@math.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/demleitner/",
+        "givenName": "Andreas"
+    },
+    {
+        "cn": "enger",
+        "sn": "Enger",
+        "mail": "timo.enger@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter",
+        "givenName": "Timo"
+    },
+    {
+        "cn": "courte",
+        "sn": "Courte",
+        "mail": "luca.courte@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/courte/index.html",
+        "givenName": "Luca"
+    },
+    {
+        "cn": "wolffvorbeck",
+        "sn": "Wolff-Vorbeck",
+        "mail": null,
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/wolffvorbeck/index.html",
+        "givenName": "Steve"
+    },
+    {
+        "cn": "kaltenbach",
+        "sn": "Kaltenbach",
+        "mail": "alex.kaltenbach@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/kaltenbach/index.html",
+        "givenName": "Alex"
+    },
+    {
+        "cn": "nicoweber",
+        "sn": "Weber",
+        "mail": null,
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/weber/index.html",
+        "givenName": "Nico"
+    },
+    {
+        "cn": "schnitzer",
+        "sn": "Schnitzer",
+        "mail": "jonas.schnitzer@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/geometrie/schnitzer/index.html",
+        "givenName": "Jonas"
+    },
+    {
+        "cn": "christoforidis",
+        "sn": "Christoforidis",
+        "mail": "ioannis.christoforidis@math.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
+        "givenName": "Ioannis"
+    },
+    {
+        "cn": "fix",
+        "sn": "Fix",
+        "mail": "daniel.fix@math.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
+        "givenName": "Daniel"
+    },
+    {
+        "cn": "ludwigstriet",
+        "sn": "Striet",
+        "mail": "ludwig.striet@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/striet/index.html",
+        "givenName": "Ludwig"
+    },
+    {
+        "cn": "jakobrotter",
+        "sn": "Rotter",
+        "mail": "jakob.rotter@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/rotter/index.html",
+        "givenName": "Jakob"
+    },
+    {
+        "cn": "jg",
+        "sn": "Gerstenberger",
+        "mail": "janick.gerstenberger@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/gerstenberger/index.html",
+        "givenName": "Janick"
+    },
+    {
+        "cn": "tscherner",
+        "sn": "Tscherner",
+        "mail": "philipp.tscherner@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/tscherner/index.html?l=de",
+        "givenName": "Philipp"
+    },
+    {
+        "cn": "weyer",
+        "sn": "Weyer",
+        "mail": "pascal.weyer@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/weyer/index.html",
+        "givenName": "Pascal"
+    },
+    {
+        "cn": "criens",
+        "sn": "Criens",
+        "mail": "david.criens@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/professoren/criens",
+        "givenName": "David"
+    },
+    {
+        "cn": "keller",
+        "sn": "Keller",
+        "mail": "hedwig.keller@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/keller/index.html?l=de",
+        "givenName": "Hedwig"
+    },
+    {
+        "cn": "levine",
+        "sn": "Levine",
+        "mail": "maxwell.levine@mathematik.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/maxwell/",
+        "givenName": "Maxwell"
+    },
+    {
+        "cn": "braeuninger",
+        "sn": "Br\u00e4uninger",
+        "mail": "christian.braeuninger@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/ML?l=en",
+        "givenName": "Christian"
+    },
+    {
+        "cn": "albertomaione",
+        "sn": "Maione",
+        "mail": null,
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/maione/index.html",
+        "givenName": "Alberto"
+    },
+    {
+        "cn": "jackisch",
+        "sn": "Jackisch",
+        "mail": "vera.jackisch@mathematik.uni-freiburg.de ",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/jackisch/index.html",
+        "givenName": "Vera"
+    },
+    {
+        "cn": "vogelmann",
+        "sn": "Vogelmann",
+        "mail": "vivien.vogelmann@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Vivien"
+    },
+    {
+        "cn": "mirjamhoferichter",
+        "sn": "Hoferichter",
+        "mail": "mirjam.hoferichter@mathematik.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/AM?l=en",
+        "givenName": "Mirjam"
+    },
+    {
+        "cn": "ketterer",
+        "sn": "Ketterer",
+        "mail": "christian.ketterer@math.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/ketterer/",
+        "givenName": "Christian"
+    },
+    {
+        "cn": "brackenhofer",
+        "sn": "Brackenhofer",
+        "mail": "christoph.brackenhofer@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Christoph"
+    },
+    {
+        "cn": "dsalimova",
+        "sn": "Salimova",
+        "mail": "diyora.salimova@mathematik.uni-freiburg.de",
+        "labeledURI": "http://www.salimova.org/",
+        "givenName": "Diyora"
+    },
+    {
+        "cn": null,
+        "sn": null,
+        "mail": null,
+        "labeledURI": null,
+        "givenName": null
+    },
+    {
+        "cn": "sh",
+        "sn": "Hermann",
+        "mail": "simone.hermann@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/hermann/index.html",
+        "givenName": "Simone"
+    },
+    {
+        "cn": "suchan",
+        "sn": "Suchan",
+        "mail": "oliver.suchan@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/suchan/index.html",
+        "givenName": "Oliver"
+    },
+    {
+        "cn": "gazca",
+        "sn": "Gazca Orozco",
+        "mail": "alexei.gazca@mathematik.uni-freiburg.de",
+        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/AM?l=en",
+        "givenName": "Pablo Alexei"
+    },
+    {
+        "cn": "bartnick",
+        "sn": "Bartnick",
+        "mail": "charlotte.bartnick@math.uni-freiburg.de",
+        "labeledURI": "https://logik.mathematik.uni-freiburg.de/mitarb/index.html?l=de",
+        "givenName": "Charlotte"
+    },
+    {
+        "cn": "lr",
+        "sn": "Radic",
+        "mail": "lidia.radic@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Lidia"
+    },
+    {
+        "cn": "amann",
+        "sn": "Amann",
+        "mail": "marius.amann@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Marius"
+    },
+    {
+        "cn": "deitmar",
+        "sn": "Deitmar",
+        "mail": "ben.deitmar@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/deitmar",
+        "givenName": "Ben"
+    },
+    {
+        "cn": "ritterm",
+        "sn": "Ritter",
+        "mail": "moritz.ritter@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/ritter",
+        "givenName": "Moritz"
+    },
+    {
+        "cn": "glaffig",
+        "sn": "Glaffig",
+        "mail": "saskia.glaffig@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/saskia-glaffig",
+        "givenName": "Saskia"
+    },
+    {
+        "cn": "kiefferd",
+        "sn": "Kieffer",
+        "mail": "dario.kieffer@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/kieffer",
+        "givenName": "Dario"
+    },
+    {
+        "cn": "stiefelj",
+        "sn": "Stiefel",
+        "mail": "jakob.stiefel@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/",
+        "givenName": "Jakob"
+    },
+    {
+        "cn": "lippek",
+        "sn": "Lippek",
+        "mail": "lippek@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Anna-Laura"
+    },
+    {
+        "cn": "christineschmidt",
+        "sn": "Schmidt",
+        "mail": "christine.schmidt@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Christine"
+    },
+    {
+        "cn": "pavarana",
+        "sn": "Pavarana",
+        "mail": "simone.pavarana@stochastik.uni-freiburg.de",
+        "labeledURI": "http://stochastik.uni-freiburg.de",
+        "givenName": "Simone"
+    },
+    {
+        "cn": "jessberger",
+        "sn": "Je\u00dfberger",
+        "mail": "julius.jessberger@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Julius"
+    },
+    {
+        "cn": "dinunzio",
+        "sn": "Di Nunzio",
+        "mail": "esther.di.nunzio@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Esther"
+    },
+    {
+        "cn": "rabe",
+        "sn": "Rabe",
+        "mail": "ramona.rabe@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ramona"
+    },
+    {
+        "cn": "caffier",
+        "sn": "Caffier",
+        "mail": "anne.caffier@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Anne"
+    },
+    {
+        "cn": "stiefken",
+        "sn": "Schreiber",
+        "mail": "tatjana.stiefken@mathematik.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/stiefken/index.html",
+        "givenName": "Tatjana"
+    },
+    {
+        "cn": "jakobhannes",
+        "sn": "Jakob",
+        "mail": "hannes.jakob@mathematik.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/jakob/",
+        "givenName": "Hannes"
+    },
+    {
+        "cn": "hattenbach",
+        "sn": "Hattenbach",
+        "mail": "rm@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Monika"
+    },
+    {
+        "cn": "zx",
+        "sn": "Zhang",
+        "mail": "xiqiang.zhang@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Xiqiang"
+    },
+    {
+        "cn": "zaccanelli",
+        "sn": "Zaccanelli",
+        "mail": "giovanni.zaccanelli@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Giovanni"
+    },
+    {
+        "cn": "reuss",
+        "sn": "Reu\u00df",
+        "mail": "jonah.reuss@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Jonah"
+    },
+    {
+        "cn": "stegemeyer",
+        "sn": "Stegemeyer",
+        "mail": "maximilian.stegemeyer@math.uni-freiburg.de",
+        "labeledURI": "https://sites.google.com/view/maximilianstegemeyer",
+        "givenName": "Maximilian"
+    },
+    {
+        "cn": "johne",
+        "sn": "Johne",
+        "mail": "florian.johne@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Florian"
+    },
+    {
+        "cn": "kertel",
+        "sn": "Kertels",
+        "mail": "fabian.kertels@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Fabian"
+    },
+    {
+        "cn": "li",
+        "sn": "Li",
+        "mail": "Jin.Li@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Jin"
+    },
+    {
+        "cn": "adeosun",
+        "sn": "Adeosun",
+        "mail": "samuel.adeosun@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Samuel Ayomide "
+    },
+    {
+        "cn": "heinzel",
+        "sn": "Heinzel",
+        "mail": "carola.heinzel@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Carola Sophia"
+    },
+    {
+        "cn": "hattenbachmonika",
+        "sn": "Hattenbach",
+        "mail": "htb@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Monika"
+    },
+    {
+        "cn": "pfaffelhuberc",
+        "sn": "Pfaffelhuber",
+        "mail": "claudia.pfaffelhuber@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Claudia"
+    },
+    {
+        "cn": "dschneider",
+        "sn": "Schneider",
+        "mail": "dominik.schneider@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Dominik"
+    },
+    {
+        "cn": "tambendonfack",
+        "sn": "Tambe Ndonfack",
+        "mail": "felix.ndonfack@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "F\u00e9lix Barrez"
+    },
+    {
+        "cn": "samek",
+        "sn": "Samek",
+        "mail": "ricarda.samek@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ricarda"
+    },
+    {
+        "cn": "zier",
+        "sn": "Zier",
+        "mail": "claudia.zier@mathphys.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Claudia"
+    },
+    {
+        "cn": "bellerinogab",
+        "sn": "Bellerino",
+        "mail": "gabriele.bellerino@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Gabriele"
+    },
+    {
+        "cn": "foerster",
+        "sn": "F\u00f6rster",
+        "mail": "ulrike.foerster@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ulrike"
+    },
+    {
+        "cn": "andres",
+        "sn": "Andres",
+        "mail": "soeren.andres@math.uni-freiburg.de",
+        "labeledURI": "https://aam.uni-freiburg.de/mitarb/andres/index.html",
+        "givenName": "S\u00f6ren"
+    },
+    {
+        "cn": "mesug",
+        "sn": "Mesuere",
+        "mail": "gerard.mesuere@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Gerard"
+    },
+    {
+        "cn": "khadikovlogik",
+        "sn": "Khadikov",
+        "mail": "olga.khadikov@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Olga"
+    },
+    {
+        "cn": "khadikovrm",
+        "sn": "Khadikov",
+        "mail": "rm@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Olga"
+    },
+    {
+        "cn": "khadikov",
+        "sn": "Khadikov",
+        "mail": "rm@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Olga"
+    },
+    {
+        "cn": "brunnerrm",
+        "sn": "Brunner",
+        "mail": "rm@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Irina"
+    },
+    {
+        "cn": "sciaraffia",
+        "sn": "Sciaraffia",
+        "mail": "luciano.sciaraffia@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Luciano"
+    },
+    {
+        "cn": "kater",
+        "sn": "Kater",
+        "mail": "stefan.kater@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Stefan"
+    },
+    {
+        "cn": "mei",
+        "sn": "Mei",
+        "mail": "xinqun.mei@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Xinqun"
+    },
+    {
+        "cn": "ren",
+        "sn": "Ren",
+        "mail": "xier.ren@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Xier"
+    },
+    {
+        "cn": "xuwenzhang",
+        "sn": "Zhang",
+        "mail": "xuwen.zhang@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Xuwen"
+    },
+    {
+        "cn": "mukhammadiev",
+        "sn": "Mukhammadiev",
+        "mail": "ilkhom.mukhammadiev@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ilkhom"
+    },
+    {
+        "cn": "snodgrass",
+        "sn": "Snodgrass",
+        "mail": "benedict.snodgrass@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ben"
+    },
+    {
+        "cn": "sercombe",
+        "sn": "Sercombe",
+        "mail": "damian.sercombe@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Damian"
+    },
+    {
+        "cn": "oswal",
+        "sn": "Oswal",
+        "mail": "abhishek.oswal@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Abhishek"
+    },
+    {
+        "cn": "ludwig",
+        "sn": "Ludwig",
+        "mail": "stefan.ludwig@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Stefan"
+    },
+    {
+        "cn": "trebuchon",
+        "sn": "Tr\u00e9buchon",
+        "mail": "eric.trebuchon@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Eric"
+    }
+]
