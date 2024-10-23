@@ -28,6 +28,6 @@ for item in data:
 
 # Ab hier wird das Schema gecheckt
 print("Check schema")
-mongo_db.command('collMod','person', validator=schema20241023.semester_validator, validationLevel='moderate')
+mongo_db.command('collMod','person', validator=schema20241023.person_validator, validationLevel='moderate')
 
 ver.create_index( [ ("name_de", pymongo.TEXT), ("name_en", pymongo.TEXT)], default_language ="german")
