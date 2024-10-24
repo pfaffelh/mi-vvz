@@ -329,6 +329,7 @@ def display_navigation():
     st.sidebar.page_link("pages/10_Terminart.py", label="Art von Terminen")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/12_Semester.py", label="Semester")
+    st.sidebar.page_link("pages/16_Statistik.py", label="Statistik")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/13_LaTeX.py", label="Latex-Files")
     st.sidebar.page_link("pages/14_Lexikon.py", label="Lexikon")
@@ -384,6 +385,10 @@ def repr(collection, id, show_collection = True, short = False):
         res = f"{x['name']}"
     elif collection == util.planung:
         res = f"{', '.join([repr(util.person, y, False, True) for y in x['dozent']])}"
+    elif collection == util.statistiksemester:
+        res = f"{x["name"]}"
+    elif collection == util.statistikveranstaltung:
+        res = f"{x["name"]}"
     if show_collection:
         res = f"{util.collection_name[collection]}: {res}"
     return res

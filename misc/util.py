@@ -47,6 +47,8 @@ def setup_session_state():
         st.session_state.dictionary = mongo_db["dictionary"]
         st.session_state.planung = mongo_db["planung"]
         st.session_state.planungveranstaltung = mongo_db["planungveranstaltung"]
+        st.session_state.statistikveranstaltung = mongo_db["statistikveranstaltung"]
+        st.session_state.statistiksemester = mongo_db["statistiksemester"]
         
     except: 
         logger.error("Verbindung zur Datenbank nicht möglich!")
@@ -70,6 +72,8 @@ def setup_session_state():
     dictionary = st.session_state.dictionary
     planungveranstaltung = st.session_state.planungveranstaltung
     planung = st.session_state.planung
+    statistikveranstaltung = st.session_state.statistikveranstaltung
+    statistiksemester = st.session_state.statistiksemester
     
     # sem ist ein gewähltes Semester
     if "current_semester_id" not in st.session_state:
@@ -124,7 +128,9 @@ def setup_session_state():
         veranstaltung: "Veranstaltungen",
         dictionary: "Lexikon",
         planungveranstaltung: "Planungskategorie",
-        planung: "Planung"
+        planung: "Planung",
+        statistikveranstaltung: "Veranstaltungsstatistik",
+        statistiksemester: "Semesterstatistik"
     }
 
     st.session_state.leer = {
@@ -344,6 +350,8 @@ veranstaltung = st.session_state.veranstaltung
 dictionary = st.session_state.dictionary
 planungveranstaltung = st.session_state.planungveranstaltung
 planung = st.session_state.planung
+statistikveranstaltung = st.session_state.statistikveranstaltung
+statistiksemester = st.session_state.statistiksemester
 collection_name = st.session_state.collection_name
 leer = st.session_state.leer
 new = st.session_state.new
