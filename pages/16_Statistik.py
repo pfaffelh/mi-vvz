@@ -37,27 +37,29 @@ if st.session_state.page != "Statistik":
     st.session_state.edit = ""
 st.session_state.page = "Statistik"
 
-def kurzname_of_id(id):
-    try:
-        x = util.semester.find_one({"_id": id})["kurzname"]
-    except:
-        x = util.studiengang.find_one({"_id": id})["kurzname"]        
-    return x
-
-def id_of_kurzname(kurzname):
-    x = util.semester.find_one({"kurzname": kurzname})["_id"]
-    return x
-
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Statistiken")
     st.write("Es gibt Statistiken von Semestern (z.B. Einschreibestatistiken) und Statistiken von Veranstaltungen (z.B. Belegzahlen).")
     st.write(" ")
     st.write("### Semesterstatistiken")
-    with st.expander(f'Neue Statistik anlegen'):
-        st.write("Neu")
+    collection = util.statistiksemester
+    if st.button('**Neue statistik hinzufügen**'):
+        st.session_state.edit = "new"
+        switch_page("statistik edit")
+
+
+
 
     stat = list(util.statistiksemester.find({}, sort = [("rang", pymongo.ASCENDING)]))
+
+    for x in stat:
+        abk = f"{x['name'].strip()}"
+        submit = st.button(abk, key=f"edit-{x['_id']}")
+        if submit:
+            st.session_state.edit = x["_id"]
+            switch_page("statistik edit")
+
     for s in stat:
         with st.expander(s["name"]):
             name=st.text_input('Name', s["name"], key = f"name_{s['_id']}")

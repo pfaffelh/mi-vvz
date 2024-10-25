@@ -261,6 +261,19 @@ def setup_session_state():
             "sem": "",
             "kommentar": "",
             "veranstaltung": leer[planungveranstaltung]
+        },
+        statistiksemester: {
+            "name" : "", 
+            "semester" : [], 
+            "studiengang" : [], 
+            "stat" : [],
+            "kommentar" : ""
+        },
+        statistikveranstaltung: {
+            "name" : "", 
+            "rubrik" : [], 
+            "stat" : [],
+            "kommentar" : ""
         }
     }
     # Für den Raumplan
@@ -287,11 +300,13 @@ def setup_session_state():
         semester: [{"collection": veranstaltung, "field": "semester", "list": False},
                     {"collection": person, "field": "semester", "list": True},
                     {"collection": studiengang, "field": "semester", "list": True},
+                    {"collection": statistiksemester, "field": "semester", "list": True},
                     {"collection": rubrik, "field": "semester", "list": False}, 
                     {"collection": code, "field": "semester", "list": False},
                     {"collection": codekategorie, "field": "semester", "list": False}, ],
         rubrik: [{"collection": semester, "field": "rubrik", "list": True}, 
-                    {"collection": veranstaltung, "field": "rubrik", "list": False}],
+                    {"collection": veranstaltung, "field": "rubrik", "list": False},
+                    {"collection": statistikveranstaltung, "field": "rubrik", "list": True}],
         code:     [{"collection": semester, "field": "code", "list": True}, 
                     {"collection": codekategorie, "field": "code", "list": True},
                     {"collection": veranstaltung, "field": "code", "list": True}],
@@ -302,7 +317,8 @@ def setup_session_state():
                     {"collection": veranstaltung, "field": "einmaliger_termin.$.person", "list": True}, 
                     {"collection": veranstaltung, "field": "woechentlicher_termin.$.person", "list": True},
                     {"collection": planung, "field": "dozent", "list": True}],
-        studiengang:[{"collection": modul, "field": "studiengang", "list": True}],
+        studiengang:[{"collection": modul, "field": "studiengang", "list": True},
+                     {"collection": statistiksemester, "field": "studiengang", "list": True}],
         modul:     [{"collection": studiengang, "field": "modul", "list": True}, 
                     {"collection": veranstaltung, "field": "verwendbarkeit_modul", "list": True},
                     {"collection": veranstaltung, "field": "verwendbarkeit.modul", "list": False}],
@@ -317,7 +333,9 @@ def setup_session_state():
                     {"collection": person, "field": "veranstaltung", "list": True}],
         dictionary: [],
         planung: [],
-        planungveranstaltung: [{"collection": planung, "field": "veranstaltung", "list": False}]
+        planungveranstaltung: [{"collection": planung, "field": "veranstaltung", "list": False}],
+        statistiksemester: [],
+        statistikveranstaltung: []
     }
 
     st.session_state.wochentag = {

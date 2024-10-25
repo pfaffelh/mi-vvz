@@ -60,13 +60,12 @@ def new(collection, ini = {}, switch = True):
     for key, value in ini.items():
         util.new[collection][key] = value
     util.new[collection].pop("_id", None)
-    # print(util.new[collection])
+    #st.write(util.new[collection])
     x = collection.insert_one(util.new[collection])
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {util.collection_name[collection]} ein neues Item angelegt.")
     if switch:
         switch_page(f"{util.collection_name[collection].lower()} edit")
-
 
 # Finde in collection.field die id, und gebe im Datensatz return_field zurück. Falls list=True,
 # dann ist collection.field ein array.
