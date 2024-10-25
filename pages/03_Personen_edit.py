@@ -77,7 +77,7 @@ if st.session_state.logged_in:
             titel=st.text_input('Titel', x["titel"])
         otherperson = collection.find_one({"_id" : { "$ne" : x["_id"]}, "name" : name, "vorname" : vorname})
         if otherperson:
-            st.warning(f"Eine Person mit demselben Namen gibt es auch in { ", ".join([tools.repr(util.semester, x, False, True) for x in otherperson["semester"]])}")
+            st.warning(f"Eine Person mit demselben Namen gibt es auch in { ', '.join([tools.repr(util.semester, x, False, True) for x in otherperson['semester']])}")
         col1, col2, col3 = st.columns([2, 1, 1])
         with col1:
             email=st.text_input('Email', x["email"])
