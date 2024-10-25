@@ -170,6 +170,7 @@ def setup_session_state():
                 "tel": "", 
                 "kommentar": "", 
                 "email": "", 
+                "url": "", 
                 "sichtbar": True, 
                 "hp_sichtbar": True, 
                 "semester": [st.session_state.semester_id], 
