@@ -65,10 +65,10 @@ if st.session_state.logged_in:
                 for k, s in enumerate(slotstart):
                     with co[k+2]:
                         # finde alle woechentliche_termine für den angezeigten Slot
-                        ve = list(util.veranstaltung.find({"semester": st.session_state.semester_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "start": {"$gte": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), "$lt": datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0)}}}}))
+                        ve = list(util.veranstaltung.find({"semester": st.session_state.semester_id, "woechentlicher_termin": {"$elemMatch": {"wochentag": {"$eq": tag}, "raum": r["_id"], "$or": [{ "start": {"$gte": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0), "$lt": datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0)}}, { "ende": {"$lte": datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0), "$gt": datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0)}}]}}}))
                         for x in ve:
                             wt = x["woechentlicher_termin"]
-                            w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and w["start"] >= datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0) and w["start"] < datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0), wt))[0]
+                            w = list(filter(lambda w: w['wochentag'] == tag and w['raum'] == r["_id"] and ((w["start"] >= datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0) and w["start"] < datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0)) or (w["ende"] <= datetime.datetime(year = 1970, month = 1, day = 1, hour = s+2, minute = 0) and w["ende"] > datetime.datetime(year = 1970, month = 1, day = 1, hour = s, minute = 0))), wt))[0]
                             k = wt.index(w)
                             st.markdown("""
                                 <style>
@@ -78,7 +78,7 @@ if st.session_state.logged_in:
                                 }
                                 </style>
                                 """,unsafe_allow_html=True)
-                            submit = st.button(f"**{x['kurzname']}**", type = "primary" if len(ve) > 1 else "secondary", help = tools.repr(util.veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}", use_container_width=True)
+                            submit = st.button(f"**{x['kurzname']}**", type = "primary" if len(ve) > 1 else "secondary", help = tools.repr(util.veranstaltung, x["_id"], False), key = f"edit_{k}_{x['_id']}_{s}", use_container_width=True)
                             if submit:
                                 st.session_state.edit = x["_id"]
                                 st.session_state.page = "Veranstaltung"
