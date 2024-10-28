@@ -59,7 +59,7 @@ if st.session_state.logged_in:
                 if wt1["start"] < wt2["ende"] and wt2["start"] < wt1["ende"]:
                     for p in [p for p in wt1["person"] if p in wt2["person"]]:
                         has_conflict = True
-                        st.write(f"{tag}: {tools.repr(util.person, p)} hat einen Terminkonflikt mit {tools.repr(util.veranstaltung, wt1["veranstaltung"], False, True)} und {tools.repr(util.veranstaltung, wt2["veranstaltung"], False, True)}")
+                        st.write(f"{tag}: {tools.repr(util.person, p)} hat einen Terminkonflikt mit {tools.repr(util.veranstaltung, wt1['veranstaltung'], False, True)} und {tools.repr(util.veranstaltung, wt2['veranstaltung'], False, True)}")
         if has_conflict == False: 
             st.write("Keine")
 
