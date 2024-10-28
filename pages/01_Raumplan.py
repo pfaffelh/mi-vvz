@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 import datetime 
 import pymongo
+from itertools import combinations
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -44,6 +45,21 @@ if st.session_state.logged_in:
 #    sem_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.current_semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed")
 #    st.session_state.semester = sem_id
     if st.session_state.semester_id is not None:
+
+        # Anzeige von Terminkonflikten von Personen:
+        ver = list(util.veranstaltung.find({"semester": st.session_state.semester_id, "woechentlicher_termin": { "$ne" : []}}))
+        # woechentliche_termine enthält alle wöchentlichen Termine (mit Veranstaltung und Personenliste)
+        for tag in tage:
+            woechentliche_termine = []
+            for v in ver:
+                woechentliche_termine.extend([{"veranstaltung" : v["_id"], "person" : v["dozent"] + v["assistent"] + v["organisation"], "wochentag" : item["wochentag"], "start" : item["start"], "ende" : item["ende"]} for item in v["woechentlicher_termin"] if item["wochentag"] == tag])
+
+            for (wt1, wt2) in combinations(woechentliche_termine,2):
+                if wt1["start"] < wt2["ende"] and wt2["start"] < wt1["ende"]:
+                    for p in [p for p in wt1["person"] if p in wt2["person"]]:
+                        st.write(f"{tag}: {tools.repr(util.person, p)} hat einen Terminkonflikt mit {tools.repr(util.veranstaltung, wt1["veranstaltung"], False, True)} und {tools.repr(util.veranstaltung, wt2["veranstaltung"], False, True)}")
+
+
         kat = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))
         raum_list = st.multiselect("Räume", raum_dict.keys(), util.hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
         st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
