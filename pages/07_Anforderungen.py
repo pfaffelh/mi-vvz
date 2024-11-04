@@ -51,6 +51,7 @@ if st.session_state.logged_in:
                 with co3:
                     abk = f"{x2['name_de'].strip()}"
                     abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"
+                    abk = abk + (" E: ✓" if x2["name_en"] != "" else " E: ✗")
                     submit = st.button(abk, key=f"edit-{x2['_id']}")
                 if submit:
                     st.session_state.edit = x2["_id"]

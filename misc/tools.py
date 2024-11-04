@@ -194,8 +194,13 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
     util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, sem_id)} kopiert.")
     util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
     util.rubrik.update_one({"_id": k}, {"$push": {"veranstaltung": w.inserted_id}})
-    for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
-        util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
+    if kopiere_personen:
+        for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
+            util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
+    if kopiere_verwendbarkeit:
+        for a in v["verwendbarkeit_anforderung"]:
+                util.anforderung.update_one({"_id" : a}, { "$addToSet" : { "semester" : st.session_state.semester_id}})
+
     return w.inserted_id
 
 # Neues Semester anlegen
@@ -268,6 +273,7 @@ def delete_semester(id):
         util.veranstaltung.delete_one({"_id": v["_id"]})
     
     util.person.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
+    util.anforderung.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
     util.studiengang.update_many({"semester": { "$elemMatch": {"$eq": id}}}, {"$pull": {"semester" : id}})
     util.rubrik.delete_many({"semester": id})
     util.code.delete_many({"semester": id})

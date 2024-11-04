@@ -66,14 +66,16 @@ if st.session_state.logged_in:
     with st.form(f'ID-{x["_id"]}'):
         sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
         hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
-        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+        col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
         with col1:
             name=st.text_input('Name (de)', x["name"], disabled = (True if not new_entry and x["_id"] == util.leer[collection] else False))
         with col2:
-            vorname=st.text_input('Vorname', x["vorname"])
+            name_en=st.text_input('Name (en), nur falls abweichend', x["name_en"])
         with col3:
-            name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
+            vorname=st.text_input('Vorname', x["vorname"])
         with col4:
+            name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
+        with col5:
             titel=st.text_input('Titel', x["titel"])
         otherperson = collection.find_one({"_id" : { "$ne" : x["_id"]}, "name" : name, "vorname" : vorname})
         if otherperson:

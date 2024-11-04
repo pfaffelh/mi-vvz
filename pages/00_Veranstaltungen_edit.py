@@ -545,7 +545,10 @@ if st.session_state.logged_in:
 
             colu1, colu2 = st.columns([1,1])
             with colu1:
-                st.button(label = "Importieren", type = 'primary', on_click = tools.update_confirm, args = (util.veranstaltung, x, x_updated, False), key = f"import-verwendbarkeit-{x['_id']}")
+                submit = st.button(label = "Importieren", type = 'primary', on_click = tools.update_confirm, args = (util.veranstaltung, x, x_updated, False), key = f"import-verwendbarkeit-{x['_id']}")
+                if submit:
+                    for w in v["verwendbarkeit_anforderung"]:
+                            util.anforderung.update_one({"_id" : w}, { "$addToSet" : { "semester" : st.session_state.semester_id}})
             with colu2: 
                 st.button(label="Abbrechen", on_click = st.rerun, args=(), key = f"not-imported-{x['_id']}")
 

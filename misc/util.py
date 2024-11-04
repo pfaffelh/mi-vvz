@@ -164,6 +164,7 @@ def setup_session_state():
             "kommentar": ""
         },
         person: {"name": "Neue Person",
+                "name_en": "", 
                 "vorname": "", 
                 "name_prefix": "", 
                 "titel": "", 
