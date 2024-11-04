@@ -198,8 +198,11 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
         for p in ( list(set(v_new["dozent"] + v_new["assistent"] + v_new["organisation"]))):
             util.person.update_one({"_id": p}, { "$push": {"veranstaltung": w.inserted_id}})
     if kopiere_verwendbarkeit:
-        for a in v["verwendbarkeit_anforderung"]:
-                util.anforderung.update_one({"_id" : a}, { "$addToSet" : { "semester" : st.session_state.semester_id}})
+        for a in v["verwendbarkeit_anforderung"]:            
+            util.anforderung.update_one({"_id" : a}, { "$addToSet" : { "semester" : st.session_state.semester_id}})
+            b = util.anforderung.find_one({"_id" : a})
+            se = list(util.semester.find({"_id": {"$in": b["semester"]}}, sort=[("rang", pymongo.ASCENDING)]))
+            util.anforderung.update_one({"_id" : a}, { "$set" : { "semester" :[s["_id"] for s in se] }})
 
     return w.inserted_id
 
@@ -218,9 +221,15 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, anforderung_uebernehme
     # Kopiere Personen aus dem letzten Semester
     if personen_uebernehmen:
         util.person.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
+        for p in list(util.person.find({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}})):
+            se = list(util.semester.find({"_id": {"$in": p["semester"]}}, sort=[("rang", pymongo.ASCENDING)]))
+            util.person.update_one({"_id" : p["_id"]}, { "$set" : { "semester" :[s["_id"] for s in se] }})        
     # Kopiere Anforderungne aus dem letzten Semester
     if anforderung_uebernehmen:
         util.anforderung.update_many({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}, { "$push": { "semester": sem_id}})
+        for a in util.anforderung.find({"semester": {"$elemMatch": {"$eq": sem[0]["_id"] }}}):
+            se = list(util.semester.find({"_id": {"$in": a["semester"]}}, sort=[("rang", pymongo.ASCENDING)]))
+            util.anforderung.update_one({"_id" : a["_id"]}, { "$set" : { "semester" :[s["_id"] for s in se] }})
 
     # Kopiere Rubriken und Codes
     if veranstaltung_uebernehmen:        
@@ -337,7 +346,6 @@ def display_navigation():
     st.sidebar.page_link("pages/12_Semester.py", label="Semester")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/13_LaTeX.py", label="Latex-Files")
-    st.sidebar.page_link("pages/14_Lexikon.py", label="Lexikon")
     st.sidebar.page_link("pages/15_Dokumentation.py", label="Dokumentation")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
 
