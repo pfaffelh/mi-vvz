@@ -30,12 +30,16 @@ if st.session_state.logged_in:
     st.header("Anforderungen")
     st.markdown("Zu den [Anforderungskategorien](#anforderungskategorien).")
     st.write("Mit 😎 markierte Anforderungen sind in Auswahlmenüs sichtbar.")
+    st.write("Semester: ✓ (bzw. ✗) bedeutet, dass diese Anforderung im aktuellen Semester nicht vorkommt.}")
     st.write(" ")
     co1, co2, co3 = st.columns([1,1,23]) 
     with co3:
         if st.button('**Neue Anforderung hinzufügen**'):
             st.session_state.edit = "new"
             switch_page("anforderungen edit")
+
+    ver = list(util.veranstaltung.find({"semester" : st.session_state.semester_id}))
+    alle_verwendete_anforderungen = list(set([item for v in ver for item in v["verwendbarkeit_anforderung"]]))
 
     y1 = list(util.anforderungkategorie.find(sort=[("rang", pymongo.ASCENDING)]))
     for x1 in y1:
@@ -51,7 +55,8 @@ if st.session_state.logged_in:
                 with co3:
                     abk = f"{x2['name_de'].strip()}"
                     abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"
-                    abk = abk + (" E: ✓" if x2["name_en"] != "" else " E: ✗")
+                    abk = abk + ("; E: ✓" if x2["name_en"] != "" else "; E: ✗") + f"; {tools.repr(util.semester, st.session_state.semester_id, False, True)}: {'✓' if x2["_id"] in alle_verwendete_anforderungen else '✗'}"
+
                     submit = st.button(abk, key=f"edit-{x2['_id']}")
                 if submit:
                     st.session_state.edit = x2["_id"]

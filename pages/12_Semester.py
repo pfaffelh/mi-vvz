@@ -44,7 +44,7 @@ collection = util.semester
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Semester-Grundeinstellungen")
-    st.write("Mit 😎 gekennzeichnete Semester sind auf www.studium.math... sichtbar.")
+    st.write("Mit 😎 gekennzeichnete Semester sind auf der [Homepage](https://www.math.uni-freiburg.de/nlehre/de/) sichtbar.")
     st.write(" ")
     x = util.semester.find_one({"_id": st.session_state.semester_id})
 

@@ -209,11 +209,10 @@ def makedata(sem_kurzname, komm, lang, alter):
             r_dict["titel"] = latex(rubrik[f"titel_{otherlang}"])
 
         r_dict["veranstaltung"] = []
-        # Falls komm == True werden nur Veranstaltungen mit Code komm aufgenommen
+        # Falls komm == True werden nur Veranstaltungen mit komm_sichtbar == True komm aufgenommen
         if komm:
             sem_id = st.session_state.semester_id
-            komm_id = util.code.find_one({"semester" : sem_id, "name" : { "$eq" : "Komm" }})["_id"]
-            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "code" : { "$elemMatch" : { "$eq" : komm_id }}}, sort=[("rang", pymongo.ASCENDING)]))
+            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "komm_sichtbar" : True}, sort=[("rang", pymongo.ASCENDING)]))
         else:
             veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}, sort=[("rang", pymongo.ASCENDING)]))
 

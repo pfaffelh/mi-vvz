@@ -28,6 +28,9 @@ collection = util.veranstaltung
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
     st.header("Veranstaltungen")
+    st.write("Mit 😎 gekennzeichnete Veranstaltungen sind auf der [Homepage](https://www.math.uni-freiburg.de/nlehre/de/) sichtbar.")
+    st.write("Mit 🤓 gekennzeichnete Veranstaltungen sind im [Kommentierten Vorlesungsverzeichnis](https://www.math.uni-freiburg.de/nlehre/de/lehrveranstaltungen/) sichtbar.")
+
     with st.popover(f'Neue Veranstaltung anlegen'):
         name_de=st.text_input('Name (de)', "")
         name_en=st.text_input('Name (en)', "")
@@ -64,7 +67,7 @@ if st.session_state.logged_in:
                     st.button('↑', key=f'up-{v["_id"]}', on_click = tools.move_up, args = (collection, v, {"rubrik": v["rubrik"]},))
                 with col3:
                     d = [(util.person.find_one({"_id": x}))["name"] for x in v["dozent"]]
-                    s = f"{v['name_de']} ({', '.join(d) if d else ''})"
+                    s = f"{v['name_de']} ({', '.join(d) if d else ''}) {'😎' if v["hp_sichtbar"] else ''}{'🤓' if v['komm_sichtbar'] else ''}"
                     submit = st.button(s, key=f"edit-{v['_id']}")
                 if submit:
                     st.session_state.edit = v["_id"]
