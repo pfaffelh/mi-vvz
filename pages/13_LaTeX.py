@@ -77,8 +77,7 @@ if st.session_state.logged_in:
     if komm:
         sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
         sem_id = st.session_state.semester_id
-        komm_id = util.code.find_one({"semester" : sem_id, "name" : { "$eq" : "Komm" }})["_id"]
-        ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
+        ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "komm_sichtbar" : True}))
     else:
         ver_komm = list(util.veranstaltung.find({"semester" : sem_id}))
 
@@ -122,10 +121,9 @@ if st.session_state.logged_in:
             st.write(result.stderr)  # 
 
     if komm:
-        st.write("Es werden nur Veranstaltungen aufgenommen, die den Code 'Komm' tragen.")
+        st.write("Es werden nur Veranstaltungen mit 🤓 aufgenommen.")
         sem_id = st.session_state.semester_id
-        komm_id = util.code.find_one({"semester" : sem_id, "name" : { "$eq" : "Komm" }})["_id"]
-        ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "code" : { "$elemMatch" : { "$eq" : komm_id }}}))
+        ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "komm_sichtbar" : True}))
         ver_text = list(util.veranstaltung.find({"semester" : sem_id, "$or" : [{ "inhalt_de" : { "$ne" : ""}}, {"inhalt_en" : { "$ne" : ""}}]}))
 
         # Veranstaltungen, die den Code Komm haben, für die kein Kommentar vorhanden ist
@@ -134,16 +132,16 @@ if st.session_state.logged_in:
         Delta2 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_text if v not in ver_komm]
 
         if Delta1 != []:
-            st.write("#### Veranstaltungen mit Code _Komm_, für die kein Kommentar vorhanden ist")
+            st.write("#### Veranstaltungen mit 🤓, für die kein Kommentar vorhanden ist")
             for v in Delta1:
                 st.write(v)
         else:
-            st.write("#### Alle Veranstaltungen mit Code _Komm_ verfügen über einen Kommentar.")
+            st.write("#### Alle Veranstaltungen mit 🤓 verfügen über einen Kommentar.")
 
         if Delta2 != []:
-            st.write("#### Veranstaltungen mit Kommentar, die den Code _Komm_ nicht besitzen")
+            st.write("#### Veranstaltungen mit Kommentar, die 🤓 nicht besitzen")
             for v in Delta2:
                 st.write(v)
         else:
-            st.write("#### Alle Veranstaltungen mit Kommentar haben Code _Komm_.")
+            st.write("#### Alle Veranstaltungen mit Kommentar haben 🤓.")
 
