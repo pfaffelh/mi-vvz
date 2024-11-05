@@ -5,12 +5,14 @@ cluster = MongoClient("mongodb://127.0.0.1:27017")
 mongo_db = cluster["vvz"]
 
 ver = mongo_db["veranstaltung"]
+ter = mongo_db["terminart"]
 cod = mongo_db["code"]
 pla_kat = mongo_db["planungkategorie"]
 pla_ver = mongo_db["planungveranstaltung"]
 
 import schema20241106
 mongo_db.command('collMod','veranstaltung', validator=schema20241106.veranstaltung_validator, validationLevel='off')
+mongo_db.command('collMod','terminart', validator=schema20241106.terminart_validator, validationLevel='off')
 
 pla_kat.drop()
 
