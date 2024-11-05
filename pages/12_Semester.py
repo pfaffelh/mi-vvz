@@ -150,7 +150,7 @@ if st.session_state.logged_in:
                         if x["titel_de"] != "-":
                             submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
                         else:
-                            submit = st.button(label = "Ja", type = 'primary', disabled = True, key = f"delete-{x['_id']}", help = "Diese Rubrik wird beim Kopieren von Veranstaltungen benötigt und kann daher nicht gelöscht werden.")
+                            submit = st.button(label = "Ja", type = 'primary', disabled = True, key = f"delete-{x['_id']}", help = "Diese Rubrik wird beim Kopieren von Veranstaltungen benötigt und kann daher nicht gelöscht werden.", disabled = True if x["_id"] == util.leer[util.rubrik] else False)
                     if submit:
                         tools.delete_item_update_dependent_items(collection, x["_id"], False)
                         st.rerun()
@@ -169,7 +169,7 @@ if st.session_state.logged_in:
                     suffix_en=st.text_area('Suffix (en)', x["suffix_en"], key=f'suffix-en-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
                     x_updated = {"hp_sichtbar": hp_sichtbar, "titel_de": titel_de, "titel_en": titel_en, "untertitel_de": untertitel_de, "untertitel_en": untertitel_en, "prefix_de": prefix_de, "prefix_en": prefix_en, "suffix_de": suffix_de, "suffix_en": suffix_en, "kommentar": kommentar}
-                    submit = st.form_submit_button('Speichern', type = 'primary')
+                    submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == util.leer[util.rubrik] else False)
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
                         time.sleep(2)
@@ -206,7 +206,7 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}")
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", disabled = True if x["_id"] == util.leer[util.codekategorie] else False)
                     if submit:
                         tools.delete_item_update_dependent_items(collection, x["_id"], False)
                         st.rerun()
@@ -223,7 +223,7 @@ if st.session_state.logged_in:
                     kommentar=st.text_area('Kommentar', x["kommentar"])
                     code = []
                     x_updated = {"hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar, "name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
-                    submit = st.form_submit_button('Speichern', type = 'primary')
+                    submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == util.leer[util.codekategorie] else False)
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
                         time.sleep(2)

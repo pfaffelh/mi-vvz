@@ -17,35 +17,42 @@ mongo_db = cluster["vvz"]
 # anforderung
 # anforderungkategorie
 # veranstaltung
-# planungkategorie
+# planungveranstaltung
 # planung
 # stat_semester
 # stat_veranstaltung
 
-# planungkategorie: zB Pflichtvorlesung, Spezialvorlesung
-planungkategorie_validator = {
+planungveranstaltung_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "title": "Eine Kategorie für die weitere Veranstaltungsplanung.",
-        "required": ["name", "rang", "kommentar"],
+        "title": "Eine Veranstaltung, die in kommenden Semestern geplant wird.",
+        "required": ["name", "sws", "regel", "rang", "kommentar"],
         "properties": {
             "name": {
                 "bsonType": "string",
-                "description": "Name der Kategorie -- required"
+                "description": "Name der Veranstaltung -- required"
+            },
+            "sws": {
+                "bsonType": "string",
+                "description": "Die SWS der Veranstaltung -- required"
+            },
+            "regel": {
+                "enum": ["Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"],
+                "description": "Die Regelmäßigkeit."
             },
             "rang": {
                 "bsonType": "int",
-                "description": "Der Rang der Kategorie in der Darstellung -- required"
+                "description": "Der Rang der Veranstaltung in der Darstellung -- required"
             },
             "kommentar": {
                 "bsonType": "string",
-                "description": "Kommentar zum Begriff."
+                "description": "Kommentar zur Veranstaltung."
             }
         }
     }
 }
 
-# planungkategorie: zB Pflichtvorlesung, Spezialvorlesung
+# planung: zB Herr S hält im WSx die Planungveranstaltung y
 planung_validator = {
     "$jsonSchema": {
         "bsonType": "object",

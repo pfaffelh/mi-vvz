@@ -44,7 +44,7 @@ if st.session_state.logged_in:
         with co3:
             abk = f"{x['name_de'].strip()} ({x['kurzname'].strip()})"
             abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
-            submit = st.button(abk, key=f"edit-{x['_id']}")
+            submit = st.button(abk, key=f"edit-{x['_id']}", disabled = True if x["_id"] == util.leer[util.modul] else False)
         if submit:
             st.session_state.edit = x["_id"]
             switch_page("module edit")

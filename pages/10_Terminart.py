@@ -49,7 +49,7 @@ if st.session_state.logged_in:
             abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
             abk = f"{abk.strip()} 🤓" if x["komm_sichtbar"] else f"{abk.strip()}"
             abk = f"{abk.strip()} 📅" if x["cal_sichtbar"] else f"{abk.strip()}"
-            submit = st.button(abk, key=f"edit-{x['_id']}")
+            submit = st.button(abk, key=f"edit-{x['_id']}", disabled = True if x["_id"] == util.leer[util.terminart] else False)
         if submit:
             st.session_state.edit = x["_id"]
             switch_page("terminart edit")

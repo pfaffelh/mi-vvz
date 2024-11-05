@@ -6,9 +6,13 @@ mongo_db = cluster["vvz"]
 
 ver = mongo_db["veranstaltung"]
 cod = mongo_db["code"]
+pla_kat = mongo_db["planungkategorie"]
+pla_ver = mongo_db["planungveranstaltung"]
 
 import schema20241106
 mongo_db.command('collMod','veranstaltung', validator=schema20241106.veranstaltung_validator, validationLevel='off')
+
+pla_kat.drop()
 
 # Ab hier wird die Datenbank verändert
 print("Ab hier wird verändert")
@@ -24,5 +28,6 @@ for c in c_list:
 # Ab hier wird das Schema gecheckt
 print("Check schema")
 mongo_db.command('collMod','person', validator=schema20241106.veranstaltung_validator, validationLevel='moderate')
+mongo_db.command('collMod','planungveranstaltung', validator=schema20241106.planungveranstaltung_validator, validationLevel='moderate')
 
 ver.create_index( [ ("name_de", pymongo.TEXT), ("name_en", pymongo.TEXT)], default_language ="german")
