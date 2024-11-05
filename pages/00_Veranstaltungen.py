@@ -67,7 +67,7 @@ if st.session_state.logged_in:
                     st.button('↑', key=f'up-{v["_id"]}', on_click = tools.move_up, args = (collection, v, {"rubrik": v["rubrik"]},))
                 with col3:
                     d = [(util.person.find_one({"_id": x}))["name"] for x in v["dozent"]]
-                    s = f"{v['name_de']} ({', '.join(d) if d else ''}) {'😎' if v["hp_sichtbar"] else ''}{'🤓' if v['komm_sichtbar'] else ''}"
+                    s = f"{v['name_de']} ({', '.join(d) if d else ''}) {'😎' if v['hp_sichtbar'] else ''}{'🤓' if v['komm_sichtbar'] else ''}"
                     submit = st.button(s, key=f"edit-{v['_id']}")
                 if submit:
                     st.session_state.edit = v["_id"]
