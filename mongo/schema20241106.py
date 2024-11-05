@@ -1056,7 +1056,7 @@ terminart_validator = {
     "$jsonSchema": {
         "bsonType": "object",
         "title": "Beschreibung der Art eines Termins, zB Vorlesung, Vortrag etc",
-        "required": ["name_de", "name_en", "hp_sichtbar", "komm_sichtbar", "calendar_sichtbar", "rang"],
+        "required": ["name_de", "name_en", "hp_sichtbar", "komm_sichtbar", "cal_sichtbar", "rang"],
         "properties": {
             "name_de": {
                 "bsonType": "string",
@@ -1072,7 +1072,7 @@ terminart_validator = {
             },
             "komm_sichtbar": {
                 "bsonType": "bool",
-                "description": "Zeigt an, ob diese Terminart in den Kommentare sichtbar ist"
+                "description": "Zeigt an, ob diese Terminart in den Kommentaren sichtbar ist"
             },
             "cal_sichtbar": {
                 "bsonType": "bool",
