@@ -70,18 +70,17 @@ if st.session_state.logged_in:
         result = list(util.veranstaltung.find(query))
 
         st.divider()
-        st.write("### Folgende Felder werden ausgegeben")
+        st.write("Folgende Felder werden ausgegeben")
         # Auswahl der Ausgabe
-        col1, col2, col3, col4, col5 = st.columns([1,1,1,1,1])
+        col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
-            ausgabe_semester = st.checkbox("Semester", True)
+            ausgabe_semester = st.checkbox("Semester", True, key = "semester1")
         with col2:
             ausgabe_rubrik = st.checkbox("Rubrik", True)
+        ausgabe_titel = True
         with col3:
-            ausgabe_titel = st.checkbox("Titel der Veranstaltung", True)
+            ausgabe_dozent = st.checkbox("Dozent*innen", True, key = "dozent1")
         with col4:
-            ausgabe_dozent = st.checkbox("Dozent*innen", True)
-        with col5:
             ausgabe_assistent = st.checkbox("Assistent*innen", True)
 
         semester = [tools.repr(util.semester, r["semester"], False, True) for r in result]
@@ -96,14 +95,16 @@ if st.session_state.logged_in:
             dict["Semester"] = semester
         if ausgabe_rubrik:
             dict["Rubrik"] = rubrik
-        if ausgabe_titel:
-            dict["Veranstaltung"] = titel    
+        dict["Veranstaltung"] = titel    
         if ausgabe_dozent:
             dict["Dozent*innen"] = dozent
         if ausgabe_assistent:
             dict["Assistent*innen"] = assistent
 
         df = pd.DataFrame(dict)
+        felder = (["Semester"] if ausgabe_semester else []) + (["Rubrik"] if ausgabe_rubrik else []) + ["Veranstaltung"]
+        felder_as = ([False] if ausgabe_semester else []) + ([True] if ausgabe_rubrik else []) + [True]
+        df = df.sort_values(by=felder, ascending = felder_as)
 
         st.divider()
 
@@ -111,14 +112,56 @@ if st.session_state.logged_in:
 
     with st.expander("Suche nach einmaligen Terminen..."):
         st.write("")
-        anzeige_start = st.date_input("von", value = datetime.now() + timedelta(days = -30),  label_visibility="hidden", placeholder = "von")
-        st.write("...und...")
-        anzeige_ende = st.date_input("bis", value = datetime.now() + timedelta(days = 90), label_visibility="hidden", placeholder = "bis")
+        col1, col2 = st.columns([1,1])
+        anzeige_start = col1.date_input("von", value = datetime.now() + timedelta(days = -30), format="DD.MM.YYYY")
+        anzeige_ende = col2.date_input("bis", value = datetime.now() + timedelta(days = 90), format="DD.MM.YYYY")
 
-        nur_cal = st.toggle("Genau die Termine aus dem Prüfungskalender")
+        # nur_cal = st.toggle("Genau die Termine aus dem Prüfungskalender", True)
         ter_list = [ta["_id"] for ta in list(util.terminart.find({"cal_sichtbar" : True}))]
-        ta_list = st.multiselect("Terminarten", [x["_id"] for x in rubrik_vorauswahl], ter_list if nur_cal else [], format_func = (lambda a: tools.repr(util.terminart, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchte Veranstaltung muss einen der ausgewählten Rubriken tragen. Falls keine Rubrik angegeben ist, werden Rubriken in der Suche nicht berücksichtigt.")
+        ta_list = st.multiselect("Als Default werden genau die Terminarten aus dem Prüfungskalender gesucht.", [x["_id"] for x in list(util.terminart.find())], ter_list, format_func = (lambda a: tools.repr(util.terminart, a, False, False)), placeholder = "Bitte auswählen")
+
+        st.divider()
+        st.write("Folgende Felder werden ausgegeben")
+        # Auswahl der Ausgabe
+        col1, col2, col3, col4 = st.columns([1,1,1,1])
+        with col1:
+            ausgabe_semester = st.checkbox("Semester", True, key = "semester2")
+        with col2:
+            ausgabe_veranstaltung = st.checkbox("Veranstaltung", True)
+        ausgabe_terminart = True
+        ausgabe_termin = True
+        with col3:
+            ausgabe_dozent = st.checkbox("Dozent*innen", True, key = "dozent2")
+
+
+        anzeige_start = datetime.combine(anzeige_start, datetime.min.time())
+        anzeige_ende = datetime.combine(anzeige_ende, datetime.max.time())
         
+        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list},"startdatum" : { "$gte" : anzeige_start}, "enddatum" : { "$lte" : anzeige_ende }}}}))
+
+        all = []
+
+        for v in ver:
+            d = {}
+            for t in v["einmaliger_termin"]:
+                if t["startdatum"] is not None and t["startdatum"] >= anzeige_start and t["enddatum"] is not None and t["enddatum"] <= anzeige_ende:
+                    if ausgabe_semester:
+                        d["Semester"] = tools.repr(util.semester, v["semester"], False, True)
+                    if ausgabe_veranstaltung:
+                        d["Veranstaltung"] = tools.repr(util.veranstaltung, v["_id"], False, True)
+                    if ausgabe_dozent:
+                        d["Dozent"] = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in v["dozent"]]])
+                    d["Terminart"] = tools.repr(util.terminart, t["key"], False, True) + " " + t[f"kommentar_de_html"]
+                    d["Einmaliger Termin"] = datetime.combine(t["startdatum"].date(), t["startzeit"].time())
+                    all.append(d)
+                d = {}
+        
+        df = pd.DataFrame.from_records(all)
+        df = df.sort_values(by="Einmaliger Termin")
+        df["Einmaliger Termin"] = [d.strftime('%d.%m.%Y  %H:%M') for d in df["Einmaliger Termin"]]
+        st.divider()
+
+        st.data_editor(df, use_container_width=True, hide_index=True)   
 
 
 
