@@ -25,8 +25,10 @@ collection = util.terminart
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
     st.header("Art eines Termins")
-    st.write("Mit 😎 markierte Terminarten, die auf der Homepage sichtbar sind.")
-    st.write("Mit 🤓 markierte Terminarten, die im kommentierten VVZ sichtbar sind.")
+    st.write("Mit 😎 markierte Terminarten sind auf der Homepage sichtbar.")
+    st.write("Mit 🤓 markierte Terminarten sind im kommentierten VVZ sichtbar.")
+    st.write("Mit 📅 markierte Terminarten sind im Prüfungskalender sichtbar.")
+
     st.write(" ")
     co1, co2, co3 = st.columns([1,1,23]) 
     with co3:
@@ -46,6 +48,7 @@ if st.session_state.logged_in:
             abk = f"{x['name_de'].strip()}"
             abk = f"{abk.strip()} 😎" if x["hp_sichtbar"] else f"{abk.strip()}"
             abk = f"{abk.strip()} 🤓" if x["komm_sichtbar"] else f"{abk.strip()}"
+            abk = f"{abk.strip()} 📅" if x["cal_sichtbar"] else f"{abk.strip()}"
             submit = st.button(abk, key=f"edit-{x['_id']}")
         if submit:
             st.session_state.edit = x["_id"]

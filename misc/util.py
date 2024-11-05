@@ -226,7 +226,8 @@ def setup_session_state():
         terminart: {"name_de": "Neu",
                     "name_en": "",
                     "hp_sichtbar": True,
-                    "komm_sichtbar": True
+                    "komm_sichtbar": True,
+                    "cal_sichtbar": False
         },
         anforderung: {"name_de": "Neu",
                     "name_en": "",
@@ -241,11 +242,6 @@ def setup_session_state():
             "kommentar": "", 
             "sichtbar": True,
             "kurzname" : ""
-        },
-        dictionary: {
-            "de": "",
-            "en": "",
-            "kommentar": ""
         },
         planungveranstaltung: {
             "name": "",

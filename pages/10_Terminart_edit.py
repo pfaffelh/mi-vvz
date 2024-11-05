@@ -65,9 +65,10 @@ if st.session_state.logged_in:
     with st.form(f'ID-{x["_id"]}'):
         hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", x["hp_sichtbar"], disabled = False)
         komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False)
+        cal_sichtbar = st.checkbox(f"Im Prüfungskalender sichtbar {'📅' if x['cal_sichtbar'] else ''}", x["cal_sichtbar"], disabled = False)
         name_de=st.text_input('Name (de)', x["name_de"])
         name_en=st.text_input('Name (en)', x["name_en"])
-        x_updated = ({"name_de": name_de, "name_en": name_en, "hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar})
+        x_updated = ({"name_de": name_de, "name_en": name_en, "hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar, "cal_sichtbar": cal_sichtbar})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             if new_entry:
