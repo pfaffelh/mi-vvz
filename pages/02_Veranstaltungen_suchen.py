@@ -137,14 +137,14 @@ if st.session_state.logged_in:
         anzeige_start = datetime.combine(anzeige_start, datetime.min.time())
         anzeige_ende = datetime.combine(anzeige_ende, datetime.max.time())
         
-        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list},"startdatum" : { "$gte" : anzeige_start}, "enddatum" : { "$lte" : anzeige_ende }}}}))
+        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list},"startdatum" : { "$gte" : anzeige_start}}}}))
 
         all = []
 
         for v in ver:
             d = {}
             for t in v["einmaliger_termin"]:
-                if t["startdatum"] is not None and t["startdatum"] >= anzeige_start and t["enddatum"] is not None and t["enddatum"] <= anzeige_ende:
+                if t["startdatum"] is not None and t["startdatum"] >= anzeige_start:
                     if ausgabe_semester:
                         d["Semester"] = tools.repr(util.semester, v["semester"], False, True)
                     if ausgabe_veranstaltung:
