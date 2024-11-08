@@ -152,7 +152,8 @@ if st.session_state.logged_in:
                     if ausgabe_dozent:
                         d["Dozent"] = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in v["dozent"]]])
                     d["Terminart"] = tools.repr(util.terminart, t["key"], False, True) + " " + t[f"kommentar_de_html"]
-                    d["Einmaliger Termin"] = datetime.combine(t["startdatum"].date(), t["startzeit"].time())
+                    s = t["startzeit"].time() if t["startzeit"].time() else datetime.min.time()
+                    d["Einmaliger Termin"] = datetime.combine(t["startdatum"].date(), s)
                     all.append(d)
                 d = {}
         
