@@ -5,6 +5,26 @@ from io import BytesIO
 import pymongo
 import pandas as pd
 
+# Transform df to xls
+def to_excel(df):
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        worksheet = writer.sheets['Sheet1']
+
+        # Automatische Anpassung der Spaltenbreite an die Inhalte
+        for col in worksheet.columns:
+            max_length = 0
+            col_letter = col[0].column_letter  # Spaltenbuchstabe (z.B., 'A', 'B', 'C')
+            for cell in col:
+                try:
+                    max_length = max(max_length, len(str(cell.value)))
+                except:
+                    pass
+            adjusted_width = max_length + 2  # +2 für Puffer
+            worksheet.column_dimensions[col_letter].width = adjusted_width
+    return output.getvalue()
+
+
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
@@ -110,6 +130,15 @@ if st.session_state.logged_in:
         st.divider()
 
         st.data_editor(df, use_container_width=True, hide_index=True)   
+        # xls Export
+        output = BytesIO()
+        excel_data = to_excel(df)
+        st.download_button(
+            label="Download Excel-Datei",
+            data=excel_data,
+            file_name="veranstaltungen.xls",
+            mime="application/vnd.ms-excel"
+        )
 
     with st.expander("Suche nach einmaligen Terminen..."):
         st.write("")
@@ -162,8 +191,16 @@ if st.session_state.logged_in:
         df = df.sort_values(by="Einmaliger Termin Anfang")
 #        df["Einmaliger Termin"] = [d.strftime('%d.%m.%Y  %H:%M') for d in df["Einmaliger Termin"]]
         st.divider()
-
         st.data_editor(df, use_container_width=True, hide_index=True)   
+        # Streamlit-Button für den Download
+        output = BytesIO()
+        excel_data = to_excel(df)
+        st.download_button(
+            label="Download Excel-Datei",
+            data=excel_data,
+            file_name="termine.xls",
+            mime="application/vnd.ms-excel"
+        )
 
     with st.expander("Deputate"):
         st.write("Hier werden gesammelt die Deputate für das aktuelle Semester ausgegeben")
@@ -212,23 +249,6 @@ if st.session_state.logged_in:
         df = df.sort_values(by = ['person', 'veranstaltung'])
         st.dataframe(df, hide_index = True, use_container_width = True)
         output = BytesIO()
-        def to_excel(df):
-            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                df.to_excel(writer, index=False, sheet_name='Sheet1')
-                worksheet = writer.sheets['Sheet1']
-
-                # Automatische Anpassung der Spaltenbreite an die Inhalte
-                for col in worksheet.columns:
-                    max_length = 0
-                    col_letter = col[0].column_letter  # Spaltenbuchstabe (z.B., 'A', 'B', 'C')
-                    for cell in col:
-                        try:
-                            max_length = max(max_length, len(str(cell.value)))
-                        except:
-                            pass
-                    adjusted_width = max_length + 2  # +2 für Puffer
-                    worksheet.column_dimensions[col_letter].width = adjusted_width
-            return output.getvalue()
 
         # Streamlit-Button für den Download
         excel_data = to_excel(df)
