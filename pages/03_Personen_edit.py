@@ -68,7 +68,7 @@ if st.session_state.logged_in:
         hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
         col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
         with col1:
-            name=st.text_input('Name (de)', x["name"], disabled = (True if not new_entry else False))
+            name=st.text_input('Name (de)', x["name"])
         with col2:
             name_en=st.text_input('Name (en), nur falls abweichend', x["name_en"])
         with col3:
@@ -92,7 +92,7 @@ if st.session_state.logged_in:
         semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
         semester_list = [s["_id"] for s in se]
-        x_updated = ({"name": name, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "tel": tel, "kommentar": kommentar, "email": email, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "semester": semester_list})
+        x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "tel": tel, "kommentar": kommentar, "email": email, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "semester": semester_list})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
             if new_entry:
