@@ -1022,7 +1022,7 @@ veranstaltung_validator = {
                 "items": {
                     "bsonType": "object",
                     "description": "Beschreibung eines Personen-Deputats.",
-                    "required": ["person", "sws", "kommentar, kommentar_intern"],
+                    "required": ["person", "sws", "kommentar", "kommentar_intern"],
                     "properties": {
                         "person": {
                             "bsonType": "objectId",
