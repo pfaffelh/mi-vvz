@@ -20,12 +20,12 @@ print("Ab hier wird verändert")
 ve = ver.find()
 for v in ve:
     de = v["deputat"]
-    for d in de:
-        d["kommentar_intern"] = ""
+#    for d in de:
+#        d["kommentar_intern"] = ""
     ver.update_one({"_id" : v["_id"]}, { "$set" : { "deputat" : de }})
         
 # Ab hier wird das Schema gecheckt
 print("Check schema")
-mongo_db.command('collMod','veranstaltung', validator=schema20241108.veranstaltung_validator, validationLevel='moderate')
+#mongo_db.command('collMod','veranstaltung', validator=schema20241108.veranstaltung_validator, validationLevel='moderate')
 
 ver.create_index( [ ("name_de", pymongo.TEXT), ("name_en", pymongo.TEXT)], default_language ="german")
