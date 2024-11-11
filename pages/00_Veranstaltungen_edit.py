@@ -74,7 +74,7 @@ def sort_deputate(deputate):
         d["name"] = p["name"]
         d["vorname"] = p["vorname"]
     deputate = sorted(deputate, key=itemgetter('name', 'vorname'))
-    return [{"person" : d["person"], "sws" : d["sws"], "kommentar" : d["kommentar"], "kommentar_intern" : f["kommentar_intern"]} for d in deputate]
+    return [{"person" : d["person"], "sws" : d["sws"], "kommentar" : d["kommentar"], "kommentar_intern" : d["kommentar_intern"]} for d in deputate]
 
 def add_to_deputat(ver, p_id):
     deputat = ver["deputat"]
