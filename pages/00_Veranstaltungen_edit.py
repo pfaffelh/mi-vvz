@@ -83,7 +83,7 @@ def add_to_deputat(ver, p_id):
         util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
 
 def remove_from_deputat(ver, person_id):
-    deputat = [{"person" : d["person"], "sws" : d["sws"], "kommentar" : d["kommentar"]} for d in ver["deputat"] if d["person"] != person_id]
+    deputat = [{"person" : d["person"], "sws" : d["sws"], "kommentar" : d["kommentar"], "kommentar_intern" : d["kommentar_intern"]} for d in ver["deputat"] if d["person"] != person_id]
     util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
 
 def correct_deputate(ver):
