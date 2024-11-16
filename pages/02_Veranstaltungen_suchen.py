@@ -1,8 +1,29 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 from datetime import datetime, timedelta
+from io import BytesIO
 import pymongo
 import pandas as pd
+
+# Transform df to xls
+def to_excel(df):
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        worksheet = writer.sheets['Sheet1']
+
+        # Automatische Anpassung der Spaltenbreite an die Inhalte
+        for col in worksheet.columns:
+            max_length = 0
+            col_letter = col[0].column_letter  # Spaltenbuchstabe (z.B., 'A', 'B', 'C')
+            for cell in col:
+                try:
+                    max_length = max(max_length, len(str(cell.value)))
+                except:
+                    pass
+            adjusted_width = max_length + 2  # +2 für Puffer
+            worksheet.column_dimensions[col_letter].width = adjusted_width
+    return output.getvalue()
+
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -109,6 +130,15 @@ if st.session_state.logged_in:
         st.divider()
 
         st.data_editor(df, use_container_width=True, hide_index=True)   
+        # xls Export
+        output = BytesIO()
+        excel_data = to_excel(df)
+        st.download_button(
+            label="Download Excel-Datei",
+            data=excel_data,
+            file_name="veranstaltungen.xls",
+            mime="application/vnd.ms-excel"
+        )
 
     with st.expander("Suche nach einmaligen Terminen..."):
         st.write("")
@@ -137,14 +167,14 @@ if st.session_state.logged_in:
         anzeige_start = datetime.combine(anzeige_start, datetime.min.time())
         anzeige_ende = datetime.combine(anzeige_ende, datetime.max.time())
         
-        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list},"startdatum" : { "$gte" : anzeige_start}}}}))
+        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list}, "enddatum" : { "$gte" : anzeige_start}, "startdatum" : { "$lte" : anzeige_ende }}}}))
 
         all = []
 
         for v in ver:
             d = {}
             for t in v["einmaliger_termin"]:
-                if t["startdatum"] is not None and t["startdatum"] >= anzeige_start:
+                if t["startdatum"] is not None and t["startdatum"] <= anzeige_ende and t["enddatum"] is not None and t["enddatum"] >= anzeige_start and t["key"] in ta_list:
                     if ausgabe_semester:
                         d["Semester"] = tools.repr(util.semester, v["semester"], False, True)
                     if ausgabe_veranstaltung:
@@ -152,17 +182,83 @@ if st.session_state.logged_in:
                     if ausgabe_dozent:
                         d["Dozent"] = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in v["dozent"]]])
                     d["Terminart"] = tools.repr(util.terminart, t["key"], False, True) + " " + t[f"kommentar_de_html"]
-                    s = t["startzeit"].time() if t["startzeit"] is not None else datetime.min.time()
-                    d["Einmaliger Termin"] = datetime.combine(t["startdatum"].date(), s)
+                    d["Einmaliger Termin Anfang"] = datetime.combine(t["startdatum"].date(), t["startzeit"].time())
+                    d["Einmaliger Termin Ende"] = datetime.combine(t["enddatum"].date(), t["endzeit"].time())
                     all.append(d)
                 d = {}
         
         df = pd.DataFrame.from_records(all)
-        df = df.sort_values(by="Einmaliger Termin")
-        df["Einmaliger Termin"] = [d.strftime('%d.%m.%Y  %H:%M') for d in df["Einmaliger Termin"]]
+        df = df.sort_values(by="Einmaliger Termin Anfang")
+#        df["Einmaliger Termin"] = [d.strftime('%d.%m.%Y  %H:%M') for d in df["Einmaliger Termin"]]
         st.divider()
-
         st.data_editor(df, use_container_width=True, hide_index=True)   
+        # Streamlit-Button für den Download
+        output = BytesIO()
+        excel_data = to_excel(df)
+        st.download_button(
+            label="Download Excel-Datei",
+            data=excel_data,
+            file_name="termine.xls",
+            mime="application/vnd.ms-excel"
+        )
+
+    with st.expander("Deputate"):
+        st.write("Hier werden gesammelt die Deputate für das aktuelle Semester ausgegeben")
+        ver = util.veranstaltung.find({"semester" : st.session_state.semester_id})
+
+        data = []
+        for v in ver:
+            for p in v["dozent"] + v["assistent"] + v["organisation"]:
+                rolle = "Dozent*in" if p in v["dozent"] else ("Assistent*in" if p in v["assistent"] else "Organisation")
+                try :
+                    sws = [d["sws"] for d in v["deputat"] if d["person"] == p][0]
+                    kommentar = [d["kommentar"] for d in v["deputat"] if d["person"] == p][0]
+                    kommentar_intern = [d["kommentar_intern"] for d in v["deputat"] if d["person"] == p][0]
+                except:
+                    sws = 0
+                    kommentar = ""
+                    kommentar_intern = ""
+                data.append({
+                    "person": tools.repr(util.person, p, False, True),
+                    "veranstaltung": tools.repr(util.veranstaltung, v["_id"], False, True),
+                    "rolle": rolle,
+                    "sws": sws,
+                    "kommentar": kommentar,
+                    "kommentar_intern": kommentar_intern
+                    })
+
+            for t in v["woechentlicher_termin"] + v["einmaliger_termin"]:
+                try :
+                    sws = [d["sws"] for d in v["deputat"] if d["person"] == p][0]
+                    kommentar = [d["kommentar"] for d in v["deputat"] if d["person"] == p][0]
+                    kommentar_intern = [d["kommentar_intern"] for d in v["deputat"] if d["person"] == p][0]
+                except:
+                    sws = 0
+                    kommentar = ""
+                    kommentar_intern = ""
+                for p in t["person"]:
+                    data.append({
+                        "person": tools.repr(util.person, p, False, True),
+                        "veranstaltung": tools.repr(util.veranstaltung, v["_id"], False, True),
+                        "rolle": tools.repr(util.terminart, t["key"], False, True),
+                        "sws": [d["sws"] for d in v["deputat"] if d["person"] == p][0],
+                        "kommentar": [d["kommentar"] for d in v["deputat"] if d["person"] == p][0],
+                        "kommentar_intern": [d["kommentar_intern"] for d in v["deputat"] if d["person"] == p][0]
+                        })
+        df = pd.DataFrame.from_records(data)
+        df = df.sort_values(by = ['person', 'veranstaltung'])
+        st.dataframe(df, hide_index = True, use_container_width = True)
+        output = BytesIO()
+
+        # Streamlit-Button für den Download
+        excel_data = to_excel(df)
+        st.download_button(
+            label="Download Excel-Datei",
+            data=excel_data,
+            file_name="deputate.xls",
+            mime="application/vnd.ms-excel"
+        )
+
 
 
 

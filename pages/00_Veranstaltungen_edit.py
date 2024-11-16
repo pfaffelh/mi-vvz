@@ -79,7 +79,7 @@ def sort_deputate(deputate):
 def add_to_deputat(ver, p_id):
     deputat = ver["deputat"]
     if p_id not in [d["person"] for d in deputat]:
-        deputat.append({ "person": p_id, "sws": 0.0, "kommentar" : ""})
+        deputat.append({ "person": p_id, "sws": 0.0, "kommentar" : "", "kommentar_intern" : ""})
         util.veranstaltung.update_one({"_id" : ver["_id"]}, { "$set" : {"deputat" : deputat}})
 
 def remove_from_deputat(ver, person_id):
@@ -397,10 +397,10 @@ if st.session_state.logged_in:
             with cols[3]:
                 w_startdatum = st.date_input("Start", value = None if w["startdatum"] == None else w["startdatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_startdatum")
                 #st.write(type(w_startdatum))
-                w_startdatum = None if w_startdatum == None else datetime.datetime.combine(w_startdatum, datetime.time(hour = 0, minute = 0))
+                w_startdatum = None if w_startdatum == None else datetime.datetime.combine(w_startdatum, datetime.time.min)
             with cols[4]:
                 w_enddatum = st.date_input("Ende", value = w["enddatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_enddatum")
-                w_enddatum = None if w_enddatum == None else datetime.datetime.combine(w_enddatum, datetime.time(hour = 0, minute = 0))                                           
+                w_enddatum = None if w_enddatum == None else datetime.datetime.combine(w_enddatum, datetime.time.max)
             with cols[5]:
                 st.write("")
                 st.write("")
@@ -663,7 +663,8 @@ if st.session_state.logged_in:
             with cols[1]:
                 d["sws"] = st.number_input("SWS", min_value = 0.0, max_value = None, value = d["sws"], step = 1.0, key = f"sws_{d['person']}")
             with cols[2]:
-                d["kommentar"] = st.text_input("Kommentar", d["kommentar"], key = f"kommentar_{d['person']}")
+                d["kommentar"] = st.text_input("Kommentar (für Homepage)", d["kommentar"], key = f"kommentar_{d['person']}")
+                d["kommentar_intern"] = st.text_input("Kommentar (intern)", d["kommentar_intern"], key = f"kommentar_intern_{d['person']}")
             x_updated = {"deputat" : deputat}
             ver_updated_all.update(x_updated)
 
