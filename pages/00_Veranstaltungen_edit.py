@@ -437,7 +437,6 @@ if st.session_state.logged_in:
                 "key": w_key,
                 "raum": w_raum,
                 "person": sort_persons(w_person),
-                # wochentag muss so gespeichert werden, um das schema nicht zu verletzen.
                 "startdatum": w_startdatum,
                 "startzeit": w_startzeit,
                 "enddatum": w_enddatum,

@@ -167,7 +167,7 @@ if st.session_state.logged_in:
         anzeige_start = datetime.combine(anzeige_start, datetime.min.time())
         anzeige_ende = datetime.combine(anzeige_ende, datetime.max.time())
         
-        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list}, "enddatum" : { "$gte" : anzeige_start}, "startdatum" : { "$lte" : anzeige_ende }}}}))
+        ver = list(util.veranstaltung.find({"einmaliger_termin" : { "$elemMatch" : {  "key" : { "$in" : ta_list}, "startdatum" : { "$gte" : anzeige_start}, "startdatum" : { "$lte" : anzeige_ende }}}}))
 
         all = []
 

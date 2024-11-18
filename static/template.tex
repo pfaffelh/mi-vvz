@@ -78,7 +78,11 @@
 \tableofcontents
 
 \clearpage
+%% if data["lang"] == "de"
 \addcontentsline{toc}{section}{{Hinweise}}\addtocontents{toc}{\medskip\hrule\medskip}
+%% else
+\addcontentsline{toc}{section}{{Comments}}\addtocontents{toc}{\medskip\hrule\medskip}
+%% endif
 
 %#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %#%% Input eines zusätzlichen Files

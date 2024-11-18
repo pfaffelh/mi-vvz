@@ -40,7 +40,7 @@ if st.session_state.logged_in:
         doz_list = st.multiselect("Dozent*innen", per_dict.keys(), [], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
         doz = list(util.person.find({"_id": {"$in": doz_list}}, sort=[("name", pymongo.ASCENDING)]))
         doz_list = [d["_id"] for d in doz]
-        kat = [g["_id"] for g in list(util.rubrik.find({"semester": st.session_state.semester_id}))]
+        kat = [g["_id"] for g in list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))]
         kat = st.selectbox("Rubrik", [x for x in kat], index = 0, format_func = (lambda a: tools.repr(util.rubrik, a)))
         v = {
             "name_de": name_de,
