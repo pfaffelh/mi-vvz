@@ -174,7 +174,7 @@ if st.session_state.logged_in:
         for v in ver:
             d = {}
             for t in v["einmaliger_termin"]:
-                if t["startdatum"] is not None and t["startdatum"] <= anzeige_ende and t["startdatum"] is not None and t["startdatum"] >= anzeige_start and t["key"] in ta_list:
+                if t["startdatum"] is not None and t["startdatum"] <= anzeige_ende and t["startdatum"] >= anzeige_start and t["key"] in ta_list:
                     if ausgabe_semester:
                         d["Semester"] = tools.repr(util.semester, v["semester"], False, True)
                     if ausgabe_veranstaltung:
@@ -182,7 +182,7 @@ if st.session_state.logged_in:
                     if ausgabe_dozent:
                         d["Dozent"] = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in v["dozent"]]])
                     d["Terminart"] = tools.repr(util.terminart, t["key"], False, True) + " " + t[f"kommentar_de_html"]
-                    d["Einmaliger Termin Anfang"] = datetime.combine(t["startdatum"].date(), t["startzeit"].time())
+                    d["Einmaliger Termin Anfang"] = datetime.combine(t["startdatum"].date(), datetime.min.time() if t["startzeit"] is None else t["startzeit"].time())
                     d["Einmaliger Termin Ende"] = (datetime.combine(t["startdatum"].date(), datetime.max.time() if t["endzeit"] == None else t["endzeit"].time())) if t["enddatum"] == None else datetime.combine(t["enddatum"].date(), datetime.max.time() if t["endzeit"] == None else t["endzeit"].time())
                     all.append(d)
                 d = {}
