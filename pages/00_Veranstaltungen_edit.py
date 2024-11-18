@@ -425,6 +425,8 @@ if st.session_state.logged_in:
             with cols[5]:
                 w_endzeit = st.time_input("", value = w["endzeit"], key = f"einmaliger_termin_{i}_endzeit")
                 w_endzeit = None if w_endzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_endzeit)
+                if w_endzeit is not None and w_enddatum is None:
+                    w_enddatum = datetime.combine(w_startdatum.date(), w_endzeit)
             cols = st.columns([1,1,10,10,1])
             with cols[2]:
                 w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"einmaliger_termin_{i}_kommentar_de_latex")
