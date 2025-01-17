@@ -171,10 +171,9 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
             else:
                 datum = ""
             if termin['startzeit'] is not None:
-                zeit = f"{str(termin['startzeit'].hour)}{': '+str(termin['startzeit'].minute) if termin['startzeit'].minute > 0 else ''}"
+                zeit = f"{str(termin['startzeit'].hour)}{':'+str(termin['startzeit'].minute)}"
                 if termin['endzeit'] is not None:
                     zeit = zeit + f"--{str(termin['endzeit'].hour)}{': '+str(termin['endzeit'].minute) if termin['endzeit'].minute > 0 else ''}"
-                zeit = zeit + (" Uhr" if lang == "de" else " h")
             else:
                 zeit = ""
             # person braucht man, wenn wir dann die Datenbank geupdated haben.
