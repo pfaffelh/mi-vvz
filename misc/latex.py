@@ -171,9 +171,9 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
             else:
                 datum = ""
             if termin['startzeit'] is not None:
-                zeit = f"{str(termin['startzeit'].hour)}{':'+str(termin['startzeit'].minute)}"
+                zeit = termin['startzeit'].strftime("%H:%M")
                 if termin['endzeit'] is not None:
-                    zeit = zeit + f"--{str(termin['endzeit'].hour)}{': '+str(termin['endzeit'].minute) if termin['endzeit'].minute > 0 else ''}"
+                    zeit = zeit + "--" + termin['endzeit'].strftime("%H:%M")
             else:
                 zeit = ""
             # person braucht man, wenn wir dann die Datenbank geupdated haben.
