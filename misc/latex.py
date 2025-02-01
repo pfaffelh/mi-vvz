@@ -234,8 +234,8 @@ def makedata(sem_kurzname, komm, lang, alter):
 
             v_dict["url"] = latex(veranstaltung["url"])
 
-            v_dict["dozent"] = latex(", ".join(get_name(veranstaltung["dozent"], lang)))
-            assistent = latex(", ".join(get_name(veranstaltung["assistent"], lang)))
+            v_dict["dozent"] = latex(", ".join(get_names(veranstaltung["dozent"], lang)))
+            assistent = latex(", ".join(get_names(veranstaltung["assistent"], lang)))
 
             if assistent:
                 if lang == "de":
