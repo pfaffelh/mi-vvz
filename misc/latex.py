@@ -20,6 +20,16 @@ def latex(s):
     s = s.replace("%", "\%")
     return s
 
+def get_name(person_id, lang = "de"):
+    if lang == "de" | util.person.find_one({'_id': person_id})['name_en'] == "":
+        res = f"{util.person.find_one({'_id': person_id})['vorname']} {util.person.find_one({'_id': person_id})['name']}"
+    else:
+        res = util.person.find_one({'_id': person_id})['name_en']
+    return res
+    
+def get_names(person_ids, lang = "de"):
+    return [get_name(x, lang) for x in person_ids]
+
 def try_combine_columns(df, sep = ", "):
     column_pairs = itertools.combinations(df.columns, 2)    
     for col1, col2 in column_pairs:
@@ -27,8 +37,8 @@ def try_combine_columns(df, sep = ", "):
             df.rename(columns = { col1 : sep.join([col1, col2])}, inplace = True)
             df.drop(columns = col2, inplace = True)
             break
-    # print(df)
     return df
+
 # Combine columns in a dataframe which have the same content.
 # Replace identical columns with one column with a combined name.
 def combine_columns2(df, sep = ", "):
@@ -223,10 +233,10 @@ def makedata(sem_kurzname, komm, lang, alter):
                 v_dict["titel"] = latex(veranstaltung[f"name_{otherlang}"])
 
             v_dict["url"] = latex(veranstaltung["url"])
-         
-            v_dict["dozent"] = latex(", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["dozent"]]))
 
-            assistent = latex(", ".join([f"{util.person.find_one({'_id': x})['vorname']} {util.person.find_one({'_id': x})['name']}"for x in veranstaltung["assistent"]]))
+            v_dict["dozent"] = latex(", ".join(get_name(veranstaltung["dozent"], lang)))
+            assistent = latex(", ".join(get_name(veranstaltung["assistent"], lang)))
+
             if assistent:
                 if lang == "de":
                     v_dict["person"] = ", Assistenz: ".join([v_dict["dozent"], assistent])
