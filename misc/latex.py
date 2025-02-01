@@ -21,7 +21,7 @@ def latex(s):
     return s
 
 def get_name(person_id, lang = "de"):
-    if lang == "de" | util.person.find_one({'_id': person_id})['name_en'] == "":
+    if lang == "de" or util.person.find_one({'_id': person_id})['name_en'] == "":
         res = f"{util.person.find_one({'_id': person_id})['vorname']} {util.person.find_one({'_id': person_id})['name']}"
     else:
         res = util.person.find_one({'_id': person_id})['name_en']
