@@ -185,8 +185,8 @@ if st.session_state.logged_in:
 
     with st.expander("Grunddaten", expanded = True if st.session_state.expanded == "grunddaten" else False):
         #with st.form(f'Grunddaten-{x["_id"]}'):
-        hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
-        komm_sichtbar = st.checkbox("In Kommentaren sichtbar", x["komm_sichtbar"], key = "komm_sichtbar1")
+        hp_sichtbar = st.checkbox("Auf Homepages sichtbar 😎", x["hp_sichtbar"])
+        komm_sichtbar = st.checkbox("In Kommentaren sichtbar 🤓", x["komm_sichtbar"], key = "komm_sichtbar1")
         name_de=st.text_input('Name (de)', x["name_de"])
         name_en=st.text_input('Name (en)', x["name_en"])
         midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
@@ -493,7 +493,7 @@ if st.session_state.logged_in:
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
         if st.session_state.translation_tmp is not None:
             x.update(st.session_state.translation_tmp[0])
-        komm_sichtbar = st.checkbox("In Kommentaren sichtbar", x["komm_sichtbar"], key = "komm_sichtbar2")
+        # komm_sichtbar = st.checkbox("In Kommentaren sichtbar", x["komm_sichtbar"], key = "komm_sichtbar2")
         inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
         inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"])
         literatur_de = st.text_area('Literatur (de)', x["literatur_de"])
@@ -503,7 +503,7 @@ if st.session_state.logged_in:
         kommentar_latex_de = st.text_area('Kommentar (Latex, de)', x["kommentar_latex_de"])
         kommentar_latex_en = st.text_area('Kommentar (Latex, en)', x["kommentar_latex_en"])
         ver_updated = {
-            "komm_sichtbar": komm_sichtbar,
+        #    "komm_sichtbar": komm_sichtbar,
             "inhalt_de": inhalt_de,
             "inhalt_en": inhalt_en,
             "literatur_de": literatur_de,

@@ -91,6 +91,8 @@ if st.session_state.logged_in:
                      "prefix_en": "", 
                      "vorspann_kommentare_de": "", 
                      "vorspann_kommentare_en": "", 
+                     "wasserzeichen_kommentare_de": "", 
+                     "wasserzeichen_kommentare_en": "", 
                      "veranstaltung": [], 
                      "rang": s[0]["rang"]+1
                      }

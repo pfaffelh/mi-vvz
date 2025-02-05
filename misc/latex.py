@@ -191,13 +191,14 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
             komm = f"kommentar_{lang}_latex"
             if alter and termin[komm] == "":
                 komm = f"kommentar_{otherlang}_latex"
-            kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
+            #kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
+            kommentar = rf", {termin[komm]}" if termin[komm] != "" else ""
             new = [ta, datum, zeit, raum, kommentar]
             res.append(new)
     res = [latex(f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}") for x in res]
     return res
 
-def makedata(sem_kurzname, komm, lang, alter):
+def makedata(sem_kurzname, lang, alter):
     semester = util.semester.find_one({"kurzname": sem_kurzname})
     sem_id = semester["_id"]
     
@@ -207,6 +208,7 @@ def makedata(sem_kurzname, komm, lang, alter):
     data = {}
 
     data["vorspann"] = semester[f"vorspann_kommentare_{lang}"]
+    data["wasserzeichen"] = semester[f"wasserzeichen_kommentare_{lang}"]
     
     data["rubriken"] = []
 
@@ -219,16 +221,15 @@ def makedata(sem_kurzname, komm, lang, alter):
 
         r_dict["veranstaltung"] = []
         # Falls komm == True werden nur Veranstaltungen mit komm_sichtbar == True komm aufgenommen
-        if komm:
-            sem_id = st.session_state.semester_id
-            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "komm_sichtbar" : True}, sort=[("rang", pymongo.ASCENDING)]))
-        else:
-            veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"]}, sort=[("rang", pymongo.ASCENDING)]))
-
+        sem_id = st.session_state.semester_id
+        veranstaltungen = list(util.veranstaltung.find({"rubrik": rubrik["_id"], "komm_sichtbar" : True}, sort=[("rang", pymongo.ASCENDING)]))
+        
         for veranstaltung in veranstaltungen:
             v_dict = {}
 
             v_dict["titel"] = latex(veranstaltung[f"name_{lang}"])
+            v_dict["kurzname"] = veranstaltung["kurzname"]
+
             if alter and v_dict["titel"] == "":
                 v_dict["titel"] = latex(veranstaltung[f"name_{otherlang}"])
 

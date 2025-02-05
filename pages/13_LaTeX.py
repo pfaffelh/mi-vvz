@@ -61,27 +61,23 @@ if st.session_state.logged_in:
 
     verw_kurz = True if kommentare else False
 
-    wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', "", key = "watermark")
-
-    with st.expander("Vorspann (LaTeX)"):
+    with st.expander("Wasserzeichen und Vorspann (LaTeX)"):
+        wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', sem[f"wasserzeichen_kommentare_{lang}"], key = "watermark")
         vorspann = st.text_area("Vorspann mit LaTeX-Befehlen", sem[f"vorspann_kommentare_{lang}"], height = 200 )
         submit = st.button("Speichern")
         if submit:
-            util.semester.update_one({"_id" : sem_id}, { "$set" : {f"vorspann_kommentare_{lang}" : vorspann }})
-            st.success("Vorspann gespeichert.")
+            util.semester.update_one({"_id" : sem_id}, { "$set" : {f"vorspann_kommentare_{lang}" : vorspann, f"wasserzeichen_kommentare_{lang}" : wasserzeichen}})
+            st.success("Wasserzeichen und Vorspann gespeichert.")
 
     # includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann-{'en' if en else 'de'}.tex", key = "includefile")
 
     titel = ("Kommentiertes Vorlesungsverzeichnis" if kommentare else "Ergänzungen des Modulhandbuchs") if not en else ("Comments on the course catalogue" if kommentare else "Supplements of the module handbooks")
 
-    if komm:
-        sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
-        sem_id = st.session_state.semester_id
-        ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "komm_sichtbar" : True}))
-    else:
-        ver_komm = list(util.veranstaltung.find({"semester" : sem_id}))
+    sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
+    sem_id = st.session_state.semester_id
+    ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "komm_sichtbar" : True}))
 
-    data = latex.makedata(sem_kurzname, komm, "en" if en else "de", alter)
+    data = latex.makedata(sem_kurzname, "en" if en else "de", alter)
     data["semester"] = sem_name
     data["titel"] = titel
     data["wasserzeichen"] = wasserzeichen
@@ -99,7 +95,6 @@ if st.session_state.logged_in:
 
     # Beides muss ausgewählt sein, bevor ein tex erzeugt wird
     if which and la:
-
         col0, col1 = st.columns([1,1])
         col0.download_button("Download (.tex)", texfile, file_name=file_name + ".tex", help=None, on_click=None, args=None, kwargs=None, type = 'primary')
         with open('texfiles/' + file_name + '.tex', 'w') as file:
@@ -120,28 +115,27 @@ if st.session_state.logged_in:
             st.write(result.stdout)  # This prints the output from pdflatex
             st.write(result.stderr)  # 
 
-    if komm:
-        st.write("Es werden nur Veranstaltungen mit 🤓 aufgenommen.")
-        sem_id = st.session_state.semester_id
-        ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "komm_sichtbar" : True}))
-        ver_text = list(util.veranstaltung.find({"semester" : sem_id, "$or" : [{ "inhalt_de" : { "$ne" : ""}}, {"inhalt_en" : { "$ne" : ""}}]}))
+    st.write("Es werden nur Veranstaltungen mit 🤓 aufgenommen.")
+    sem_id = st.session_state.semester_id
+    ver_komm = list(util.veranstaltung.find({"semester" : sem_id, "komm_sichtbar" : True}))
+    ver_text = list(util.veranstaltung.find({"semester" : sem_id, "$or" : [{ "inhalt_de" : { "$ne" : ""}}, {"inhalt_en" : { "$ne" : ""}}]}))
 
-        # Veranstaltungen, die den Code Komm haben, für die kein Kommentar vorhanden ist
-        Delta1 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_komm if v not in ver_text]
-        # Veranstaltungen, für die ein Kommentar vorhanden ist, die aber den Code Komm nicht tragen
-        Delta2 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_text if v not in ver_komm]
+    # Veranstaltungen, die komm_sichtbar haben, für die kein Kommentar vorhanden ist
+    Delta1 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_komm if v not in ver_text]
+    # Veranstaltungen, für die ein Kommentar vorhanden ist, aber komm_sichtbar == False
+    Delta2 = [tools.repr(util.veranstaltung, v["_id"], False) for v in ver_text if v not in ver_komm]
 
-        if Delta1 != []:
-            st.write("#### Veranstaltungen mit 🤓, für die kein Kommentar vorhanden ist")
-            for v in Delta1:
-                st.write(v)
-        else:
-            st.write("#### Alle Veranstaltungen mit 🤓 verfügen über einen Kommentar.")
+    if Delta1 != []:
+        st.write("#### Veranstaltungen mit 🤓, für die kein Kommentar vorhanden ist")
+        for v in Delta1:
+            st.write(v)
+    else:
+        st.write("#### Alle Veranstaltungen mit 🤓 verfügen über einen Kommentar.")
 
-        if Delta2 != []:
-            st.write("#### Veranstaltungen mit Kommentar, die 🤓 nicht besitzen")
-            for v in Delta2:
-                st.write(v)
-        else:
-            st.write("#### Alle Veranstaltungen mit Kommentar haben 🤓.")
+    if Delta2 != []:
+        st.write("#### Veranstaltungen mit Kommentar, die 🤓 nicht besitzen")
+        for v in Delta2:
+            st.write(v)
+    else:
+        st.write("#### Alle Veranstaltungen mit Kommentar haben 🤓.")
 

@@ -208,7 +208,7 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
     return w.inserted_id
 
 # Neues Semester anlegen
-# df ist ein dataframe, wobei "Veranstaltung übernehmen" die ids der aus dem vorlestzten Semester zu übernehmenden Veranstaltungen enthält.
+# df ist ein dataframe, wobei "Veranstaltung übernehmen" die ids der aus dem vorletzten Semester zu übernehmenden Veranstaltungen enthält.
 def semester_anlegen(x_updated, df, personen_uebernehmen, anforderung_uebernehmen, veranstaltung_uebernehmen):
     sem = list(util.semester.find({}, sort = [("rang", pymongo.DESCENDING)]))
     s = util.semester.insert_one(x_updated)
@@ -325,7 +325,7 @@ def reset_vars(text=""):
 def display_navigation():
     st.markdown("<style>.st-emotion-cache-16txtl3 { padding: 2rem 2rem; }</style>", unsafe_allow_html=True)
     with st.sidebar:
-        st.image("static/ufr.png", use_column_width=True)
+        st.image("static/ufr.png", use_container_width=True)
         semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
         st.session_state.semester_id = st.selectbox(label="Semester", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: f"{util.semester.find_one({'_id': a})['name_de']} {'😎' if util.semester.find_one({'_id': a})['hp_sichtbar'] else ''}"), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "master_semester_choice")
 
