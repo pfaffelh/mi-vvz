@@ -148,7 +148,7 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 if alter and termin[komm] == "":
                     komm = f"kommentar_{otherlang}_latex"
                 kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
-                new = [key, tag, zeit, raum, kommentar]
+                new = [key, tag, ", ".join([zeit, raum]), kommentar]
                 if key in [x[0] for x in res]:
                     new.pop(0)
                     i = [x[0] for x in res].index(key)
