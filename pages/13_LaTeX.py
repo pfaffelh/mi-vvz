@@ -139,3 +139,7 @@ if st.session_state.logged_in:
     else:
         st.write("#### Alle Veranstaltungen mit Kommentar haben 🤓.")
 
+else:
+    switch_page("VVZ")
+
+st.sidebar.button("logout", on_click = tools.logout)
