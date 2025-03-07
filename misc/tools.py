@@ -191,6 +191,12 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
         "bearbeitet": "",
         "deputat": v["deputat"] if kopiere_personen else []
     }
+    for et in v_new["einmaliger_termin"]:
+        et["startdatum"] = None
+        et["enddatum"] = None 
+        et["startzeit"] = None 
+        et["endzeit"] = None 
+    
     w = util.veranstaltung.insert_one(v_new)
     util.logger.info(f"User {st.session_state.user} hat Veranstaltung {repr(util.veranstaltung, id)} nach Semester {repr(util.semester, sem_id)} kopiert.")
     util.semester.update_one({"_id": sem_id}, {"$push": {"veranstaltung": w.inserted_id}})
