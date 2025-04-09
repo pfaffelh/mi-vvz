@@ -79,7 +79,7 @@ def nachname(id):
 #    dozlist = dozlist + v["dozent"]
 #dozlist = list(set(dozlist))
 #per_dict = {p: tools.repr(util.person, p, False, True) for p in dozlist }
-pe = list(util.person.find(sort = [("name", pymongo.ASCENDING)]))
+pe = list(util.person.find({"semester": { "$elemMatch": {"$eq": st.session_state.semester_id}}}, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
 per_dict = {p["_id"]: tools.repr(util.person, p["_id"], False, True) for p in pe }
 
 semesters = semlist(2010,2050)
