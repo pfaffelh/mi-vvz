@@ -139,6 +139,66 @@ if st.session_state.logged_in:
             file_name="veranstaltungen.xls",
             mime="application/vnd.ms-excel"
         )
+    with st.expander("Suche nach wöchentlichen Terminen..."):
+        st.write("Es werden alle wöchentlichen Termine der angegebenen Personen im angegebenen Semester gesucht. Falls keine Personen ausgewählt sind, werden alle Termine angezeigt.")
+        # QUERY
+        # Auswahl von Personen
+        person_vorauswahl = list(util.person.find({"semester": {"$elemMatch": {"$in": [x["_id"] for x in semester_auswahl]}}, "veranstaltung": {"$ne": []}}, sort = [("name", pymongo.ASCENDING)]))
+        person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen mit einer der ausgewählten Personen verbunden sein.")
+
+        # Erstellung der Query
+        query = {}
+        query["semester"] = {"$eq": st.session_state.semester_id}
+        if person_list:
+            query["$or"] = [{"dozent": {"$elemMatch": { "$in": person_list}}}, {"assistent": {"$elemMatch": { "$in": person_list}}}, {"organisation": {"$elemMatch": { "$in": person_list}}}]
+
+        result = list(util.veranstaltung.find(query))
+
+        for r in result:
+            # Personen ausgeben
+            dozent = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in r["dozent"]]])
+            assistent = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in r["assistent"]]])
+            organisation = ", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in r["organisation"]]])
+            
+            dozent = f"{dozent} (Dozent:in)" if dozent != "" else ""
+            assistent = f"{assistent} (Assistent:in)" if assistent != "" else ""
+            organisation = f"{organisation} (Organisation)" if organisation != "" else ""
+            
+            r["person"] = "; ".join([p for p in [dozent, assistent, organisation] if p != ""])
+            r["rubrik"] = tools.repr(util.rubrik, r["rubrik"], False, False)
+            r["wt"] = r["woechentlicher_termin"]
+
+        # Erstelle die wöchentlichen Termine
+        wt = []
+        for r in result:
+            for w in r["wt"]:
+                if w["wochentag"] and w["start"] and w["ende"]:
+                    wt.append({
+                        "Wochentag" : w["wochentag"],
+                        "Zeit" : f"{w['start'].strftime('%H:%M')}-{w['ende'].strftime('%H:%M')}",
+                        "Person" : r["person"],
+                        "Titel" : r["name_de"],
+                        "Rubrik" : r["rubrik"]
+                    })
+        
+        # Sortiere die Termine
+        wochentage = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
+        wt = sorted(wt, key=lambda x: (wochentage.index(x['Wochentag']), x["Zeit"]))
+
+        df = pd.DataFrame(wt)
+
+        st.divider()
+        st.write(f"Wöchentliche Termine im {tools.repr(util.semester, st.session_state.semester_id, False, False)}")
+        st.data_editor(df, use_container_width=True, hide_index=True)   
+        # xls Export
+        output = BytesIO()
+        excel_data = to_excel(df)
+        st.download_button(
+            label="Download Excel-Datei",
+            data=excel_data,
+            file_name=f"woechentliche_termine_{tools.repr(util.semester, st.session_state.semester_id, False, True)}.xls",
+            mime="application/vnd.ms-excel"
+        )
 
     with st.expander("Suche nach einmaligen Terminen..."):
         st.write("")
@@ -228,22 +288,22 @@ if st.session_state.logged_in:
                     })
 
             for t in v["woechentlicher_termin"] + v["einmaliger_termin"]:
-                try :
-                    sws = [d["sws"] for d in v["deputat"] if d["person"] == p][0]
-                    kommentar = [d["kommentar"] for d in v["deputat"] if d["person"] == p][0]
-                    kommentar_intern = [d["kommentar_intern"] for d in v["deputat"] if d["person"] == p][0]
-                except:
-                    sws = 0
-                    kommentar = ""
-                    kommentar_intern = ""
                 for p in t["person"]:
+                    try :
+                        sws = [d["sws"] for d in v["deputat"] if d["person"] == p][0]
+                        kommentar = [d["kommentar"] for d in v["deputat"] if d["person"] == p][0]
+                        kommentar_intern = [d["kommentar_intern"] for d in v["deputat"] if d["person"] == p][0]
+                    except:
+                        sws = 0
+                        kommentar = ""
+                        kommentar_intern = ""
                     data.append({
                         "person": tools.repr(util.person, p, False, True),
                         "veranstaltung": tools.repr(util.veranstaltung, v["_id"], False, True),
                         "rolle": tools.repr(util.terminart, t["key"], False, True),
-                        "sws": [d["sws"] for d in v["deputat"] if d["person"] == p][0],
-                        "kommentar": [d["kommentar"] for d in v["deputat"] if d["person"] == p][0],
-                        "kommentar_intern": [d["kommentar_intern"] for d in v["deputat"] if d["person"] == p][0]
+                        "sws": sws,
+                        "kommentar": kommentar,
+                        "kommentar_intern": kommentar_intern
                         })
         df = pd.DataFrame.from_records(data)
         df = df.sort_values(by = ['person', 'veranstaltung'])
