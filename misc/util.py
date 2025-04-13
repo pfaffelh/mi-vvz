@@ -76,7 +76,7 @@ def setup_session_state():
         semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
         st.session_state.current_semester_id = semesters[0]["_id"]
     if "semester_id" not in st.session_state:
-        semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+        semesters = list(semester.find({"hp_sichtbar" : True}, sort=[("kurzname", pymongo.DESCENDING)]))
         st.session_state.semester_id = semesters[0]["_id"]
     # expanded zeigt an, welches Element ausgeklappt sein soll
     if "expanded" not in st.session_state:
