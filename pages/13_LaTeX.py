@@ -101,8 +101,7 @@ if st.session_state.logged_in:
             file.write(texfile) 
 
         command = ['pdflatex', '-interaction=nonstopmode', '-output-directory', 'texfiles', f'texfiles/{file_name}.tex']
-        command = ['pdflatex', '-interaction=nonstopmode', '-output-directory', 'texfiles', f'texfiles/{file_name}.tex']
-        result = subprocess.run(command, capture_output=True, text = True)
+        result = subprocess.run(command, capture_output=True)
 
         try:
             with open('texfiles/' + file_name + '.pdf', 'rb') as file:
