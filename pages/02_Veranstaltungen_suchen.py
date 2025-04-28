@@ -108,6 +108,7 @@ if st.session_state.logged_in:
         titel = [r["name_de"] for r in result]
         rubrik = [tools.repr(util.rubrik, r["rubrik"], False, True) for r in result]
         titel = [r["name_de"] for r in result]
+        his = [r["midname_de"] for r in result]
         dozent = [", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in r["dozent"]]]) for r in result]
         assistent = [", ".join([f"{c['name_prefix']} {c['name']}".strip() for c in [util.person.find_one({"_id": p}) for p in r["assistent"]]]) for r in result]
 
@@ -117,14 +118,15 @@ if st.session_state.logged_in:
         if ausgabe_rubrik:
             dict["Rubrik"] = rubrik
         dict["Veranstaltung"] = titel    
+        dict["HisInOne"] = his
         if ausgabe_dozent:
             dict["Dozent*innen"] = dozent
         if ausgabe_assistent:
             dict["Assistent*innen"] = assistent
 
         df = pd.DataFrame(dict)
-        felder = (["Semester"] if ausgabe_semester else []) + (["Rubrik"] if ausgabe_rubrik else []) + ["Veranstaltung"]
-        felder_as = ([False] if ausgabe_semester else []) + ([True] if ausgabe_rubrik else []) + [True]
+        felder = (["Semester"] if ausgabe_semester else []) + (["Rubrik"] if ausgabe_rubrik else []) + ["Veranstaltung"] + ["HisInOne"]
+        felder_as = ([False] if ausgabe_semester else []) + ([True] if ausgabe_rubrik else []) + [True, False]
         df = df.sort_values(by=felder, ascending = felder_as)
 
         st.divider()
