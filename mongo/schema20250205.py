@@ -757,11 +757,11 @@ veranstaltung_validator = {
             },
             "midname_de": {
                 "bsonType": "string",
-                "description": "Etwas abgekürzte Version des Namens."
+                "description": "HisInOne Kürzel der Veranstaltung."
             },
             "midname_en": {
                 "bsonType": "string",
-                "description": "Etwas abgekürzte Version des Namens."
+                "description": "Etwas abgekürzte Version des Namens; wird nicht verwendet."
             },
             "kurzname": {
                 "bsonType": "string",

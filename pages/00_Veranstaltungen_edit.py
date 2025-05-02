@@ -189,8 +189,8 @@ if st.session_state.logged_in:
         komm_sichtbar = st.checkbox("In Kommentaren sichtbar 🤓", x["komm_sichtbar"], key = "komm_sichtbar1")
         name_de=st.text_input('Name (de)', x["name_de"])
         name_en=st.text_input('Name (en)', x["name_en"])
-        midname_de=st.text_input('Mittelkurzer Name (de)', x["midname_de"])
-        midname_en=st.text_input('Mittelkurzer Name (en)', x["midname_en"])
+        midname_de=st.text_input('HisInOne Kürzel', x["midname_de"])
+        midname_en="" #st.text_input('Mittelkurzer Name (en)', x["midname_en"])
         kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
         ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12, 15, 18] 
         ects = st.selectbox("Typische Anzahl an ECTS-Punkten.", ects_all, index = ects_all.index(x["ects"]), placeholder = "Bitte auswählen!")
