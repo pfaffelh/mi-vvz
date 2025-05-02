@@ -151,7 +151,7 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
             k = util.rubrik.find_one({"semester": sem_id, "titel_de": "-"})["_id"]
     # Das wird der Rang der kopierten Veranstaltung
     try:
-        r = util.veranstaltung.find_one({"semester": sem_id, "rubrik": k}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
+        r = util.veranstaltung.find_one({"semester": sem_id}, sort = [("rang",pymongo.DESCENDING)])["rang"] + 1
     except:
         r = 0
     v_new = {
