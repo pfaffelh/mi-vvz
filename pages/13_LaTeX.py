@@ -39,7 +39,7 @@ if st.session_state.logged_in:
 
     col0, col1 = st.columns([1,1])
     with col0:
-        which = st.selectbox("Was soll erstellt werden?", ["Kommentiertes Vorlesungsverzeichnis", "Erweiterung der Modulhandbücher"], index = None, placeholder = "Bitte auswählen")
+        which = st.selectbox("Was soll erstellt werden?", ["Kommentiertes Vorlesungsverzeichnis", "... und Ergänzungen der Modulhandbücher"], index = None, placeholder = "Bitte auswählen")
         kommentare = True if which == "Kommentiertes Vorlesungsverzeichnis" else False
         modulhandbuch = not kommentare
     with col1: 
@@ -71,7 +71,7 @@ if st.session_state.logged_in:
 
     # includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann-{'en' if en else 'de'}.tex", key = "includefile")
 
-    titel = ("Kommentiertes Vorlesungsverzeichnis" if kommentare else "Ergänzungen des Modulhandbuchs") if not en else ("Comments on the course catalogue" if kommentare else "Supplements of the module handbooks")
+    titel = ("Kommentare" if kommentare else "Modulhandbuch")
 
     sem_name = util.semester.find_one({"_id" : sem_id})[f"name_{'en' if en else 'de'}"]
     sem_id = st.session_state.semester_id

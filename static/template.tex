@@ -63,7 +63,18 @@
 \resizebox{\textwidth}{!}{\VAR{data["semester"]}}
 
 \bigskip
-\resizebox{\textwidth}{!}{\VAR{data["titel"]}}
+
+%% if data["lang"] == "de"
+\resizebox{\textwidth}{!}{Kommentiertes Vorlesungsverzeichnis}
+%% if data["titel"] == "Modulhandbuch"
+\resizebox{\textwidth}{!}{und Ergänzungen der Modulhandbücher}
+%% endif
+%% else
+\resizebox{\textwidth}{!}{Comments on the Course Catalogue}
+%% if data["titel"] == "Modulhandbuch"
+\resizebox{\textwidth}{!}{and Supplements of the Module Handbooks}
+%% endif
+%% endif
 
 \medskip\hrule\vskip1pt\hrule
 

@@ -642,8 +642,8 @@ if st.session_state.logged_in:
                 with cols[i+3]:
                     g.loc[str(a),f"{str(m[0])}_{m[1]}"] = float(st.checkbox(f"{m[0]}_{m[1]}_{a}", True if { "modul": m[0], "ects": float(m[1]), "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m[0]}_ects_{m[1]}", label_visibility="collapsed"))
         verwendbarkeit = [{"modul": m[0], "ects": float(m[1]), "anforderung": a} for m in mod_ects_list for a in an_list if g.loc[str(a),f"{str(m[0])}_{m[1]}"] == True]
-        kommentar_verwendbarkeit_de = st.text_area('Kommentar zur Verwendbarkeit (de)', x["kommentar_verwendbarkeit_de"])
-        kommentar_verwendbarkeit_en = st.text_area('Kommentar zur Verwendbarkeit (en)', x["kommentar_verwendbarkeit_en"])
+        kommentar_verwendbarkeit_de = st.text_area('Kommentar zur Verwendbarkeit (html, de)', x["kommentar_verwendbarkeit_de"])
+        kommentar_verwendbarkeit_en = st.text_area('Kommentar zur Verwendbarkeit (html, en)', x["kommentar_verwendbarkeit_en"])
 
         x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit, "kommentar_verwendbarkeit_de": kommentar_verwendbarkeit_de, "kommentar_verwendbarkeit_en": kommentar_verwendbarkeit_en }
         ver_updated_all.update(x_updated)
