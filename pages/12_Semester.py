@@ -279,7 +279,30 @@ if st.session_state.logged_in:
                         st.session_state.edit = ""
                         st.rerun()                      
 
-
+    with st.expander("Codes einstellen"):
+        codekategorie = st.selectbox("Codekategorie", codekategorie_dict.keys(), index, format_func = (lambda a: codekategorie_dict[a]), key = f"codekategorie_wahl")
+        y = list(util.code.find({"codekategorie" : codekategorie}))
+        ver_list = []
+        rub_list = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))
+        for r in rub_list:
+            ver_list.extend(list(util.veranstaltung.find({"rubrik": r["_id"]}, sort = [("rang", pymongo.ASCENDING)])))        
+        ver_dict = []
+        for v in ver_list:
+            loc = {}
+            loc["_id"] = v["_id"]
+            loc["Name"] = tools.repr(util.veranstaltung, v["_id"], False, True),
+            for x in y:
+                loc[str(x["_id"])] = True if x["_id"] in v["code"] else False
+            ver_dict.append(loc)
+        df = df_new = pd.DataFrame.from_records(ver_dict)
+        cc = {}
+        cc["_id"] = None
+        cc["Name"] = "Name"
+        for x in y:
+            cc[str(x["_id"])] = util.code.find_one({"_id": x["_id"]})["name"]
+        df_new = st.data_editor(
+                df, height = None, column_config = cc, disabled=["Name"], hide_index = True)
+        st.button("Codes übernehmen", on_click=tools.codes_uebernehmen, args = (df_new,), type="primary")
 
 else:
     switch_page("VVZ")

@@ -298,6 +298,17 @@ def delete_semester(id):
     util.semester.delete_one({"_id": id})
     st.toast("🎉 Semester gelöscht, alle Personen, Studiengänge und Veranstaltungen geupdated.")
 
+# Zum Einstellen der Codes für das gesamte Semester
+def codes_uebernehmen(df):
+    for v in df.to_dict(orient='records'):
+        vid = ObjectId(v["_id"])
+        del v["_id"]
+        del v["Name"]
+        code_all = [ObjectId(key) for key in v.keys()]
+        co = [ObjectId(key) for key, value in v.items() if value]
+        util.veranstaltung.update_one({"_id" : vid}, {"$pull" : {"code" : { "$in" : code_all}}})
+        util.veranstaltung.update_one({"_id" : vid}, {"$push" : {"code" : { "$each" : co}}})
+
 # Die Authentifizierung gegen den Uni-LDAP-Server
 def authenticate(username, password):
     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
