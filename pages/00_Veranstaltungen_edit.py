@@ -276,7 +276,7 @@ if st.session_state.logged_in:
             with cols[2]:
 #                terminart_list = list(util.terminart.find({}, sort = [("rang", pymongo.ASCENDING)]))
                 terminart_list = list(util.terminart.find({}, sort = [("name_de", pymongo.ASCENDING)]))
-                terminart_dict = {r["_id"]: tools.repr(util.terminart, r["_id"], show_collection = False) for r in terminart_list}
+                terminart_dict = {r["_id"]: tools.repr(util.terminart, r["_id"], show_collection = False) + (" 😎" if r["hp_sichtbar"] else "") for r in terminart_list}
                 index = [g["_id"] for g in terminart_list].index(w["key"])
                 w_key = st.selectbox("Art des Termins", terminart_dict.keys(), index, format_func = (lambda a: terminart_dict[a]), key = f"wt_{i}")
             with cols[3]:
