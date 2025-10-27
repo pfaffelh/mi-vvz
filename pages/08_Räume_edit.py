@@ -70,7 +70,7 @@ if st.session_state.logged_in:
         sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
         name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == util.leer[collection] else False))
         name_en=st.text_input('Name (en)', x["name_en"])
-        kurzname=st.text_input('Kurzname', x["kurzname"])
+        kurzname=st.text_input('Kurzname', x["kurzname"], disabled = True if x["_id"] in st.session_state.hauptraum_ids else False)
         if x["gebaeude"] not in gebaeude_sichtbar:
             gebaeude_sichtbar.insert(0, x["gebaeude"])
         index = [g for g in gebaeude_sichtbar].index(x["gebaeude"])
