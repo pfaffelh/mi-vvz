@@ -256,19 +256,19 @@ def setup_session_state():
         }
     }
     # Für den Raumplan
-    rund = raum.find_one({"kurzname": "HsRundbau"})
-    weis = raum.find_one({"kurzname": "HsWeismann"})
-    hs2 = raum.find_one({"kurzname": "HSII"})
-    sr404 = raum.find_one({"kurzname": "SR404"})
-    sr125 = raum.find_one({"kurzname": "SR125"})
-    sr127 = raum.find_one({"kurzname": "SR127"})
-    sr226 = raum.find_one({"kurzname": "SR226"})
-    sr119 = raum.find_one({"kurzname": "SR119"})
-    sr218 = raum.find_one({"kurzname": "SR218"})
-    sr232 = raum.find_one({"kurzname": "R232"})
-    sr318 = raum.find_one({"kurzname": "SR318"})
-    sr403 = raum.find_one({"kurzname": "SR403"})
-    sr414 = raum.find_one({"kurzname": "SR414"})
+    rund = raum.find_one({"kurzname": "HS Rundbau"})
+    weis = raum.find_one({"kurzname": "HS Weismann"})
+    hs2 = raum.find_one({"kurzname": "HS II"})
+    sr404 = raum.find_one({"kurzname": "SR 404"})
+    sr125 = raum.find_one({"kurzname": "SR 125"})
+    sr127 = raum.find_one({"kurzname": "SR 127"})
+    sr226 = raum.find_one({"kurzname": "SR 226"})
+    sr119 = raum.find_one({"kurzname": "SR 119"})
+    sr218 = raum.find_one({"kurzname": "SR 218"})
+    sr232 = raum.find_one({"kurzname": "R 232"})
+    sr318 = raum.find_one({"kurzname": "SR 318"})
+    sr403 = raum.find_one({"kurzname": "SR 403"})
+    sr414 = raum.find_one({"kurzname": "SR 414"})
     hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226]
     st.session_state.hauptraum_ids = [r["_id"] for r in hauptraum]
 
