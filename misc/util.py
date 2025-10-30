@@ -269,8 +269,11 @@ def setup_session_state():
     sr318 = raum.find_one({"kurzname": "SR 318"})
     sr403 = raum.find_one({"kurzname": "SR 403"})
     sr414 = raum.find_one({"kurzname": "SR 414"})
-    hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226]
-    st.session_state.hauptraum_ids = [r["_id"] for r in hauptraum]
+    gesperrt = raum.find_one({"kurzname": "gesperrt"})
+    if "hauptraum" not in st.session_state:
+        st.session_state.hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226, gesperrt]
+    if "hauptraum_ids" not in st.session_state:
+        st.session_state.hauptraum_ids = [r["_id"] for r in st.session_state.hauptraum]
 
     st.session_state.abhaengigkeit = {
         gebaeude: [{"collection": raum, "field": "gebaeude", "list": False}],
@@ -345,6 +348,7 @@ planung = st.session_state.planung
 collection_name = st.session_state.collection_name
 leer = st.session_state.leer
 new = st.session_state.new
+hauptraum = st.session_state.hauptraum
 hauptraum_ids = st.session_state.hauptraum_ids
 abhaengigkeit = st.session_state.abhaengigkeit
 wochentag = st.session_state.wochentag

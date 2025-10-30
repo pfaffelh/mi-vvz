@@ -67,9 +67,9 @@ if st.session_state.logged_in:
 
 
         kat = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))
-        raum_list = st.multiselect("Räume", raum_dict.keys(), util.hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
+        st.session_state.hauptraum_ids = st.multiselect("Räume", raum_dict.keys(), st.session_state.hauptraum_ids, format_func = (lambda a: raum_dict[a]), placeholder = "Bitte auswählen")
         st.write("<hr style='height:1px;margin:0px;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
-        showraum = [util.raum.find_one({"_id": id}) for id in raum_list]
+        showraum = [util.raum.find_one({"_id": id}) for id in st.session_state.hauptraum_ids]
         co = st.columns([1, 1] + [1 for s in slotstart])
         for i, s in enumerate(slotstart):
             with co[i+2]:
