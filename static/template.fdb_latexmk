@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1769204483.81429 "/home/pfaffelh/Code/mi/mi-vvz/static/template.tex" "template.pdf" "template" 1769204484.55062 2
+["pdflatex"] 1769204872.42927 "/home/pfaffelh/Code/mi/mi-vvz/static/template.tex" "template.pdf" "template" 1769204873.14319 2
   "/etc/texmf/web2c/texmf.cnf" 1706866098.26444 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/pfaffelh/Code/mi/mi-vvz/static/template.tex" 1769204482.65631 6893 5fc2012b3baecee83818b1f6823e758a ""
+  "/home/pfaffelh/Code/mi/mi-vvz/static/template.tex" 1769204872.0403 6893 5fc2012b3baecee83818b1f6823e758a ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/symbol/psyr.tfm" 1136768653 1408 5937f58aa508ea2cea4901c07d10f5fe ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136768653 1528 f853c4d1b4e0550255e02831fdc8496f ""
@@ -91,9 +91,9 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1728767001.56757 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1728767124 8216230 67cc43ef41d0df72e8941f9ca432e412 ""
-  "template.aux" 1769204484.39632 1014 ee2fe39d55dfed2517dc457391ab5391 "pdflatex"
-  "template.tex" 1769204482.65631 6893 5fc2012b3baecee83818b1f6823e758a ""
-  "template.toc" 1769204484.37132 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "template.aux" 1769204872.9893 1014 ee2fe39d55dfed2517dc457391ab5391 "pdflatex"
+  "template.tex" 1769204872.0403 6893 5fc2012b3baecee83818b1f6823e758a ""
+  "template.toc" 1769204872.9643 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   (generated)
   "template.aux"
   "template.log"
