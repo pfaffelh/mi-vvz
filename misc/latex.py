@@ -134,9 +134,9 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
                 raum = getraum(r["_id"], lang, alter)
                 # zB Vorlesung: Montag, 8-10 Uhr, HSII, Albertstr. 23a
                 if termin['start'] is not None:
-                    zeit = f"{str(termin['start'].hour)}{': '+str(termin['start'].minute) if termin['start'].minute > 0 else ''}"
+                    zeit = f"{str(termin['start'].hour)}{':'+str(termin['start'].minute) if termin['start'].minute > 0 else ''}"
                     if termin['ende'] is not None:
-                        zeit = zeit + f"--{str(termin['ende'].hour)}{': '+str(termin['ende'].minute) if termin['ende'].minute > 0 else ''}"
+                        zeit = zeit + f"--{str(termin['ende'].hour)}{':'+str(termin['ende'].minute) if termin['ende'].minute > 0 else ''}"
                     zeit = zeit + (" Uhr" if lang == "de" else " h")
                 else:
                     zeit = ""
@@ -192,7 +192,9 @@ def make_raumzeit(veranstaltung, lang="de", alter = True):
             if alter and termin[komm] == "":
                 komm = f"kommentar_{otherlang}_latex"
             #kommentar = rf"\newline {termin[komm]}" if termin[komm] != "" else ""
-            kommentar = rf", {termin[komm]}" if termin[komm] != "" else ""
+            kommentar = rf"{termin[komm]}" if termin[komm] != "" else ""
+            if datum != "" or zeit != "" or raum != "":
+                kommentar = ", " + kommentar                
             new = [ta, datum, zeit, raum, kommentar]
             res.append(new)
     res = [latex(f"{x[0]} {(', '.join([z for z in x if z !='' and x.index(z)!=0]))}") for x in res]
