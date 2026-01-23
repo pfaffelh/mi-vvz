@@ -122,13 +122,13 @@
 %% for veranstaltung in rubrik["veranstaltung"]
 \clearpage\hrule\vskip1pt\hrule
 %% if veranstaltung["url"] != ""
-\section*{\Large \href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
+\section*{\Large\href{\VAR{veranstaltung["url"]}}{\VAR{veranstaltung["titel"]}}}
 %% else 
 \section*{\Large \VAR{veranstaltung["titel"]}}
 %% endif
 \addcontentsline{toc}{subsection}{\VAR{veranstaltung["titel"]}\ \textcolor{gray}{(\em \VAR{veranstaltung["dozent"]})}}
 \vskip-2ex
-\label{\VAR{veranstaltung["kurzname"]}}\\
+\label{\VAR{veranstaltung["kurzname"]}}
 {\it \VAR{veranstaltung["person"]}}
 %% if veranstaltung["code"] != ""
 \hfill{\VAR{veranstaltung["code"]}}\\
