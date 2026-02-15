@@ -2,72 +2,180 @@
     {
         "cn": null,
         "sn": null,
+        "ou": "People",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "D",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "ML",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": "http://logik.mathematik.uni-freiburg.de/personen.html zur Personenseite der Abteilung f\u00fcr Mathematische Logik",
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "organizationalUnit",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "AM",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/Institut/Dprofessorships.html zur Personenseite der Abteilung f\u00fcr Angewandte Mathematik",
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "organizationalUnit",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "RM",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "PA",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "Di",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "MSt",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": "http://www.stochastik.uni-freiburg.de/personen.html zur Personenseite der Abteilung f\u00fcr Mathematische Stochastik",
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "organizationalUnit",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "hde",
         "sn": "Ebbinghaus",
+        "ou": "ML",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": ".",
         "labeledURI": "https://home.mathematik.uni-freiburg.de/hde",
-        "givenName": "Heinz-Dieter"
+        "givenName": "Heinz-Dieter",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "309",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "rose",
         "sn": "R\u016f\u017ei\u010dka",
+        "ou": "AM",
+        "eduPersonAffiliation": "faculty",
         "mail": "rose@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/agru/index.html",
-        "givenName": "Michael"
+        "givenName": "Michael",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5680",
+        "roomNumber": "145",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "fachschaft",
@@ -75,16 +183,51 @@
             "Fachschaft",
             "Mathematik"
         ],
+        "ou": "People",
+        "eduPersonAffiliation": null,
         "mail": "Fachschaft@math.uni-freiburg.de",
         "labeledURI": "http://fachschaft.mathematik.uni-freiburg.de/",
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5649",
+        "roomNumber": "011",
+        "personalTitle": null
     },
     {
         "cn": "flum",
         "sn": "Flum",
+        "ou": "ML",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "joerg.flum@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/flum/Flum.html",
-        "givenName": "J\u00f6rg"
+        "givenName": "J\u00f6rg",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5601",
+        "roomNumber": "309",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "faxam",
@@ -93,23 +236,71 @@
             "Angewandte",
             "Mathematik"
         ],
+        "ou": "AM",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "HH10",
+        "telephoneNumber": "5632",
+        "roomNumber": "205",
+        "personalTitle": null
     },
     {
         "cn": "fried",
         "sn": "Fried",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": "micha@mathematik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Michael"
+        "givenName": "Michael",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "lais",
         "sn": "Lais",
+        "ou": "MSt",
+        "eduPersonAffiliation": "secretary",
         "mail": "lais@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Thomas"
+        "givenName": "Thomas",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5664",
+        "roomNumber": "249",
+        "personalTitle": null
     },
     {
         "cn": "hausmeister",
@@ -117,100 +308,339 @@
             "Hausmeister",
             "Institutsviertel"
         ],
+        "ou": "People",
+        "eduPersonAffiliation": "employee",
         "mail": "hausmiv@verwaltung.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": null,
+        "telephoneNumber": "7990",
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "dziuk",
         "sn": "Dziuk",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "gerd@mathematik.uni-freiburg.de",
         "labeledURI": "http://aam.uni-freiburg.de/emeriti/agdz/",
-        "givenName": "Gerhard"
+        "givenName": "Gerhard",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "burri",
         "sn": "Burri",
-        "mail": "burriad@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": null,
-        "givenName": "Adrian"
+        "givenName": "Adrian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "bibliothekmi",
         "sn": "Bibliothek Mathematisches Institut",
+        "ou": null,
+        "eduPersonAffiliation": "employee",
         "mail": "mathbib@ub.uni-freiburg.de",
         "labeledURI": "https://www.ub.uni-freiburg.de/standorte/fachbibliotheken/bibliothek-des-mathematischen-instituts/",
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5543",
+        "roomNumber": "022",
+        "personalTitle": null
     },
     {
         "cn": "dedner",
         "sn": "Dedner",
-        "mail": "dedner@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/dedner/dedner.html",
-        "givenName": "Andreas"
+        "givenName": "Andreas",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "riecke",
         "sn": "Riecke",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": null,
-        "givenName": "Clemens"
+        "givenName": "Clemens",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "junker",
         "sn": "Junker",
+        "ou": "ML",
+        "eduPersonAffiliation": "staff",
         "mail": "markus.junker@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/junker/",
-        "givenName": "Markus"
+        "givenName": "Markus",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5537",
+        "roomNumber": "312",
+        "personalTitle": "PD Dr."
     },
     {
         "cn": "computerraum",
         "sn": "Computerraum - Fachschaftspool-Pool EG",
+        "ou": null,
+        "eduPersonAffiliation": "employee",
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "005",
+        "personalTitle": null
     },
     {
         "cn": "gaeste",
         "sn": "G\u00e4stezimmer",
+        "ou": "AM",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "HH10",
+        "telephoneNumber": "5655",
+        "roomNumber": "122",
+        "personalTitle": null
     },
     {
         "cn": "demlow",
         "sn": "Demlow",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": null,
-        "givenName": "Alan"
+        "givenName": "Alan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "diening",
         "sn": "Diening",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "staff",
+            "alumn"
+        ],
         "mail": "diening@mathematik.uni-freiburg.de",
         "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/diening/",
-        "givenName": "Lars"
+        "givenName": "Lars",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "apl. Prof. Dr."
     },
     {
         "cn": "lerche",
         "sn": "Lerche",
+        "ou": "MSt",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "lerche@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/emeriti/lerche",
-        "givenName": "Hans Rudolf"
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/de/emeriti/lerche",
+        "givenName": "Hans Rudolf",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5662",
+        "roomNumber": "229",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "dietmar",
         "sn": "Kr\u00f6ner",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "dietmar@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/agkr/index.html",
-        "givenName": "Dietmar"
+        "givenName": "Dietmar",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "HH10",
+        "telephoneNumber": "5637",
+        "roomNumber": "215",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "ziegler",
         "sn": "Ziegler",
+        "ou": "ML",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "ziegler@uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/ziegler/",
-        "givenName": "Martin"
+        "givenName": "Martin",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "faxmst",
@@ -219,23 +649,63 @@
             "Mathematische",
             "Stochastik"
         ],
+        "ou": "MSt",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5661",
+        "roomNumber": "226",
+        "personalTitle": null
     },
     {
         "cn": "haasdonk",
         "sn": "Haasdonk",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/haasdonk/",
-        "givenName": "Bernard"
+        "givenName": "Bernard",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "analysis",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "faxdekanat",
@@ -243,37 +713,115 @@
             "FAX",
             "Dekanat"
         ],
+        "ou": "D",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5535",
+        "roomNumber": "428",
+        "personalTitle": null
     },
     {
         "cn": "eberlein",
         "sn": "Eberlein",
+        "ou": "MSt",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "eberlein@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/emeriti/eberlein",
-        "givenName": "Ernst"
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/de/emeriti/eberlein",
+        "givenName": "Ernst",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5660",
+        "roomNumber": "229",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "ohlberger",
         "sn": "Ohlberger",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "staff",
+            "alumn"
+        ],
         "mail": null,
         "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/mario/dmario.html",
-        "givenName": "Mario"
+        "givenName": "Mario",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "geometrie",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "fakultraum",
         "sn": "Fakult\u00e4tsraum",
+        "ou": "D",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5619",
+        "roomNumber": "427",
+        "personalTitle": null
     },
     {
         "cn": "diplommst",
@@ -281,16 +829,48 @@
             "Diplomandenzimmer",
             "MSt"
         ],
+        "ou": "MSt",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5675",
+        "roomNumber": "222",
+        "personalTitle": null
     },
     {
         "cn": "systemadmin",
         "sn": "IT Systemadministration",
+        "ou": "RM",
+        "eduPersonAffiliation": "employee",
         "mail": "sysadm@email.mathematik.uni-freiburg.de",
-        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
-        "givenName": null
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/index.html",
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5552",
+        "roomNumber": "041",
+        "personalTitle": null
     },
     {
         "cn": "bibliothekdi",
@@ -298,65 +878,218 @@
             "Bibliothek",
             "Didaktik"
         ],
+        "ou": "Di",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5618",
+        "roomNumber": "133",
+        "personalTitle": null
     },
     {
         "cn": "frei",
         "sn": "Frei",
+        "ou": "RM",
+        "eduPersonAffiliation": "secretary",
         "mail": "ludmila.frei@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Ludmila"
+        "givenName": "Ludmila",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5586",
+        "roomNumber": "207",
+        "personalTitle": null
     },
     {
         "cn": "kuwert",
         "sn": "Kuwert",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "ernst.kuwert@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/kuwert/",
-        "givenName": "Ernst"
+        "givenName": "Ernst",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5585",
+        "roomNumber": "208",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "bangert",
         "sn": "Bangert",
+        "ou": "RM",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "victor.bangert@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/geometrie/bangert/",
-        "givenName": "Victor"
+        "givenName": "Victor",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5562",
+        "roomNumber": "334",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "schneider",
         "sn": "Schneider",
+        "ou": "RM",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "rolf.schneider@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/rschnei/",
-        "givenName": "Rolf"
+        "givenName": "Rolf",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5554",
+        "roomNumber": "212",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "moessner",
         "sn": "M\u00f6ssner",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "staff",
+            "alumn"
+        ],
         "mail": null,
         "labeledURI": "http://aam.mathematik.uni-freiburg.de/IAM/homepages/moessner/",
-        "givenName": "Bernhard"
+        "givenName": "Bernhard",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "goette",
         "sn": "Goette",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "sebastian.goette@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/goette/",
-        "givenName": "Sebastian"
+        "givenName": "Sebastian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5571",
+        "roomNumber": "340",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "junker",
         "sn": "Junker",
+        "ou": "D",
+        "eduPersonAffiliation": "employee",
         "mail": "studienberatung@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/junker/",
-        "givenName": "Markus"
+        "givenName": "Markus",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5537",
+        "roomNumber": "312",
+        "personalTitle": "PD Dr."
     },
     {
         "cn": "pfaffelhuber",
         "sn": "Pfaffelhuber",
+        "ou": "MSt",
+        "eduPersonAffiliation": "faculty",
         "mail": "peter.pfaffelhuber@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/pfaffelhuber",
-        "givenName": "Peter"
+        "labeledURI": "https://pfaffelh.github.io/hp/",
+        "givenName": "Peter",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5667",
+        "roomNumber": "233",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "computer",
@@ -365,9 +1098,25 @@
             "und",
             "Druckerraum"
         ],
+        "ou": "ML",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5599",
+        "roomNumber": "303",
+        "personalTitle": null
     },
     {
         "cn": "computer",
@@ -376,9 +1125,25 @@
             "und",
             "Druckerraum"
         ],
+        "ou": "RM",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "333",
+        "personalTitle": null
     },
     {
         "cn": "computer",
@@ -387,135 +1152,396 @@
             "und",
             "Druckerraum"
         ],
+        "ou": "RM",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5581",
+        "roomNumber": "211",
+        "personalTitle": null
     },
     {
         "cn": "rueschen",
         "sn": "R\u00fcschendorf",
+        "ou": "MSt",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "ruschen@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/profs/ruschen",
-        "givenName": "Ludger"
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/de/emeriti/rueschendorf/rueschendorf",
+        "givenName": "Ludger",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5665",
+        "roomNumber": "241",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "pruefsek",
         "sn": "Pr\u00fcfungsamt",
+        "ou": "PA",
+        "eduPersonAffiliation": "secretary",
         "mail": "pruefungsamt@math.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/pruefungsamt/index.html",
-        "givenName": null
+        "labeledURI": "https://www.math.uni-freiburg.de/nlehre/de/studiendekanat/pruefungsamt/",
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "67682",
+        "roomNumber": "333",
+        "personalTitle": null
     },
     {
         "cn": "pruefvorsitz",
         "sn": "Pr\u00fcfungsamtsvorsitz",
+        "ou": "PA",
+        "eduPersonAffiliation": "employee",
         "mail": "pruefungsamt@math.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/pruefungsamt/index.html",
-        "givenName": null
+        "labeledURI": "https://www.math.uni-freiburg.de/nlehre/de/studiendekanat/pruefungsamt/",
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "67682",
+        "roomNumber": "333",
+        "personalTitle": null
     },
     {
         "cn": "wuerth",
         "sn": "W\u00fcrth",
+        "ou": "People",
+        "eduPersonAffiliation": "employee",
         "mail": "mathbib@ub.uni-freiburg.de",
         "labeledURI": "http://www.ub.uni-freiburg.de/?id=3413",
-        "givenName": "Marlies"
+        "givenName": "Marlies",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5543",
+        "roomNumber": "022",
+        "personalTitle": "M.A."
     },
     {
         "cn": "wang",
         "sn": "Wang",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "Guofang.Wang@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/wang/",
-        "givenName": "Guofang"
+        "givenName": "Guofang",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5584",
+        "roomNumber": "209",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "alagzt",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "algebra",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "alggeom",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "zahlentheorie",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "spilker",
         "sn": "Spilker",
+        "ou": "RM",
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "Juergen.Spilker@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/spilker/",
-        "givenName": "J\u00fcrgen"
+        "givenName": "J\u00fcrgen",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "5545",
+        "roomNumber": "124",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "huber",
         "sn": "Huber-Klawitter",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "annette.huber@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/arithmetische-geometrie/huber.html",
-        "givenName": "Annette"
-    },
-    {
-        "cn": "kegel",
-        "sn": "Kegel",
-        "mail": "otto.h.kegel@math.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/RM/alagzt/algebra?l=de",
-        "givenName": "Otto"
+        "givenName": "Annette",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5560",
+        "roomNumber": "434",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "fiebig",
         "sn": "Fiebig",
+        "ou": "RM",
+        "eduPersonAffiliation": [
+            "faculty",
+            "alumn"
+        ],
         "mail": "fiebig@mi.uni-erlangen.de",
         "labeledURI": null,
-        "givenName": "Peter"
+        "givenName": "Peter",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "soergel",
         "sn": "Soergel",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "wolfgang.soergel@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/soergel/",
-        "givenName": "Wolfgang"
+        "givenName": "Wolfgang",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5540",
+        "roomNumber": "429",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "kebekus",
         "sn": "Kebekus",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "stefan.kebekus@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/kebekus/",
-        "givenName": "Stefan"
+        "givenName": "Stefan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5536",
+        "roomNumber": "432",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "mildenberger",
         "sn": "Mildenberger",
+        "ou": "ML",
+        "eduPersonAffiliation": "faculty",
         "mail": "heike.mildenberger@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/mildenberger/",
-        "givenName": "Heike"
+        "givenName": "Heike",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5610",
+        "roomNumber": "313",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "daube",
         "sn": "Daube",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "staff",
+            "alumn"
+        ],
         "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/daube/index.html",
-        "givenName": "Johannes"
+        "givenName": "Johannes",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "rauscher",
         "sn": "Rauscher",
+        "ou": "AM",
+        "eduPersonAffiliation": "student",
         "mail": null,
         "labeledURI": null,
-        "givenName": "Sebastian"
+        "givenName": "Sebastian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": null,
+        "street": "E1",
+        "telephoneNumber": "5679",
+        "roomNumber": "144",
+        "personalTitle": null
     },
     {
         "cn": "dplzim",
@@ -523,23 +1549,74 @@
             "Diplomandenzimmer",
             "AM"
         ],
+        "ou": "AM",
+        "eduPersonAffiliation": "student",
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "student",
+        "street": "HH10",
+        "telephoneNumber": "5636",
+        "roomNumber": "218",
+        "personalTitle": null
     },
     {
         "cn": "schumacher",
         "sn": "Schumacher",
+        "ou": null,
+        "eduPersonAffiliation": [
+            "retired",
+            "alumn"
+        ],
         "mail": "martin.schumacher@uniklinik-freiburg.de",
         "labeledURI": "https://www.uniklinik-freiburg.de/imbi/team.html",
-        "givenName": "Martin"
+        "givenName": "Martin",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "retired",
+        "street": "E1",
+        "telephoneNumber": "7707",
+        "roomNumber": "110",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "bartels",
         "sn": "Bartels",
+        "ou": "AM",
+        "eduPersonAffiliation": "faculty",
         "mail": "bartels@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/agba/index.html",
-        "givenName": "S\u00f6ren"
+        "givenName": "S\u00f6ren",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "HH10",
+        "telephoneNumber": "5628",
+        "roomNumber": "209",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "diplomanden",
@@ -547,16 +1624,48 @@
             "Diplomandenzimmer",
             "RM"
         ],
+        "ou": "RM",
+        "eduPersonAffiliation": "student",
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "student",
+        "street": "E1",
+        "telephoneNumber": "5614",
+        "roomNumber": "203",
+        "personalTitle": null
     },
     {
         "cn": "papathanassopoulos",
         "sn": "Papathanassopoulos",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": "alexis@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/pap/index.html",
-        "givenName": "Alexis"
+        "givenName": "Alexis",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dipl.-Math."
     },
     {
         "cn": "diplomandenzimmer",
@@ -564,764 +1673,2529 @@
             "Diplomandenzimmer",
             "ML"
         ],
+        "ou": "ML",
+        "eduPersonAffiliation": "student",
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "student",
+        "street": "E1",
+        "telephoneNumber": "5612",
+        "roomNumber": "308",
+        "personalTitle": null
     },
     {
         "cn": "knies",
         "sn": "Knies",
+        "ou": null,
+        "eduPersonAffiliation": "staff",
         "mail": "susanne.knies@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/knies/",
-        "givenName": "Susanne"
+        "givenName": "Susanne",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5590",
+        "roomNumber": "150",
+        "personalTitle": "Dr."
     },
     {
         "cn": "frei",
         "sn": "Frei",
+        "ou": "RM",
+        "eduPersonAffiliation": "secretary",
         "mail": "ludmila.frei@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Ludmila"
+        "givenName": "Ludmila",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5546",
+        "roomNumber": "421",
+        "personalTitle": null
     },
     {
         "cn": "schmidtth",
         "sn": "Schmidt",
+        "ou": "MSt",
+        "eduPersonAffiliation": "faculty",
         "mail": "thorsten.schmidt@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/abteilung/profs/schmidt",
-        "givenName": "Thorsten"
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/de/professoren/thorsten-schmidt",
+        "givenName": "Thorsten",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5668",
+        "roomNumber": "247",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "dondl",
         "sn": "Dondl",
+        "ou": "AM",
+        "eduPersonAffiliation": "faculty",
         "mail": "patrick.dondl@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/agdo/index.html",
-        "givenName": "Patrick"
+        "givenName": "Patrick",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "HH10",
+        "telephoneNumber": "5642",
+        "roomNumber": "217",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "grosse",
         "sn": "Gro\u00dfe",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "nadine.grosse@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/ngrosse/",
-        "givenName": "Nadine"
+        "givenName": "Nadine",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5561",
+        "roomNumber": "328",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "diehl",
         "sn": "Diehl",
+        "ou": "AM",
+        "eduPersonAffiliation": "faculty",
         "mail": "moritz.diehl@imtek.uni-freiburg.de",
         "labeledURI": "https://www.syscop.de/people/moritz-diehl",
-        "givenName": "Moritz"
-    },
-    {
-        "cn": "lh",
-        "sn": "L\u00fctkebohmert-Holtz",
-        "mail": "eva.luetkebohmert@finance.uni-freiburg.de",
-        "labeledURI": "http://www.finance.uni-freiburg.de/mitarbeiter/prof.-dr.-e.-luetkebohmert-holtz",
-        "givenName": "Eva"
+        "givenName": "Moritz",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "GK102",
+        "telephoneNumber": "67852",
+        "roomNumber": "01-21",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "brunner",
         "sn": "Brunner",
+        "ou": "RM",
+        "eduPersonAffiliation": "secretary",
         "mail": "irina.brunner@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Irina"
+        "givenName": "Irina",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5548",
+        "roomNumber": "341",
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "agkroener",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "agbartels",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "agdondl",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "agruzicka",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "co",
         "sn": "Olveira",
+        "ou": "AM",
+        "eduPersonAffiliation": "student",
         "mail": "erasmus@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Christina"
+        "givenName": "Christina",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "student",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": "226",
+        "personalTitle": null
     },
     {
         "cn": "hammer",
         "sn": "Hammerstein",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "ernst.august.hammerstein@stochastik.uni-freiburg.de",
         "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/hammerstein",
-        "givenName": "Ernst August"
+        "givenName": "Ernst August",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5673",
+        "roomNumber": "248",
+        "personalTitle": "Dr."
     },
     {
         "cn": "rohde",
         "sn": "Rohde",
+        "ou": "MSt",
+        "eduPersonAffiliation": "faculty",
         "mail": "angelika.rohde@stochastik.uni-freiburg.de",
         "labeledURI": "https://www.stochastik.uni-freiburg.de/professoren/rohde",
-        "givenName": "Angelika"
+        "givenName": "Angelika",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "98659",
+        "roomNumber": "242",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "zwang",
         "sn": "Wang",
-        "mail": "zhangxian.wang@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/wang/index.html",
-        "givenName": "Zhangxian"
+        "givenName": "Zhangxian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "pizarro",
         "sn": "Martin-Pizarro",
+        "ou": "ML",
+        "eduPersonAffiliation": "faculty",
         "mail": "pizarro@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/pizarro/",
-        "givenName": "Amador"
+        "givenName": "Amador",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5603",
+        "roomNumber": "310",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "bihler",
         "sn": "Bihler",
+        "ou": "RM",
+        "eduPersonAffiliation": "employee",
         "mail": "michael.bihler@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Michael"
+        "givenName": "Michael",
+        "objectClass": [
+            "organizationalPerson",
+            "mathPerson",
+            "person",
+            "eduPerson",
+            "top",
+            "inetOrgPerson",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5597",
+        "roomNumber": "237",
+        "personalTitle": null
     },
     {
         "cn": "brutschej",
         "sn": "Brutsche",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "johannes.brutsche@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/brutsche?set_language=de",
-        "givenName": "Johannes"
+        "labeledURI": " https://uni-freiburg.de/stochastik/dr-johannes-brutsche/ ",
+        "givenName": "Johannes",
+        "objectClass": [
+            "inetOrgPerson",
+            "eduPerson",
+            "organizationalPerson",
+            "person",
+            "mathPerson",
+            "labeledURIObject",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5672",
+        "roomNumber": "228",
+        "personalTitle": "Dr."
     },
     {
         "cn": "binder",
         "sn": "Binder",
+        "ou": null,
+        "eduPersonAffiliation": "faculty",
         "mail": "binderh@imbi.uni-freiburg.de",
         "labeledURI": "https://www.uniklinik-freiburg.de/imbi/team.html",
-        "givenName": "Harald"
+        "givenName": "Harald",
+        "objectClass": [
+            "mathPerson",
+            "person",
+            "organizationalPerson",
+            "eduPerson",
+            "top",
+            "inetOrgPerson",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "SM26",
+        "telephoneNumber": "6662",
+        "roomNumber": "01-019",
+        "personalTitle": "Prof. Dr."
     },
     {
         "cn": "palus",
         "sn": "Palus",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": "christian.palus@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/palus/index.html?l=de",
-        "givenName": "Christian"
+        "givenName": "Christian",
+        "objectClass": [
+            "top",
+            "organizationalPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "mathPerson",
+            "eduPerson",
+            "person"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "keck",
         "sn": "Keck",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": null,
-        "givenName": "Jakob"
+        "givenName": "Jakob",
+        "objectClass": [
+            "inetOrgPerson",
+            "labeledURIObject",
+            "top",
+            "mathPerson",
+            "eduPerson",
+            "person",
+            "organizationalPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "boecherer",
         "sn": "B\u00f6cherer-Linder",
+        "ou": "Di",
+        "eduPersonAffiliation": "staff",
         "mail": "boecherer-linder@math.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/didaktik/",
-        "givenName": "Katharina"
+        "givenName": "Katharina",
+        "objectClass": [
+            "top",
+            "person",
+            "inetOrgPerson",
+            "mathPerson",
+            "labeledURIObject",
+            "organizationalPerson",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5616",
+        "roomNumber": "131",
+        "personalTitle": "StR Dr."
     },
     {
         "cn": "hoegerle",
         "sn": "H\u00f6gerle",
+        "ou": "D",
+        "eduPersonAffiliation": "employee",
         "mail": "daniela.hoegerle@mathphys.uni-freiburg.de",
         "labeledURI": "http://www.mathphys.uni-freiburg.de/dekanat.de.html",
-        "givenName": "Daniela"
+        "givenName": "Daniela",
+        "objectClass": [
+            "top",
+            "organizationalPerson",
+            "labeledURIObject",
+            "inetOrgPerson",
+            "eduPerson",
+            "mathPerson",
+            "person"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5533",
+        "roomNumber": "428c",
+        "personalTitle": "Dr."
     },
     {
         "cn": "zeinhofer",
         "sn": "Zeinhofer",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": null,
-        "givenName": "Marius"
+        "givenName": "Marius",
+        "objectClass": [
+            "inetOrgPerson",
+            "top",
+            "labeledURIObject",
+            "mathPerson",
+            "eduPerson",
+            "person",
+            "organizationalPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc. "
     },
     {
         "cn": "anguige",
         "sn": "Angiuge",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": null,
-        "givenName": "Keith"
+        "givenName": "Keith",
+        "objectClass": [
+            "labeledURIObject",
+            "top",
+            "person",
+            "eduPerson",
+            "organizationalPerson",
+            "inetOrgPerson",
+            "mathPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "cf",
         "sn": "Hounkpe",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": "coffi.hounkpe@mathematik.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/AM?l=en",
-        "givenName": "Coffi Aristide"
-    },
-    {
-        "cn": "demleitner",
-        "sn": "Demleitner",
-        "mail": "andreas.demleitner@math.uni-freiburg.de",
-        "labeledURI": "https://home.mathematik.uni-freiburg.de/demleitner/",
-        "givenName": "Andreas"
-    },
-    {
-        "cn": "enger",
-        "sn": "Enger",
-        "mail": "timo.enger@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter",
-        "givenName": "Timo"
+        "givenName": "Coffi Aristide",
+        "objectClass": [
+            "labeledURIObject",
+            "mathPerson",
+            "top",
+            "organizationalPerson",
+            "eduPerson",
+            "inetOrgPerson",
+            "person"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": "5639",
+        "roomNumber": "212",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "courte",
         "sn": "Courte",
-        "mail": "luca.courte@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/courte/index.html",
-        "givenName": "Luca"
+        "givenName": "Luca",
+        "objectClass": [
+            "inetOrgPerson",
+            "mathPerson",
+            "eduPerson",
+            "organizationalPerson",
+            "labeledURIObject",
+            "person",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "wolffvorbeck",
         "sn": "Wolff-Vorbeck",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/wolffvorbeck/index.html",
-        "givenName": "Steve"
+        "givenName": "Steve",
+        "objectClass": [
+            "inetOrgPerson",
+            "mathPerson",
+            "eduPerson",
+            "organizationalPerson",
+            "labeledURIObject",
+            "person",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "kaltenbach",
         "sn": "Kaltenbach",
-        "mail": "alex.kaltenbach@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/kaltenbach/index.html",
-        "givenName": "Alex"
+        "givenName": "Alex",
+        "objectClass": [
+            "inetOrgPerson",
+            "mathPerson",
+            "eduPerson",
+            "organizationalPerson",
+            "labeledURIObject",
+            "person",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "nicoweber",
         "sn": "Weber",
+        "ou": "AM",
+        "eduPersonAffiliation": [
+            "staff",
+            "alumn"
+        ],
         "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/weber/index.html",
-        "givenName": "Nico"
-    },
-    {
-        "cn": "schnitzer",
-        "sn": "Schnitzer",
-        "mail": "jonas.schnitzer@math.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/geometrie/schnitzer/index.html",
-        "givenName": "Jonas"
+        "givenName": "Nico",
+        "objectClass": [
+            "mathPerson",
+            "organizationalPerson",
+            "top",
+            "person",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "christoforidis",
         "sn": "Christoforidis",
+        "ou": "RM",
+        "eduPersonAffiliation": "employee",
         "mail": "ioannis.christoforidis@math.uni-freiburg.de",
-        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
-        "givenName": "Ioannis"
-    },
-    {
-        "cn": "fix",
-        "sn": "Fix",
-        "mail": "daniel.fix@math.uni-freiburg.de",
-        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
-        "givenName": "Daniel"
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/index.html",
+        "givenName": "Ioannis",
+        "objectClass": [
+            "eduPerson",
+            "mathPerson",
+            "top",
+            "labeledURIObject",
+            "inetOrgPerson",
+            "person",
+            "organizationalPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5552",
+        "roomNumber": "041",
+        "personalTitle": null
     },
     {
         "cn": "ludwigstriet",
         "sn": "Striet",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "ludwig.striet@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/striet/index.html",
-        "givenName": "Ludwig"
-    },
-    {
-        "cn": "jakobrotter",
-        "sn": "Rotter",
-        "mail": "jakob.rotter@mathematik.uni-freiburg.de",
-        "labeledURI": "https://aam.uni-freiburg.de/mitarb/rotter/index.html",
-        "givenName": "Jakob"
-    },
-    {
-        "cn": "jg",
-        "sn": "Gerstenberger",
-        "mail": "janick.gerstenberger@mathematik.uni-freiburg.de",
-        "labeledURI": "https://aam.uni-freiburg.de/mitarb/gerstenberger/index.html",
-        "givenName": "Janick"
+        "givenName": "Ludwig",
+        "objectClass": [
+            "labeledURIObject",
+            "inetOrgPerson",
+            "person",
+            "mathPerson",
+            "organizationalPerson",
+            "eduPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5635",
+        "roomNumber": "228",
+        "personalTitle": "Dr."
     },
     {
         "cn": "tscherner",
         "sn": "Tscherner",
-        "mail": "philipp.tscherner@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/tscherner/index.html?l=de",
-        "givenName": "Philipp"
+        "givenName": "Philipp",
+        "objectClass": [
+            "eduPerson",
+            "person",
+            "inetOrgPerson",
+            "organizationalPerson",
+            "top",
+            "labeledURIObject",
+            "mathPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "weyer",
         "sn": "Weyer",
-        "mail": "pascal.weyer@mathematik.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/weyer/index.html",
-        "givenName": "Pascal"
+        "givenName": "Pascal",
+        "objectClass": [
+            "labeledURIObject",
+            "inetOrgPerson",
+            "person",
+            "eduPerson",
+            "top",
+            "mathPerson",
+            "organizationalPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "criens",
         "sn": "Criens",
+        "ou": "MSt",
+        "eduPersonAffiliation": "faculty",
         "mail": "david.criens@stochastik.uni-freiburg.de",
         "labeledURI": "https://www.stochastik.uni-freiburg.de/professoren/criens",
-        "givenName": "David"
+        "givenName": "David",
+        "objectClass": [
+            "inetOrgPerson",
+            "top",
+            "labeledURIObject",
+            "organizationalPerson",
+            "person",
+            "mathPerson",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5674",
+        "roomNumber": "244",
+        "personalTitle": "JProf. Dr."
     },
     {
         "cn": "keller",
         "sn": "Keller",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": "hedwig.keller@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/keller/index.html?l=de",
-        "givenName": "Hedwig"
+        "givenName": "Hedwig",
+        "objectClass": [
+            "mathPerson",
+            "organizationalPerson",
+            "inetOrgPerson",
+            "eduPerson",
+            "top",
+            "person",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "levine",
         "sn": "Levine",
+        "ou": "ML",
+        "eduPersonAffiliation": "staff",
         "mail": "maxwell.levine@mathematik.uni-freiburg.de",
         "labeledURI": "https://home.mathematik.uni-freiburg.de/maxwell/",
-        "givenName": "Maxwell"
-    },
-    {
-        "cn": "braeuninger",
-        "sn": "Br\u00e4uninger",
-        "mail": "christian.braeuninger@math.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/ML?l=en",
-        "givenName": "Christian"
+        "givenName": "Maxwell",
+        "objectClass": [
+            "organizationalPerson",
+            "inetOrgPerson",
+            "person",
+            "top",
+            "mathPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5613",
+        "roomNumber": "311",
+        "personalTitle": "Dr."
     },
     {
         "cn": "albertomaione",
         "sn": "Maione",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/maione/index.html",
-        "givenName": "Alberto"
+        "givenName": "Alberto",
+        "objectClass": [
+            "labeledURIObject",
+            "eduPerson",
+            "mathPerson",
+            "organizationalPerson",
+            "person",
+            "inetOrgPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
     },
     {
         "cn": "jackisch",
         "sn": "Jackisch",
+        "ou": "AM",
+        "eduPersonAffiliation": "alumn",
         "mail": "vera.jackisch@mathematik.uni-freiburg.de ",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/jackisch/index.html",
-        "givenName": "Vera"
+        "givenName": "Vera",
+        "objectClass": [
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson",
+            "top",
+            "organizationalPerson",
+            "person"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "HH10",
+        "telephoneNumber": "5647",
+        "roomNumber": "207",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "vogelmann",
         "sn": "Vogelmann",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "vivien.vogelmann@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Vivien"
+        "givenName": "Vivien",
+        "objectClass": [
+            "mathPerson",
+            "organizationalPerson",
+            "top",
+            "person",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5604",
+        "roomNumber": "424",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "mirjamhoferichter",
         "sn": "Hoferichter",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "mirjam.hoferichter@mathematik.uni-freiburg.de",
         "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/AM?l=en",
-        "givenName": "Mirjam"
-    },
-    {
-        "cn": "ketterer",
-        "sn": "Ketterer",
-        "mail": "christian.ketterer@math.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/ketterer/",
-        "givenName": "Christian"
+        "givenName": "Mirjam",
+        "objectClass": [
+            "labeledURIObject",
+            "inetOrgPerson",
+            "person",
+            "eduPerson",
+            "mathPerson",
+            "organizationalPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5679",
+        "roomNumber": "144",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "brackenhofer",
         "sn": "Brackenhofer",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "christoph.brackenhofer@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Christoph"
+        "givenName": "Christoph",
+        "objectClass": [
+            "labeledURIObject",
+            "eduPerson",
+            "inetOrgPerson",
+            "top",
+            "organizationalPerson",
+            "person",
+            "mathPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5566",
+        "roomNumber": "437",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "dsalimova",
         "sn": "Salimova",
+        "ou": "AM",
+        "eduPersonAffiliation": "faculty",
         "mail": "diyora.salimova@mathematik.uni-freiburg.de",
         "labeledURI": "http://www.salimova.org/",
-        "givenName": "Diyora"
+        "givenName": "Diyora",
+        "objectClass": [
+            "labeledURIObject",
+            "eduPerson",
+            "inetOrgPerson",
+            "mathPerson",
+            "person",
+            "organizationalPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "HH10",
+        "telephoneNumber": "5643",
+        "roomNumber": "208",
+        "personalTitle": "JProf. Dr."
     },
     {
         "cn": null,
         "sn": null,
+        "ou": "agsalimova",
+        "eduPersonAffiliation": null,
         "mail": null,
         "labeledURI": null,
-        "givenName": null
+        "givenName": null,
+        "objectClass": "organizationalUnit",
+        "eduPersonPrimaryAffiliation": null,
+        "street": null,
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": null
     },
     {
         "cn": "sh",
         "sn": "Hermann",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "simone.hermann@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/hermann/index.html",
-        "givenName": "Simone"
+        "givenName": "Simone",
+        "objectClass": [
+            "person",
+            "eduPerson",
+            "organizationalPerson",
+            "mathPerson",
+            "labeledURIObject",
+            "inetOrgPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5650",
+        "roomNumber": "206",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "suchan",
         "sn": "Suchan",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "oliver.suchan@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/suchan/index.html",
-        "givenName": "Oliver"
-    },
-    {
-        "cn": "gazca",
-        "sn": "Gazca Orozco",
-        "mail": "alexei.gazca@mathematik.uni-freiburg.de",
-        "labeledURI": "http://home.mathematik.uni-freiburg.de/personen/list/AM?l=en",
-        "givenName": "Pablo Alexei"
+        "givenName": "Oliver",
+        "objectClass": [
+            "top",
+            "labeledURIObject",
+            "person",
+            "eduPerson",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5639",
+        "roomNumber": "212",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "bartnick",
-        "sn": "Bartnick",
+        "sn": "Amann-Bartnick",
+        "ou": "ML",
+        "eduPersonAffiliation": "staff",
         "mail": "charlotte.bartnick@math.uni-freiburg.de",
-        "labeledURI": "https://logik.mathematik.uni-freiburg.de/mitarb/index.html?l=de",
-        "givenName": "Charlotte"
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/bartnick/",
+        "givenName": "Charlotte",
+        "objectClass": [
+            "labeledURIObject",
+            "eduPerson",
+            "organizationalPerson",
+            "inetOrgPerson",
+            "person",
+            "mathPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5611",
+        "roomNumber": "305",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "lr",
         "sn": "Radic",
+        "ou": "AM",
+        "eduPersonAffiliation": "secretary",
         "mail": "lidia.radic@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Lidia"
-    },
-    {
-        "cn": "amann",
-        "sn": "Amann",
-        "mail": "marius.amann@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Marius"
+        "givenName": "Lidia",
+        "objectClass": [
+            "mathPerson",
+            "top",
+            "labeledURIObject",
+            "eduPerson",
+            "organizationalPerson",
+            "person",
+            "inetOrgPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "HH10",
+        "telephoneNumber": "5640",
+        "roomNumber": "204",
+        "personalTitle": null
     },
     {
         "cn": "deitmar",
         "sn": "Deitmar",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "ben.deitmar@stochastik.uni-freiburg.de",
         "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/deitmar",
-        "givenName": "Ben"
-    },
-    {
-        "cn": "ritterm",
-        "sn": "Ritter",
-        "mail": "moritz.ritter@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/ritter",
-        "givenName": "Moritz"
-    },
-    {
-        "cn": "glaffig",
-        "sn": "Glaffig",
-        "mail": "saskia.glaffig@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/saskia-glaffig",
-        "givenName": "Saskia"
+        "givenName": "Ben",
+        "objectClass": [
+            "mathPerson",
+            "person",
+            "eduPerson",
+            "organizationalPerson",
+            "labeledURIObject",
+            "inetOrgPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "227",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "kiefferd",
         "sn": "Kieffer",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "dario.kieffer@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/kieffer",
-        "givenName": "Dario"
-    },
-    {
-        "cn": "stiefelj",
-        "sn": "Stiefel",
-        "mail": "jakob.stiefel@stochastik.uni-freiburg.de",
-        "labeledURI": "https://www.stochastik.uni-freiburg.de/mitarbeiter/",
-        "givenName": "Jakob"
+        "labeledURI": "https://www.stochastik.uni-freiburg.de/de/mitarbeiter/dario-kieffer/dario-kieffer",
+        "givenName": "Dario",
+        "objectClass": [
+            "mathPerson",
+            "person",
+            "eduPerson",
+            "organizationalPerson",
+            "labeledURIObject",
+            "inetOrgPerson",
+            "top"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "226",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "lippek",
         "sn": "Lippek",
+        "ou": "MSt",
+        "eduPersonAffiliation": "secretary",
         "mail": "lippek@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Anna-Laura"
-    },
-    {
-        "cn": "christineschmidt",
-        "sn": "Schmidt",
-        "mail": "christine.schmidt@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Christine"
+        "givenName": "Anna-Laura",
+        "objectClass": [
+            "person",
+            "labeledURIObject",
+            "eduPerson",
+            "inetOrgPerson",
+            "organizationalPerson",
+            "top",
+            "mathPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5676",
+        "roomNumber": "245",
+        "personalTitle": "B.A."
     },
     {
         "cn": "pavarana",
         "sn": "Pavarana",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "simone.pavarana@stochastik.uni-freiburg.de",
-        "labeledURI": "http://stochastik.uni-freiburg.de",
-        "givenName": "Simone"
+        "labeledURI": null,
+        "givenName": "Simone",
+        "objectClass": [
+            "mathPerson",
+            "eduPerson",
+            "top",
+            "inetOrgPerson",
+            "person",
+            "organizationalPerson",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "224",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "jessberger",
         "sn": "Je\u00dfberger",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "julius.jessberger@mathematik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Julius"
+        "givenName": "Julius",
+        "objectClass": [
+            "mathPerson",
+            "person",
+            "organizationalPerson",
+            "labeledURIObject",
+            "top",
+            "inetOrgPerson",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5679",
+        "roomNumber": "144",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "dinunzio",
         "sn": "Di Nunzio",
+        "ou": null,
+        "eduPersonAffiliation": "secretary",
         "mail": "esther.di.nunzio@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Esther"
-    },
-    {
-        "cn": "rabe",
-        "sn": "Rabe",
-        "mail": "ramona.rabe@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Ramona"
+        "givenName": "Esther",
+        "objectClass": [
+            "top",
+            "mathPerson",
+            "eduPerson",
+            "organizationalPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "person"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "67682",
+        "roomNumber": "333a",
+        "personalTitle": null
     },
     {
         "cn": "caffier",
         "sn": "Caffier",
+        "ou": null,
+        "eduPersonAffiliation": "secretary",
         "mail": "anne.caffier@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Anne"
+        "givenName": "Anne",
+        "objectClass": [
+            "mathPerson",
+            "person",
+            "eduPerson",
+            "top",
+            "labeledURIObject",
+            "organizationalPerson",
+            "inetOrgPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5576",
+        "roomNumber": "333a",
+        "personalTitle": null
     },
     {
         "cn": "stiefken",
         "sn": "Schreiber",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "tatjana.stiefken@mathematik.uni-freiburg.de",
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/stiefken/index.html",
-        "givenName": "Tatjana"
-    },
-    {
-        "cn": "jakobhannes",
-        "sn": "Jakob",
-        "mail": "hannes.jakob@mathematik.uni-freiburg.de",
-        "labeledURI": "https://home.mathematik.uni-freiburg.de/jakob/",
-        "givenName": "Hannes"
-    },
-    {
-        "cn": "hattenbach",
-        "sn": "Hattenbach",
-        "mail": "rm@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Monika"
-    },
-    {
-        "cn": "zx",
-        "sn": "Zhang",
-        "mail": "xiqiang.zhang@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Xiqiang"
+        "givenName": "Tatjana",
+        "objectClass": [
+            "top",
+            "organizationalPerson",
+            "person",
+            "inetOrgPerson",
+            "eduPerson",
+            "mathPerson",
+            "labeledURIObject"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5654",
+        "roomNumber": "211",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "zaccanelli",
         "sn": "Zaccanelli",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "giovanni.zaccanelli@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Giovanni"
+        "givenName": "Giovanni",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5555",
+        "roomNumber": "422",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "reuss",
         "sn": "Reu\u00df",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "jonah.reuss@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Jonah"
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/reuss/",
+        "givenName": "Jonah",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5572",
+        "roomNumber": "326",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "stegemeyer",
         "sn": "Stegemeyer",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "maximilian.stegemeyer@math.uni-freiburg.de",
         "labeledURI": "https://sites.google.com/view/maximilianstegemeyer",
-        "givenName": "Maximilian"
+        "givenName": "Maximilian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "97922",
+        "roomNumber": "335",
+        "personalTitle": "Dr."
     },
     {
         "cn": "johne",
         "sn": "Johne",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "florian.johne@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Florian"
-    },
-    {
-        "cn": "kertel",
-        "sn": "Kertels",
-        "mail": "fabian.kertels@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Fabian"
+        "givenName": "Florian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5551",
+        "roomNumber": "206",
+        "personalTitle": "Dr."
     },
     {
         "cn": "li",
         "sn": "Li",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "Jin.Li@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Jin"
+        "givenName": "Jin",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5549",
+        "roomNumber": "325",
+        "personalTitle": null
     },
     {
         "cn": "adeosun",
         "sn": "Adeosun",
+        "ou": "MSt",
+        "eduPersonAffiliation": [
+            "faculty",
+            "staff"
+        ],
         "mail": "samuel.adeosun@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Samuel Ayomide "
+        "givenName": "Samuel Ayomide ",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "231",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "heinzel",
         "sn": "Heinzel",
+        "ou": "MSt",
+        "eduPersonAffiliation": [
+            "faculty",
+            "staff"
+        ],
         "mail": "carola.heinzel@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Carola Sophia"
-    },
-    {
-        "cn": "hattenbachmonika",
-        "sn": "Hattenbach",
-        "mail": "htb@mathematik.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Monika"
+        "givenName": "Carola Sophia",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "231a",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "pfaffelhuberc",
         "sn": "Pfaffelhuber",
+        "ou": "Di",
+        "eduPersonAffiliation": "secretary",
         "mail": "claudia.pfaffelhuber@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Claudia"
+        "givenName": "Claudia",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5617",
+        "roomNumber": "131",
+        "personalTitle": null
     },
     {
         "cn": "dschneider",
         "sn": "Schneider",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "dominik.schneider@mathematik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Dominik"
+        "givenName": "Dominik",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5627",
+        "roomNumber": "210",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "tambendonfack",
         "sn": "Tambe Ndonfack",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "felix.ndonfack@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "F\u00e9lix Barrez"
+        "givenName": "F\u00e9lix Barrez",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "224",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "samek",
         "sn": "Samek",
+        "ou": "RM",
+        "eduPersonAffiliation": "employee",
         "mail": "ricarda.samek@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Ricarda"
+        "givenName": "Ricarda",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "95230",
+        "roomNumber": "423",
+        "personalTitle": null
     },
     {
         "cn": "zier",
         "sn": "Zier",
+        "ou": "D",
+        "eduPersonAffiliation": "secretary",
         "mail": "claudia.zier@mathphys.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Claudia"
+        "givenName": "Claudia",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5534",
+        "roomNumber": "428",
+        "personalTitle": null
     },
     {
         "cn": "bellerinogab",
         "sn": "Bellerino",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
         "mail": "gabriele.bellerino@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Gabriele"
+        "givenName": "Gabriele",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "227",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "foerster",
         "sn": "F\u00f6rster",
+        "ou": "AM",
+        "eduPersonAffiliation": "secretary",
         "mail": "ulrike.foerster@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Ulrike"
+        "givenName": "Ulrike",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "HH10",
+        "telephoneNumber": "5629",
+        "roomNumber": "205",
+        "personalTitle": null
     },
     {
         "cn": "andres",
         "sn": "Andres",
-        "mail": "soeren.andres@math.uni-freiburg.de",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
+        "mail": null,
         "labeledURI": "https://aam.uni-freiburg.de/mitarb/andres/index.html",
-        "givenName": "S\u00f6ren"
-    },
-    {
-        "cn": "mesug",
-        "sn": "Mesuere",
-        "mail": "gerard.mesuere@stochastik.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Gerard"
+        "givenName": "S\u00f6ren",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "khadikovlogik",
         "sn": "Khadikov",
+        "ou": "ML",
+        "eduPersonAffiliation": "secretary",
         "mail": "olga.khadikov@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Olga"
+        "givenName": "Olga",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5606",
+        "roomNumber": "306",
+        "personalTitle": null
     },
     {
         "cn": "khadikovrm",
         "sn": "Khadikov",
+        "ou": "RM",
+        "eduPersonAffiliation": "secretary",
         "mail": "rm@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Olga"
-    },
-    {
-        "cn": "khadikov",
-        "sn": "Khadikov",
-        "mail": "rm@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Olga"
+        "givenName": "Olga",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5542",
+        "roomNumber": "322",
+        "personalTitle": null
     },
     {
         "cn": "brunnerrm",
         "sn": "Brunner",
+        "ou": "RM",
+        "eduPersonAffiliation": "secretary",
         "mail": "rm@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Irina"
+        "givenName": "Irina",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "secretary",
+        "street": "E1",
+        "telephoneNumber": "5542",
+        "roomNumber": "322",
+        "personalTitle": null
     },
     {
         "cn": "sciaraffia",
         "sn": "Sciaraffia",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "luciano.sciaraffia@mathematik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Luciano"
+        "givenName": "Luciano",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5645",
+        "roomNumber": "222",
+        "personalTitle": "Dr."
     },
     {
         "cn": "kater",
         "sn": "Kater",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "stefan.kater@mathematik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Stefan"
-    },
-    {
-        "cn": "mei",
-        "sn": "Mei",
-        "mail": "xinqun.mei@math.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Xinqun"
+        "givenName": "Stefan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5635",
+        "roomNumber": "228",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "ren",
         "sn": "Ren",
+        "ou": null,
+        "eduPersonAffiliation": "staff",
         "mail": "xier.ren@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Xier"
+        "givenName": "Xier",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "425",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "xuwenzhang",
         "sn": "Zhang",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "xuwen.zhang@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Xuwen"
+        "givenName": "Xuwen",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5582",
+        "roomNumber": "214",
+        "personalTitle": "Dr."
     },
     {
         "cn": "mukhammadiev",
         "sn": "Mukhammadiev",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
         "mail": "ilkhom.mukhammadiev@mathematik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Ilkhom"
+        "givenName": "Ilkhom",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5627",
+        "roomNumber": "210",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "snodgrass",
         "sn": "Snodgrass",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "benedict.snodgrass@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Ben"
+        "givenName": "Ben",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "54029",
+        "roomNumber": "418",
+        "personalTitle": "M.Sc."
     },
     {
         "cn": "sercombe",
         "sn": "Sercombe",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "damian.sercombe@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Damian"
+        "givenName": "Damian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5550",
+        "roomNumber": "433",
+        "personalTitle": "Dr."
     },
     {
         "cn": "oswal",
         "sn": "Oswal",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
         "mail": "abhishek.oswal@math.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Abhishek"
+        "givenName": "Abhishek",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5567",
+        "roomNumber": "419",
+        "personalTitle": "JProf. "
     },
     {
         "cn": "ludwig",
         "sn": "Ludwig",
+        "ou": "ML",
+        "eduPersonAffiliation": "staff",
         "mail": "stefan.ludwig@mathematik.uni-freiburg.de",
-        "labeledURI": null,
-        "givenName": "Stefan"
+        "labeledURI": "https://ludwig-sml.github.io",
+        "givenName": "Stefan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5609",
+        "roomNumber": "304",
+        "personalTitle": "Dr."
     },
     {
         "cn": "trebuchon",
         "sn": "Tr\u00e9buchon",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
         "mail": "eric.trebuchon@math.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/trebuchon/",
+        "givenName": "Eric",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5572",
+        "roomNumber": "326",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "stroppel",
+        "sn": "Stroppel",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
+        "mail": "sebastian.stroppel@stochastik.uni-freiburg.de",
         "labeledURI": null,
-        "givenName": "Eric"
+        "givenName": "Sebastian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "231a",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "temkin",
+        "sn": "Temkin",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "mtemkin@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Mikhail",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5573",
+        "roomNumber": "323",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "pu",
+        "sn": "Pu",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "zhe.pu@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Zhe",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5614",
+        "roomNumber": "203",
+        "personalTitle": null
+    },
+    {
+        "cn": "brugger",
+        "sn": "Brugger",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
+        "mail": "jonathan.brugger@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Jonathan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5647",
+        "roomNumber": "207",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "hahn",
+        "sn": "Hahn",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
+        "mail": "sebastian.hahn@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Sebastian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "226",
+        "personalTitle": null
+    },
+    {
+        "cn": "mingwei",
+        "sn": "Zhang",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "mingwei.zhang@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Mingwei",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5556",
+        "roomNumber": "213",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "winter",
+        "sn": "Winter",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "rosa.winter@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Rosa",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5547",
+        "roomNumber": "425",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "han",
+        "sn": "Han",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "mingyang.han@math.uni-freiburg.de ",
+        "labeledURI": null,
+        "givenName": "Mingyang",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5591",
+        "roomNumber": "151",
+        "personalTitle": null
+    },
+    {
+        "cn": "bohan",
+        "sn": "Wang",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "bohan.wang@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Bohan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5614",
+        "roomNumber": "203",
+        "personalTitle": null
+    },
+    {
+        "cn": "bi",
+        "sn": "Bi",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "yuchen.bi@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Yuchen",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5600",
+        "roomNumber": "205",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "zg",
+        "sn": "Gong",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
+        "mail": "zikang.gong@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Zikang",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "HH10",
+        "telephoneNumber": "5654",
+        "roomNumber": "211",
+        "personalTitle": "MSc."
+    },
+    {
+        "cn": "selinger",
+        "sn": "Selinger",
+        "ou": null,
+        "eduPersonAffiliation": [
+            "faculty",
+            "employee"
+        ],
+        "mail": "sebastian.selinger@math.uni-freiburg.de",
+        "labeledURI": "https://home.mathematik.uni-freiburg.de/admins/",
+        "givenName": "Sebastian",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "employee",
+        "street": "E1",
+        "telephoneNumber": "5552",
+        "roomNumber": "041",
+        "personalTitle": null
+    },
+    {
+        "cn": "ak",
+        "sn": "Kushova",
+        "ou": "AM",
+        "eduPersonAffiliation": "staff",
+        "mail": "alen.kushova@mathematik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Alen",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5682",
+        "roomNumber": "147",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "mueller",
+        "sn": "M\u00fcller",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "niklas.mueller@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Niklas",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5555",
+        "roomNumber": "422",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "toufik",
+        "sn": "Toufik",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "ayman.toufik@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Ayman",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5589",
+        "roomNumber": "408",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "saffirio",
+        "sn": "Saffirio",
+        "ou": "RM",
+        "eduPersonAffiliation": "faculty",
+        "mail": "chiara.saffirio@math.uni-freiburg.de ",
+        "labeledURI": null,
+        "givenName": "Chiara",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5563",
+        "roomNumber": "337",
+        "personalTitle": "Prof. Dr."
+    },
+    {
+        "cn": "genovese",
+        "sn": "Genovese",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
+        "mail": "giuseppe.genovese@stochastik.uni-freiburg.de",
+        "labeledURI": "https://sites.google.com/site/giuseppegenovesemathphys/",
+        "givenName": "Giuseppe",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5669",
+        "roomNumber": "240",
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "bader",
+        "sn": "Bader",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
+        "mail": "roger.bader@stochastik.uni-freiburg.de",
+        "labeledURI": "https://www.math.uni-freiburg.de/cd2021/personen_MSt_de/",
+        "givenName": "Roger",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "239",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "dahlhaus",
+        "sn": "Dahlhaus",
+        "ou": "MSt",
+        "eduPersonAffiliation": [
+            "faculty",
+            "teaching"
+        ],
+        "mail": "rainer.dahlhaus@stochastik.uni-freiburg.de",
+        "labeledURI": "https://uni-freiburg.de/stochastik/dahlhaus/",
+        "givenName": "Rainer",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "faculty",
+        "street": "E1",
+        "telephoneNumber": "5662",
+        "roomNumber": "229",
+        "personalTitle": "Prof. Dr."
+    },
+    {
+        "cn": "stiefel",
+        "sn": "Stiefel",
+        "ou": "MSt",
+        "eduPersonAffiliation": "alumn",
+        "mail": null,
+        "labeledURI": "https://www.math.uni-freiburg.de/cd2021/personen_MSt_de/",
+        "givenName": "Jakob",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "alumn",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": null,
+        "personalTitle": "Dr."
+    },
+    {
+        "cn": "vegnuti",
+        "sn": "Vegnuti",
+        "ou": "ML",
+        "eduPersonAffiliation": "staff",
+        "mail": "alessandro.vegnuti@email.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Alessandro",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5612",
+        "roomNumber": "308",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "kamdem",
+        "sn": "Kuissi Kamdem",
+        "ou": "MSt",
+        "eduPersonAffiliation": "staff",
+        "mail": "wilfried.kuissi.kamdem@stochastik.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Donatien Wilfried",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": null,
+        "roomNumber": "225",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "pflaum",
+        "sn": "Pflaum",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "phillip.pflaum@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Phillip",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5568",
+        "roomNumber": "324",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "klemm",
+        "sn": "Klemm",
+        "ou": "ML",
+        "eduPersonAffiliation": "staff",
+        "mail": "simon.klemm@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Simon",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5605",
+        "roomNumber": "307",
+        "personalTitle": "B.Sc."
+    },
+    {
+        "cn": "brotz",
+        "sn": "Brotz",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "benjamin.brotz@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Benjamin",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5547",
+        "roomNumber": "325",
+        "personalTitle": "M.Sc."
+    },
+    {
+        "cn": "yang",
+        "sn": "Yang",
+        "ou": "RM",
+        "eduPersonAffiliation": "staff",
+        "mail": "liuluan.yang@math.uni-freiburg.de",
+        "labeledURI": null,
+        "givenName": "Liuluan",
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "mathPerson",
+            "inetOrgPerson",
+            "labeledURIObject",
+            "eduPerson"
+        ],
+        "eduPersonPrimaryAffiliation": "staff",
+        "street": "E1",
+        "telephoneNumber": "5591",
+        "roomNumber": "151",
+        "personalTitle": "M.Sc."
     }
 ]

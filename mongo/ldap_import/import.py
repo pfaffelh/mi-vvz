@@ -1,6 +1,10 @@
 from ldap3 import Server, Connection, ALL, SUBTREE
 import json
 
+# writes ldap.json
+
+# Subsequently, this can be used in mi-vvz/change20260301.py in order to get the data into the mongodb
+
 # URL des öffentlichen LDAP-Servers
 ldap_server = 'ldap://home.mathematik.uni-freiburg.de'  # Beispiel für einen öffentlichen LDAP-Server
 
