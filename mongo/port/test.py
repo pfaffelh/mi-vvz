@@ -8,10 +8,7 @@ per = mongo_db["person"]
 
 import schema20260301
 schema = schema20260301.person_validator["$jsonSchema"]
-
-per.update_many({}, 
-             {"$set": {"url": "", "raum1" : ""}})
-
+ 
 invalid_docs = mongo_db.person.find({
     "$nor": [
         {"$jsonSchema": schema}
@@ -20,20 +17,12 @@ invalid_docs = mongo_db.person.find({
  
 for doc in invalid_docs:
     print(doc["_id"])
-    print("Fehlt: ")
-    print([x for x in schema["required"] if x not in list(doc.keys())])
-    
 
 per.update_one(
              {"_id": doc["_id"]},
              {"$set": {"_validation_check": True}},
              bypass_document_validation=False)
-
-
-print([type(x) for x in list(doc.values())])
-print("\n")
-print(schema["required"])
+print(doc)
 
 
 
-print(schema)

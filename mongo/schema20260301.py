@@ -196,16 +196,14 @@ raum_validator = {
     }
 }
 
-
-# Lehrperson bool (für VVZ)
-
 # person: Beschreibung einer Person
+
 person_validator = {
     "$jsonSchema": {
         "bsonType": "object",
         "title": "Beschreibung einer Person",
         "description": "Soll auch noch alle Informationen für das Personenverzeichnis bekommen.",
-        "required": ["name", "name_en", "vorname", "name_prefix", "titel", "kennung", "rang", "tel", "email", "raum", "gebaeude", "url", "sichtbar", "hp_sichtbar", "ldap", "lehrperson", "einstiegsdatum", "ausstiegsdatum", "semester", "code", "veranstaltung", "kommentar"],
+        "required": ["name", "name_en", "vorname", "name_prefix", "titel", "kennung", "rang", "tel1", "tel2", "email1", "email2", "raum1", "gebaeude1", "raum2", "gebaeude2", "url", "sichtbar", "hp_sichtbar", "ldap", "einstiegsdatum", "ausstiegsdatum", "semester", "code", "veranstaltung", "kommentar", "kommentar_html", "bearbeitet"],
         "properties": {
             "name": {
                 "bsonType": "string",
@@ -231,27 +229,51 @@ person_validator = {
                 "bsonType": "string",
                 "description": "RZ-Kennung oder sonstiger Identifier"
             },
+            "kommentar_html": {
+                "bsonType": "string",
+                "description": "Kommentar zur Person für die Webpage"
+            },
             "kommentar": {
                 "bsonType": "string",
                 "description": "Kommentar zur Person"
+            },
+            "bearbeitet": {
+                "bsonType": "string",
+                "description": "Wer hat wann zuletzt bearbeitet."
             },
             "rang": {
                 "bsonType": "int",
                 "description": "Rang, nach dem (absteigend) sortiert wird."
             },
-            "tel": {
+            "tel1": {
                 "bsonType": "string",
                 "description": "Telefonnummer der Person"
             },
-            "email": {
+            "email1": {
                 "bsonType": "string",
                 "description": "Email-Adresse der Person"
             },
-            "raum": {
+            "raum1": {
                 "bsonType": "string",
                 "description": "Büro-Nummer der Person"
             },
-            "gebaeude": {
+            "gebaeude1": {
+                "bsonType": "objectId",
+                "description": "Die Gebäude-id1 des Gebäudes, in dem sich der Raum befindet."
+            },
+            "tel2": {
+                "bsonType": "string",
+                "description": "Telefonnummer der Person"
+            },
+            "email2": {
+                "bsonType": "string",
+                "description": "Email-Adresse der Person"
+            },
+            "raum2": {
+                "bsonType": "string",
+                "description": "Büro-Nummer der Person"
+            },
+            "gebaeude2": {
                 "bsonType": "objectId",
                 "description": "Die Gebäude-id1 des Gebäudes, in dem sich der Raum befindet."
             },
@@ -270,10 +292,6 @@ person_validator = {
             "ldap": {
                 "bsonType": "bool",
                 "description": "Gibt an, ob die Person im LDAP erscheinen soll."
-            },
-            "lehrperson": {
-                "bsonType": "bool",
-                "description": "Gibt an, ob die Person in der Lehre tätig ist."
             },
             "semester": {
                 "bsonType": "array",
@@ -313,7 +331,7 @@ personencode_validator = {
     "$jsonSchema": {
         "bsonType": "object",
         "title": "Beschreibung der Codes, die auf der Webpage verwendet werden",
-        "required": ["name", "codekategorie", "beschreibung_de", "beschreibung_en", "rang", "kommentar"],
+        "required": ["name", "codekategorie", "beschreibung_de", "beschreibung_en", "rang", "kommentar_html", "kommentar"],
         "properties": {
             "name": {
                 "bsonType": "string",
@@ -335,6 +353,10 @@ personencode_validator = {
                 "bsonType": "int",
                 "description": "Rang, nach dem (aufsteigend) sortiert wird."
             },
+            "kommentar_html": {
+                "bsonType": "string",
+                "description": "Kommentar zum Kürzel für die Webpage"
+            },
             "kommentar": {
                 "bsonType": "string",
                 "description": "Kommentar zum Kürzel"
@@ -355,7 +377,7 @@ personencodekategorie_validator = {
                 "bsonType": "string",
                 "description": "Die Beschreibung der Kategorie, zB Sprache, Evaluation,... -- required"
             },
-            "name_de": {
+            "name_en": {
                 "bsonType": "string",
                 "description": "Die Beschreibung der Kategorie, zB Sprache, Evaluation,... -- required"
             },
