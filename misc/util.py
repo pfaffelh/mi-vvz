@@ -1,6 +1,7 @@
 import streamlit as st
 from misc.config import *
 import pymongo
+from datetime import datetime
 
 # Initialize logging
 import logging
@@ -165,14 +166,26 @@ def setup_session_state():
         person: {"name": "Neue Person",
                 "name_en": "", 
                 "vorname": "", 
+                "kennung": "", 
+                "titel": "",
                 "name_prefix": "", 
-                "titel": "", 
-                "tel": "", 
+                "tel1": "", 
+                "tel2": "", 
+                "email1": "", 
+                "email2": "", 
+                "raum1": "", 
+                "raum2": "", 
+                "gebaeude1": leer[gebaeude], 
+                "gebaeude2": leer[gebaeude],         
+                "kommentar_html": "", 
+                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
                 "kommentar": "", 
-                "email": "", 
                 "url": "", 
                 "sichtbar": True, 
                 "hp_sichtbar": True, 
+                "einstiegsdatum" : None, 
+                "ausstiegsdatum" : None,
+                "code": [], 
                 "semester": [st.session_state.semester_id], 
                 "veranstaltung": [] 
         },

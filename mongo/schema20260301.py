@@ -203,7 +203,7 @@ person_validator = {
         "bsonType": "object",
         "title": "Beschreibung einer Person",
         "description": "Soll auch noch alle Informationen für das Personenverzeichnis bekommen.",
-        "required": ["name", "name_en", "vorname", "name_prefix", "titel", "kennung", "rang", "tel1", "tel2", "email1", "email2", "raum1", "gebaeude1", "raum2", "gebaeude2", "url", "sichtbar", "hp_sichtbar", "ldap", "einstiegsdatum", "ausstiegsdatum", "semester", "code", "veranstaltung", "kommentar", "kommentar_html", "bearbeitet"],
+        "required": ["name", "name_en", "vorname", "name_prefix", "titel", "kennung", "rang", "tel1", "tel2", "email1", "email2", "raum1", "gebaeude1", "raum2", "gebaeude2", "url", "sichtbar", "hp_sichtbar", "einstiegsdatum", "ausstiegsdatum", "semester", "code", "veranstaltung", "kommentar", "kommentar_html", "bearbeitet"],
         "properties": {
             "name": {
                 "bsonType": "string",
@@ -288,10 +288,6 @@ person_validator = {
             "hp_sichtbar": {
                 "bsonType": "bool",
                 "description": "Gibt an, ob die Person auf Webpage etc sichtbar sein soll."
-            },
-            "ldap": {
-                "bsonType": "bool",
-                "description": "Gibt an, ob die Person im LDAP erscheinen soll."
             },
             "semester": {
                 "bsonType": "array",

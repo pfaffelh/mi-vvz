@@ -11,7 +11,6 @@ code = mongo_db["personencode"]
 
 import schema20260301
 
-
 mongo_db.command('collMod','person', validator=schema20260301.person_validator, validationLevel='off')
 if "personencode" in mongo_db.list_collection_names():
     mongo_db.command('collMod','personencode', validator=schema20260301.personencode_validator, validationLevel='off')
@@ -167,7 +166,6 @@ for p in list(per.find({})):
                     "tel2": "", 
                     "einstiegsdatum" : None, 
                     "ausstiegsdatum" : None,
-                    "ldap" : False,
                     "code" : [],
                     "kommentar_html" : "",
                     "bearbeitet" : "Initialer Eintrag."
