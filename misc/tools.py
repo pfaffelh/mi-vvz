@@ -326,7 +326,7 @@ def authenticate(username, password):
         return False
 
 def can_edit(username):
-    u = util.user.find_one({"rz": username})
+    u = st.session_state.users.find_one({"rz": username})
     id = util.group.find_one({"name": app_name})["_id"]
     return (True if id in u["groups"] else False)
 
@@ -384,6 +384,11 @@ def repr(collection, id, show_collection = True, short = False):
         res = x['beschreibung_de'] if short else f"{x['beschreibung_de']} ({sem})"    
     elif collection == util.person:
         res = f"{x['name']}, {x['name_prefix']}" if short else f"{x['name']}, {x['vorname']}"
+    elif collection == util.personencode:
+        kat = util.personencodekategorie.find_one({"_id": x["codekategorie"]})["name_de"]
+        res = x['name'] if short else f"{kat}: {x['name']}"
+    elif collection == util.personencodekategorie:
+        res = x['name_de']
     elif collection == util.studiengang:
         res = f"{x['name']}"
     elif collection == util.modul:

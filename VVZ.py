@@ -38,12 +38,14 @@ if submit:
             st.session_state.logged_in = True
             st.success("Login successful")
             util.logger.info(f"User {st.session_state.user} hat in sich erfolgreich eingeloggt.")
+            u = st.session_state.users.find_one({"rz": st.session_state.user})
+            st.session_state.username = " ".join([u["vorname"], u["name"]])
             # make all neccesary variables available to session_state
             util.setup_session_state()
             switch_page("veranstaltungen")
         else:
             st.error("Nicht genügend Rechte, um VVZ zu editieren.")
-            util.logger.info(f"User {kennung} hatte nicht gebügend Rechte, um sich einzuloggen.")
+            util.logger.info(f"User {kennung} hatte nicht genügend Rechte, um sich einzuloggen.")
             time.sleep(2)
             st.rerun()
     else: 

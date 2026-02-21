@@ -27,7 +27,7 @@ def setup_session_state():
     try:
         cluster = pymongo.MongoClient(mongo_location)
         mongo_db_users = cluster["user"]
-        st.session_state.user = mongo_db_users["user"]
+        st.session_state.users = mongo_db_users["user"]
         st.session_state.group = mongo_db_users["group"]
 
         mongo_db = cluster["vvz"]
@@ -40,6 +40,8 @@ def setup_session_state():
         st.session_state.rubrik = mongo_db["rubrik"]
         st.session_state.modul = mongo_db["modul"]
         st.session_state.person = mongo_db["person"]
+        st.session_state.personencode = mongo_db["personencode"]
+        st.session_state.personencodekategorie = mongo_db["personencodekategorie"]
         st.session_state.raum = mongo_db["raum"]
         st.session_state.semester = mongo_db["semester"]
         st.session_state.studiengang = mongo_db["studiengang"]
@@ -53,7 +55,7 @@ def setup_session_state():
         logger.error("Verbindung zur Datenbank nicht möglich!")
         st.write("**Verbindung zur Datenbank nicht möglich!**  \nKontaktieren Sie den Administrator.")
 
-    user = st.session_state.user
+    users = st.session_state.users
     group = st.session_state.group
     anforderung = st.session_state.anforderung
     anforderungkategorie = st.session_state.anforderungkategorie
@@ -63,6 +65,8 @@ def setup_session_state():
     rubrik = st.session_state.rubrik
     modul = st.session_state.modul
     person = st.session_state.person
+    personencode = st.session_state.personencode
+    personencodekategorie = st.session_state.personencodekategorie
     raum = st.session_state.raum
     semester = st.session_state.semester
     studiengang = st.session_state.studiengang
@@ -88,6 +92,8 @@ def setup_session_state():
     # Name of the user
     if "user" not in st.session_state:
         st.session_state.user = ""
+    if "username" not in st.session_state:
+        st.session_state.username = ""
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
     # Element to edit
@@ -120,6 +126,8 @@ def setup_session_state():
         gebaeude: "Gebäude",
         modul: "Module",
         person: "Personen",
+        personencode: "Personencode",
+        personencodekategorie: "Personencodekategorie",
         raum: "Räume",
         rubrik: "Rubrik",
         semester: "Semester",
@@ -137,6 +145,7 @@ def setup_session_state():
         codekategorie: codekategorie.find_one({"semester": st.session_state.semester_id, "name_de": "-"})["_id"] if len(list(codekategorie.find({"semester": st.session_state.semester_id, "name_de": "-"}))) else "",
         gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
         modul: modul.find_one({"name_de": "-"})["_id"],
+        personencodekategorie: personencodekategorie.find_one({"name_de": "-"})["_id"],
         raum: raum.find_one({"name_de": "-"})["_id"],
         studiengang: studiengang.find_one({"name": "-"})["_id"],
         rubrik: rubrik.find_one({"semester": st.session_state.semester_id, "titel_de": "-"})["_id"] if len(list(rubrik.find({"semester": st.session_state.semester_id, "titel_de": "-"}))) else "",
@@ -310,6 +319,8 @@ def setup_session_state():
                     {"collection": veranstaltung, "field": "einmaliger_termin.$.person", "list": True}, 
                     {"collection": veranstaltung, "field": "woechentlicher_termin.$.person", "list": True},
                     {"collection": planung, "field": "dozent", "list": True}],
+        personencode: [{"collection": person, "field": "code", "list": True}],
+        personencodekategorie: [{"collection": code, "field": "codekategorie", "list": False}],
         studiengang:[{"collection": modul, "field": "studiengang", "list": True}],
         modul:     [{"collection": studiengang, "field": "modul", "list": True}, 
                     {"collection": veranstaltung, "field": "verwendbarkeit_modul", "list": True},
@@ -350,6 +361,8 @@ gebaeude = st.session_state.gebaeude
 rubrik = st.session_state.rubrik
 modul = st.session_state.modul
 person = st.session_state.person
+personencode = st.session_state.personencode
+personencodekategorie = st.session_state.personencodekategorie
 raum = st.session_state.raum
 semester = st.session_state.semester
 studiengang = st.session_state.studiengang
