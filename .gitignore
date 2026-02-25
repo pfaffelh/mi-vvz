@@ -1,5 +1,6 @@
 /misc/__pycache__/
 /mongo/__pycache__/
+/mongo/vvz-backup_*
 /__pycache__/
 /venv/
 *.log
