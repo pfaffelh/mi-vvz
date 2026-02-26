@@ -39,6 +39,10 @@ for p in liste:
             co = code.find_one({"name" : "Professorinnen und Professoren"})
             vo = per.find_one({"name" : p["vorgesetzte"]})
             per.update_one({"_id" : pe["_id"]}, {"$addToSet" : {"vorgesetzte" : vo["_id"]}})
+        if p["abteilung"]:
+            print(f"Abteilung {p["abteilung"]}")
+            co = code.find_one({"name" : p["abteilung"]})
+            per.update_one({"_id" : pe["_id"]}, {"$addToSet" : {"code" : co["_id"]}})
         if pd.notna(p["einstiegsdatum"]):
             per.update_one({"_id" : pe["_id"]}, {"$set" : {"einstiegsdatum" : p["einstiegsdatum"]}})
         if pd.notna(p["ausstiegsdatum"]):
@@ -53,7 +57,7 @@ for p in liste:
             per.update_one({"_id" : pe["_id"]}, {"$set" : {"kommentar" : p["kommentar"]}})
         if p["dekanat"]:
             co = code.find_one({"name" : p["dekanat"]})
-            print(f"Fehler bei {p["dekanat"]}")
+            #print(f"Fehler bei {p["dekanat"]}")
             per.update_one({"_id" : pe["_id"]}, {"$addToSet" : {"code" : co["_id"]}})
         if p["studiendekanat"]:
             co = code.find_one({"name" : p["studiendekanat"]})

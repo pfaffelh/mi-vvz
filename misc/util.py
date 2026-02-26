@@ -177,6 +177,7 @@ def setup_session_state():
                 "vorname": "", 
                 "kennung": "", 
                 "titel": "",
+                "abschluss": "",
                 "name_prefix": "", 
                 "tel1": "", 
                 "tel2": "", 
@@ -198,6 +199,8 @@ def setup_session_state():
                 "vorgesetzte" : [], 
                 "abwesend_start" : None, 
                 "abwesend_ende" : None,
+                "kommentar_abwesend" : "",
+                "kommentar_stelle" : "",
                 "code": [], 
                 "semester": [st.session_state.semester_id], 
                 "veranstaltung": [] 
