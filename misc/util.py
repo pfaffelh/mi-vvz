@@ -191,7 +191,7 @@ def setup_session_state():
                 "kommentar": "", 
                 "url": "", 
                 "sichtbar": True, 
-                "hp_sichtbar": True, 
+                "hp_sichtbar": False,
                 "einstiegsdatum" : None, 
                 "ausstiegsdatum" : None,
                 "gender" : "kA", 

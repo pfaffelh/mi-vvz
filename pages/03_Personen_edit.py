@@ -75,7 +75,7 @@ if st.session_state.logged_in:
 
     sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
     st.write(x["bearbeitet"])
-    hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
+    hp_sichtbar = st.checkbox("Im [Personenverzeichnis](https://www.math.uni-freiburg.de/cd2021/personen_de/) sichtbar", x["hp_sichtbar"])
     # ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
