@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -44,7 +43,7 @@ if st.session_state.logged_in:
         with co3:
             abk = f"{x['name_de'].strip()} ({x['kurzname'].strip()})"
             abk = f"{abk.strip()} 😎" if x["sichtbar"] else f"{abk.strip()}"
-            submit = st.button(abk, key=f"edit-{x['_id']}", disabled = True if x["_id"] == util.leer[util.modul] else False)
+            submit = st.button(abk, key=f"edit-{x['_id']}", disabled = True if x["_id"] == st.session_state.leer[util.modul] else False)
         if submit:
             st.session_state.edit = x["_id"]
             switch_page("module edit")

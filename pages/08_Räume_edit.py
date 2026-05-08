@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -67,8 +66,8 @@ if st.session_state.logged_in:
         
 
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
-        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == util.leer[collection] else False))
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
+        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
         name_en=st.text_input('Name (en)', x["name_en"])
         kurzname=st.text_input('Kurzname', x["kurzname"], disabled = True if x["_id"] in st.session_state.hauptraum_ids else False)
         if x["gebaeude"] not in gebaeude_sichtbar:
@@ -85,7 +84,6 @@ if st.session_state.logged_in:
                 tools.new(collection, ini = x_updated, switch=False)
             else:
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(2)
             st.session_state.edit = ""
             switch_page("Räume")
 

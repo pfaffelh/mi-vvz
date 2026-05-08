@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -75,7 +74,6 @@ if st.session_state.logged_in:
                 tools.new(collection, ini = x_updated, switch=False)
             else:
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(2)
             st.session_state.edit = ""
             switch_page("terminart")
             

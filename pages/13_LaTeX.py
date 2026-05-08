@@ -1,7 +1,6 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 import pymongo
-import time
 import ldap
 import misc.util as util
 import misc.latex as latex
