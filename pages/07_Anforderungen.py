@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -57,7 +56,7 @@ if st.session_state.logged_in:
                     abk = f"{abk.strip()} 😎" if x2["sichtbar"] else f"{abk.strip()}"
                     abk = abk + ("; E: ✓" if x2["name_en"] != "" else "; E: ✗") + f"; {tools.repr(util.semester, st.session_state.semester_id, False, True)}: {'✓' if x2['_id'] in alle_verwendete_anforderungen else '✗'}"
 
-                    submit = st.button(abk, key=f"edit-{x2['_id']}", disabled = True if x2["_id"] == util.leer[util.anforderung] else False)
+                    submit = st.button(abk, key=f"edit-{x2['_id']}", disabled = True if x2["_id"] == st.session_state.leer[util.anforderung] else False)
                 if submit:
                     st.session_state.edit = x2["_id"]
                     switch_page("anforderungen edit")
@@ -89,7 +88,7 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", disabled = True if x["_id"] == util.leer[util.anforderungkategorie] else False)
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", disabled = True if x["_id"] == st.session_state.leer[util.anforderungkategorie] else False)
                         if submit:
                             tools.delete_item_update_dependent_items(collection, x["_id"], switch = False)
                     with colu3: 
@@ -101,10 +100,9 @@ if st.session_state.logged_in:
                     kurzname=st.text_input('Kurzname', x["kurzname"], key=f'kurzname-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
                     x_updated = {"sichtbar": sichtbar, "name_de": name_de, "name_en": name_en, "kurzname": kurzname, "kommentar": kommentar}
-                    submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == util.leer[util.anforderungkategorie] else False)
+                    submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.anforderungkategorie] else False)
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
-                        time.sleep(.1)
                         st.session_state.expanded = ""
                         st.session_state.edit = ""
                         st.rerun()

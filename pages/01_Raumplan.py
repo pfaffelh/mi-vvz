@@ -32,7 +32,7 @@ collection = util.veranstaltung
 st.session_state.page = "Raumplan"
 st.session_state.edit = ""
 
-semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+semesters = util.list_semesters()
 tage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 slotstart = [8, 10, 12, 14, 16, 18]
 raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in util.raum.find() }

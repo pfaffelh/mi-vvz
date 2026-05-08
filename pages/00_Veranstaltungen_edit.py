@@ -2,7 +2,6 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 import datetime 
 import pymongo
-import time
 import pandas as pd
 import translators as ts
 from itertools import chain
@@ -127,7 +126,7 @@ def write_tmp(i_tmp_start, field, termine):
         st.session_state.veranstaltung_tmp[field][i] = termine[tmp_id_start + i]
 
 
-semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+semesters = list(util.list_semesters())
 
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
@@ -160,8 +159,7 @@ if st.session_state.logged_in:
                 submit = st.button(label = "Kopieren", type = 'primary', key = f"copy-{x['_id']}")
                 if submit:
                     w_id = tools.kopiere_veranstaltung(x["_id"], kop_sem_id, kopiere_personen, kopiere_termine, kopiere_kommVVZ, kopiere_verwendbarkeit)
-                    st.success("Erfolgreich kopiert!")
-                    time.sleep(2)
+                    tools.flash("Erfolgreich kopiert!")
                     st.session_state.semester_id = kop_sem_id
                     st.session_state.edit = w_id
                     st.rerun()
@@ -487,7 +485,6 @@ if st.session_state.logged_in:
             sync_termine()
             tools.update_confirm(collection, x, ver_updated, reset = False)
             correct_deputate(x)
-            time.sleep(.1) ## to show toast
             st.rerun()
 
     with st.expander("Kommentiertes Vorlesungsverzeichnis", expanded = True if st.session_state.expanded == "kommentiertes_VVZ" else False):
@@ -674,7 +671,6 @@ if st.session_state.logged_in:
         correct_deputate(x)
         tools.update_confirm(collection, x, ver_updated_all, reset = False)
         ver_updated_all = dict()
-        time.sleep(2)
         switch_page("Veranstaltungen")
 
 else: 

@@ -20,12 +20,24 @@ def configure_logging(file_path, level=logging.INFO):
 
 logger = configure_logging(log_file)
 
+@st.cache_resource
+def get_mongo_client():
+    return pymongo.MongoClient(mongo_location)
+
+def get_current_semester_kurzname():
+    if datetime.now().month < 4:
+        return f"{datetime.now().year-1}WS"
+    elif 3 < datetime.now().month and datetime.now().month < 10:
+        return f"{datetime.now().year}SS"
+    else:
+        return f"{datetime.now().year}WS"
+
 def setup_session_state():
-    # Das ist die mongodb; 
-    # vvz enthält alle Daten für das Vorlesungsverzeichnis. 
+    # Das ist die mongodb;
+    # vvz enthält alle Daten für das Vorlesungsverzeichnis.
     # user ist aus dem Cluster user und wird nur bei der Authentifizierung benötigt
     try:
-        cluster = pymongo.MongoClient(mongo_location)
+        cluster = get_mongo_client()
         mongo_db_users = cluster["user"]
         st.session_state.users = mongo_db_users["user"]
         st.session_state.group = mongo_db_users["group"]
@@ -50,8 +62,8 @@ def setup_session_state():
         st.session_state.dictionary = mongo_db["dictionary"]
         st.session_state.planung = mongo_db["planung"]
         st.session_state.planungveranstaltung = mongo_db["planungveranstaltung"]
-        
-    except: 
+
+    except:
         logger.error("Verbindung zur Datenbank nicht möglich!")
         st.write("**Verbindung zur Datenbank nicht möglich!**  \nKontaktieren Sie den Administrator.")
 
@@ -75,7 +87,7 @@ def setup_session_state():
     dictionary = st.session_state.dictionary
     planungveranstaltung = st.session_state.planungveranstaltung
     planung = st.session_state.planung
-    
+
     # sem ist ein gewähltes Semester
     if "current_semester_id" not in st.session_state:
         semesters = list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
@@ -83,9 +95,9 @@ def setup_session_state():
     if "semester_id" not in st.session_state:
         try:
             st.session_state.semester_id = semester.find_one({"kurzname" : get_current_semester_kurzname()})["_id"]
-        except: 
+        except:
             semesters = list(semester.find({"hp_sichtbar" : True}, sort=[("kurzname", pymongo.DESCENDING)]))
-        st.session_state.semester_id = semesters[0]["_id"]
+            st.session_state.semester_id = semesters[0]["_id"]
     # expanded zeigt an, welches Element ausgeklappt sein soll
     if "expanded" not in st.session_state:
         st.session_state.expanded = ""
@@ -139,112 +151,115 @@ def setup_session_state():
         planung: "Planung"
     }
 
-    st.session_state.leer = {
-        anforderung: anforderung.find_one({"name_de": "-"})["_id"],
-        anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"],
-        codekategorie: codekategorie.find_one({"semester": st.session_state.semester_id, "name_de": "-"})["_id"] if len(list(codekategorie.find({"semester": st.session_state.semester_id, "name_de": "-"}))) else "",
-        gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
-        modul: modul.find_one({"name_de": "-"})["_id"],
-        personencodekategorie: personencodekategorie.find_one({"name_de": "-"})["_id"],
-        raum: raum.find_one({"name_de": "-"})["_id"],
-        studiengang: studiengang.find_one({"name": "-"})["_id"],
-        rubrik: rubrik.find_one({"semester": st.session_state.semester_id, "titel_de": "-"})["_id"] if len(list(rubrik.find({"semester": st.session_state.semester_id, "titel_de": "-"}))) else "",
-        terminart: terminart.find_one({"name_de": "-"})["_id"],
-        planungveranstaltung: planungveranstaltung.find_one({"name": "-"})["_id"],
-    }
+    # leer-Dict: 10 find_one-Calls auf praktisch unveränderliche Anker-Datensätze.
+    # Einmal pro Session reicht.
+    if "leer" not in st.session_state:
+        st.session_state.leer = {
+            anforderung: anforderung.find_one({"name_de": "-"})["_id"],
+            anforderungkategorie: anforderungkategorie.find_one({"name_de": "-"})["_id"],
+            codekategorie: codekategorie.find_one({"semester": st.session_state.semester_id, "name_de": "-"})["_id"] if len(list(codekategorie.find({"semester": st.session_state.semester_id, "name_de": "-"}))) else "",
+            gebaeude: gebaeude.find_one({"name_de": "-"})["_id"],
+            modul: modul.find_one({"name_de": "-"})["_id"],
+            personencodekategorie: personencodekategorie.find_one({"name_de": "-"})["_id"],
+            raum: raum.find_one({"name_de": "-"})["_id"],
+            studiengang: studiengang.find_one({"name": "-"})["_id"],
+            rubrik: rubrik.find_one({"semester": st.session_state.semester_id, "titel_de": "-"})["_id"] if len(list(rubrik.find({"semester": st.session_state.semester_id, "titel_de": "-"}))) else "",
+            terminart: terminart.find_one({"name_de": "-"})["_id"],
+            planungveranstaltung: planungveranstaltung.find_one({"name": "-"})["_id"],
+        }
     leer = st.session_state.leer
 
     semester_id = st.session_state.semester_id
     st.session_state.new = {
-        gebaeude: {"name_de": "neu", 
-                "name_en": "", 
-                "kurzname": "", 
-                "adresse": "", 
-                "url": "", 
-                "sichtbar": True, 
+        gebaeude: {"name_de": "neu",
+                "name_en": "",
+                "kurzname": "",
+                "adresse": "",
+                "url": "",
+                "sichtbar": True,
                 "kommentar": ""},
-        raum: {"name_de": "neu", 
-            "name_en": "", 
-            "kurzname": "", 
-            "gebaeude": leer[gebaeude], 
-            "raum": "", 
-            "groesse": 0, 
-            "sichtbar": True, 
+        raum: {"name_de": "neu",
+            "name_en": "",
+            "kurzname": "",
+            "gebaeude": leer[gebaeude],
+            "raum": "",
+            "groesse": 0,
+            "sichtbar": True,
             "kommentar": ""
         },
         person: {"name": "Neue Person",
-                "name_en": "", 
-                "vorname": "", 
-                "kennung": "", 
+                "name_en": "",
+                "vorname": "",
+                "kennung": "",
                 "titel": "",
-                "name_prefix": "", 
-                "tel1": "", 
-                "tel2": "", 
-                "email1": "", 
-                "email2": "", 
-                "raum1": "", 
-                "raum2": "", 
-                "gebaeude1": leer[gebaeude], 
-                "gebaeude2": leer[gebaeude],         
-                "kommentar_html": "", 
+                "name_prefix": "",
+                "tel1": "",
+                "tel2": "",
+                "email1": "",
+                "email2": "",
+                "raum1": "",
+                "raum2": "",
+                "gebaeude1": leer[gebaeude],
+                "gebaeude2": leer[gebaeude],
+                "kommentar_html": "",
                 "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
-                "kommentar": "", 
-                "url": "", 
-                "sichtbar": True, 
+                "kommentar": "",
+                "url": "",
+                "sichtbar": True,
                 "hp_sichtbar": False,
-                "einstiegsdatum" : None, 
+                "einstiegsdatum" : None,
                 "ausstiegsdatum" : None,
-                "gender" : "kA", 
-                "vorgesetzte" : [], 
-                "abwesend_start" : None, 
+                "gender" : "kA",
+                "vorgesetzte" : [],
+                "abwesend_start" : None,
                 "abwesend_ende" : None,
                 "abschluss": "",
                 "kommentar_abwesend" : "",
                 "kommentar_stelle" : "",
-                "code": [], 
-                "semester": [st.session_state.semester_id], 
-                "veranstaltung": [] 
+                "code": [],
+                "semester": [st.session_state.semester_id],
+                "veranstaltung": []
         },
         studiengang: {"name": "Neuer Studiengang",
-                "kurzname": "", 
-                "kommentar": "", 
+                "kurzname": "",
+                "kommentar": "",
                 "sichtbar": True,
                 "modul": [],
                 "semester": []
         },
         modul: {"name_de": "Neues Modul",
                 "name_en": "",
-                "kurzname": "", 
-                "kommentar": "", 
+                "kurzname": "",
+                "kommentar": "",
                 "sichtbar": True,
-                "studiengang": [] 
+                "studiengang": []
         },
         rubrik: {"titel_de": "Neue Rubrik",
                 "titel_en": "",
-                "untertitel_de": "", 
-                "untertitel_en": "", 
-                "prefix_de": "", 
-                "prefix_en": "", 
-                "suffix_de": "", 
-                "suffix_en": "", 
+                "untertitel_de": "",
+                "untertitel_en": "",
+                "prefix_de": "",
+                "prefix_en": "",
+                "suffix_de": "",
+                "suffix_en": "",
                 "hp_sichtbar": True,
                 "veranstaltung": [] ,
                 "kommentar": "",
-                "semester": st.session_state.semester_id                
+                "semester": st.session_state.semester_id
         },
         code:  {"name": "",
                 "beschreibung_de": "Neuer Code",
-                "beschreibung_en": "", 
+                "beschreibung_en": "",
                 "codekategorie": leer[codekategorie],
                 "veranstaltung": [] ,
-                "kommentar": "", 
+                "kommentar": "",
                 "semester": st.session_state.semester_id
         },
         codekategorie:  {
                 "name_de": "Neu",
                 "name_en": "",
                 "beschreibung_de": "",
-                "beschreibung_en": "", 
+                "beschreibung_en": "",
                 "hp_sichtbar": True,
                 "code": [],
                 "semester": [],
@@ -260,14 +275,14 @@ def setup_session_state():
         anforderung: {"name_de": "Neu",
                     "name_en": "",
                     "anforderungskategorie": leer[anforderungkategorie],
-                    "kommentar": "", 
+                    "kommentar": "",
                     "sichtbar": True,
                     "semester": [st.session_state.semester_id]
         },
         anforderungkategorie: {
             "name_de": "Neu",
             "name_en": "",
-            "kommentar": "", 
+            "kommentar": "",
             "sichtbar": True,
             "kurzname" : ""
         },
@@ -284,52 +299,46 @@ def setup_session_state():
             "veranstaltung": leer[planungveranstaltung]
         }
     }
-    # Für den Raumplan
-    rund = raum.find_one({"kurzname": "HS Rundbau"})
-    weis = raum.find_one({"kurzname": "HS Weismann"})
-    hs2 = raum.find_one({"kurzname": "HS II"})
-    sr404 = raum.find_one({"kurzname": "SR 404"})
-    sr125 = raum.find_one({"kurzname": "SR 125"})
-    sr127 = raum.find_one({"kurzname": "SR 127"})
-    sr226 = raum.find_one({"kurzname": "SR 226"})
-    sr119 = raum.find_one({"kurzname": "SR 119"})
-    sr218 = raum.find_one({"kurzname": "SR 218"})
-    sr232 = raum.find_one({"kurzname": "R 232"})
-    sr318 = raum.find_one({"kurzname": "SR 318"})
-    sr403 = raum.find_one({"kurzname": "SR 403"})
-    sr414 = raum.find_one({"kurzname": "SR 414"})
-    gesperrt = raum.find_one({"kurzname": "gesperrt"})
+    # Für den Raumplan: 8 find_one-Calls auf statische Räume — einmal pro Session.
     if "hauptraum" not in st.session_state:
+        rund = raum.find_one({"kurzname": "HS Rundbau"})
+        weis = raum.find_one({"kurzname": "HS Weismann"})
+        hs2 = raum.find_one({"kurzname": "HS II"})
+        sr404 = raum.find_one({"kurzname": "SR 404"})
+        sr125 = raum.find_one({"kurzname": "SR 125"})
+        sr127 = raum.find_one({"kurzname": "SR 127"})
+        sr226 = raum.find_one({"kurzname": "SR 226"})
+        gesperrt = raum.find_one({"kurzname": "gesperrt"})
         st.session_state.hauptraum = [rund, weis, hs2, sr404, sr125, sr127, sr226, gesperrt]
     if "hauptraum_ids" not in st.session_state:
         st.session_state.hauptraum_ids = [r["_id"] for r in st.session_state.hauptraum]
 
     st.session_state.abhaengigkeit = {
         gebaeude: [{"collection": raum, "field": "gebaeude", "list": False}],
-        raum    : [{"collection": veranstaltung, "field": "einmaliger_termin.$.raum", "list": True}, 
+        raum    : [{"collection": veranstaltung, "field": "einmaliger_termin.$.raum", "list": True},
                     {"collection": veranstaltung, "field": "woechentlicher_termin.raum", "list": False}],
         semester: [{"collection": veranstaltung, "field": "semester", "list": False},
                     {"collection": person, "field": "semester", "list": True},
                     {"collection": studiengang, "field": "semester", "list": True},
-                    {"collection": rubrik, "field": "semester", "list": False}, 
+                    {"collection": rubrik, "field": "semester", "list": False},
                     {"collection": code, "field": "semester", "list": False},
                     {"collection": codekategorie, "field": "semester", "list": False}, ],
-        rubrik: [{"collection": semester, "field": "rubrik", "list": True}, 
+        rubrik: [{"collection": semester, "field": "rubrik", "list": True},
                     {"collection": veranstaltung, "field": "rubrik", "list": False}],
-        code:     [{"collection": semester, "field": "code", "list": True}, 
+        code:     [{"collection": semester, "field": "code", "list": True},
                     {"collection": codekategorie, "field": "code", "list": True},
                     {"collection": veranstaltung, "field": "code", "list": True}],
         codekategorie: [{"collection": code, "field": "codekategorie", "list": False}],
-        person  : [{"collection": veranstaltung, "field": "dozent", "list": True}, 
-                    {"collection": veranstaltung, "field": "assistent", "list": True}, 
-                    {"collection": veranstaltung, "field": "organisation", "list": True}, 
-                    {"collection": veranstaltung, "field": "einmaliger_termin.$.person", "list": True}, 
+        person  : [{"collection": veranstaltung, "field": "dozent", "list": True},
+                    {"collection": veranstaltung, "field": "assistent", "list": True},
+                    {"collection": veranstaltung, "field": "organisation", "list": True},
+                    {"collection": veranstaltung, "field": "einmaliger_termin.$.person", "list": True},
                     {"collection": veranstaltung, "field": "woechentlicher_termin.$.person", "list": True},
                     {"collection": planung, "field": "dozent", "list": True}],
         personencode: [{"collection": person, "field": "code", "list": True}],
         personencodekategorie: [{"collection": code, "field": "codekategorie", "list": False}],
         studiengang:[{"collection": modul, "field": "studiengang", "list": True}],
-        modul:     [{"collection": studiengang, "field": "modul", "list": True}, 
+        modul:     [{"collection": studiengang, "field": "modul", "list": True},
                     {"collection": veranstaltung, "field": "verwendbarkeit_modul", "list": True},
                     {"collection": veranstaltung, "field": "verwendbarkeit.modul", "list": False}],
         anforderungkategorie: [{"collection": anforderung, "field": "anforderungskategorie", "list": False}],
@@ -357,32 +366,31 @@ def setup_session_state():
         "": {"de": "", "en": ""}
     }
 
-setup_session_state()
-user = st.session_state.user
-group = st.session_state.group
-anforderung = st.session_state.anforderung
-anforderungkategorie = st.session_state.anforderungkategorie
-code = st.session_state.code
-codekategorie = st.session_state.codekategorie
-gebaeude = st.session_state.gebaeude
-rubrik = st.session_state.rubrik
-modul = st.session_state.modul
-person = st.session_state.person
-personencode = st.session_state.personencode
-personencodekategorie = st.session_state.personencodekategorie
-raum = st.session_state.raum
-semester = st.session_state.semester
-studiengang = st.session_state.studiengang
-terminart = st.session_state.terminart
-veranstaltung = st.session_state.veranstaltung
-dictionary = st.session_state.dictionary
-planungveranstaltung = st.session_state.planungveranstaltung
-planung = st.session_state.planung
-collection_name = st.session_state.collection_name
-leer = st.session_state.leer
-new = st.session_state.new
-hauptraum = st.session_state.hauptraum
-hauptraum_ids = st.session_state.hauptraum_ids
-abhaengigkeit = st.session_state.abhaengigkeit
-wochentag = st.session_state.wochentag
+# Cachebare Reads: Semester ändert sich selten und steckt in vielen Selectboxen.
+@st.cache_data(ttl=30)
+def list_semesters():
+    return list(semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
 
+_vvz_db = get_mongo_client()["vvz"]
+anforderung = _vvz_db["anforderung"]
+anforderungkategorie = _vvz_db["anforderungkategorie"]
+code = _vvz_db["code"]
+codekategorie = _vvz_db["codekategorie"]
+gebaeude = _vvz_db["gebaeude"]
+rubrik = _vvz_db["rubrik"]
+modul = _vvz_db["modul"]
+person = _vvz_db["person"]
+personencode = _vvz_db["personencode"]
+personencodekategorie = _vvz_db["personencodekategorie"]
+raum = _vvz_db["raum"]
+semester = _vvz_db["semester"]
+studiengang = _vvz_db["studiengang"]
+terminart = _vvz_db["terminart"]
+veranstaltung = _vvz_db["veranstaltung"]
+dictionary = _vvz_db["dictionary"]
+planungveranstaltung = _vvz_db["planungveranstaltung"]
+planung = _vvz_db["planung"]
+
+_user_db = get_mongo_client()["user"]
+users = _user_db["user"]
+group = _user_db["group"]

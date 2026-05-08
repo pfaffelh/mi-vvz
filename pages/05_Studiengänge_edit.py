@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -61,8 +60,8 @@ if st.session_state.logged_in:
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
-        name=st.text_input('Name', x["name"], disabled = (True if x["_id"] == util.leer[collection] else False))
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
+        name=st.text_input('Name', x["name"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
         kurzname=st.text_input('Kurzname', x["kurzname"])
         kommentar=st.text_input('Kommentar', x["kommentar"])
         #modul_list = st.multiselect("Module", [x["_id"] for x in util.modul.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["modul"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["modul"], format_func = (lambda a: tools.repr(util.modul, a, False)), placeholder = "Bitte auswählen")
@@ -70,7 +69,7 @@ if st.session_state.logged_in:
 #        mo = list(util.modul.find({"_id": {"$in": modul_list}}, sort=[("rang", pymongo.ASCENDING)]))
         mo = list(util.modul.find({"_id": {"$in": modul_list}}, sort=[("name_de", pymongo.ASCENDING)]))
         modul_list = [m["_id"] for m in mo]
-        semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+        semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
         semester_list = [s["_id"] for s in se]
         x_updated = ({"name": name, "kurzname": kurzname, "sichtbar": sichtbar, "kommentar": kommentar, "modul": modul_list, "semester": semester_list})
@@ -83,7 +82,6 @@ if st.session_state.logged_in:
                 util.modul.update_many({"_id": { "$in": modul_list}}, { "$addToSet" : { "studiengang": x["_id"]}})
                 util.modul.update_many({"_id": { "$nin": modul_list}}, { "$pull" : { "studiengang": x["_id"]}})
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(.1)
             st.session_state.edit = ""
             switch_page("studiengänge")
 

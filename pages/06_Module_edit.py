@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -59,8 +58,8 @@ if st.session_state.logged_in:
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
-        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == util.leer[collection] else False))
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
+        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
         name_en=st.text_input('Name (en)', x["name_en"])
         kurzname=st.text_input('Kurzname', x["kurzname"])
         kommentar=st.text_input('Kommentar', x["kommentar"])
@@ -79,7 +78,6 @@ if st.session_state.logged_in:
                 util.studiengang.update_many({"_id": { "$in": stu_list}}, { "$addToSet" : { "modul": x["_id"]}})
                 util.studiengang.update_many({"_id": { "$nin": stu_list}}, { "$pull" : { "modul": x["_id"]}})
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(.1)
             st.session_state.edit = ""
             switch_page("module")           
 

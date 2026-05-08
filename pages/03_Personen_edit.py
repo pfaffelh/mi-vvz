@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 import datetime
 
@@ -73,7 +72,7 @@ if st.session_state.logged_in:
                 with colu3: 
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
-    sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
+    sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
     st.write(x["bearbeitet"])
     hp_sichtbar = st.checkbox("Im [Personenverzeichnis](https://www.math.uni-freiburg.de/cd2021/personen_de/) sichtbar", x["hp_sichtbar"])
     # ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
@@ -156,7 +155,7 @@ if st.session_state.logged_in:
     kommentar_stelle = x["kommentar_stelle"]
     kommentar_abwesend = x["kommentar_abwesend"]
 
-    semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+    semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
@@ -169,7 +168,6 @@ if st.session_state.logged_in:
             tools.new(collection, ini = x_updated, switch=False)
         else: 
             tools.update_confirm(collection, x, x_updated, reset=False)
-        time.sleep(1)
 
 else: 
     switch_page("VVZ")

@@ -28,7 +28,7 @@ tools.display_navigation()
 collection = util.veranstaltung
 st.session_state.page = "Vorschau"
 
-semesters = list(util.semester.find(sort=[("kurzname", pymongo.DESCENDING)]))
+semesters = util.list_semesters()
 
 
 if st.session_state.logged_in:
@@ -68,7 +68,7 @@ if st.session_state.logged_in:
                     for t in v['woechentlicher_termin']:
                         art = util.terminart.find_one({"_id": t["key"]})["name_de"]
                         a = f"*{art}*" if t["key"] else ""
-                        b = util.wochentag[t["wochentag"]]
+                        b = st.session_state.wochentag[t["wochentag"]]
                         c = f"{tools.hour_of_datetime(t['start'])} – {tools.hour_of_datetime(t['ende'])}"
                         if c == " – ":
                             c = ""

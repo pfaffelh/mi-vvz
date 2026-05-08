@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 
 # Seiten-Layout
@@ -62,13 +61,13 @@ if st.session_state.logged_in:
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
         name_de=st.text_input('Name (de)', x["name_de"])
         name_en=st.text_input('Name (en)', x["name_en"])
         anfkat = [x["_id"] for x in list(util.anforderungkategorie.find())]
         index = anfkat.index(x["anforderungskategorie"])
         anforderungskategorie = st.selectbox("Anforderungskategorie", [x for x in anfkat], index = index, format_func = (lambda a: tools.repr(util.anforderungkategorie, a, show_collection=False)))
-        semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+        semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
         semester_list = [s["_id"] for s in se]
         kommentar=st.text_input('Kommentar', x["kommentar"])
@@ -79,7 +78,6 @@ if st.session_state.logged_in:
                 tools.new(collection, ini = x_updated, switch=False)
             else:
                 tools.update_confirm(collection, x, x_updated, )
-            time.sleep(.1)
             st.session_state.edit = ""
             switch_page("anforderungen")
 
