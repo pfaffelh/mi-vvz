@@ -163,8 +163,9 @@ if st.session_state.logged_in:
     if submit1 or submit2:
         if new_entry:
             tools.new(collection, ini = x_updated, switch=False)
-        else: 
-            tools.update_confirm(collection, x, x_updated, reset=False)
+        else:
+            if not tools.update_confirm(collection, x, x_updated, reset=False):
+                st.rerun() # Konflikt: neu laden, damit Warnung und aktueller Stand erscheinen
 
 else: 
     switch_page("VVZ")

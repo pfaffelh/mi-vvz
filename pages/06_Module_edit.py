@@ -76,9 +76,10 @@ if st.session_state.logged_in:
                 tools.new(collection, ini = x_updated, switch=False)
                 util.studiengang.update_many({"_id": { "$in": stu_list}}, { "$push" : { "modul": st.session_state.edit}})
             else:
+                if not tools.update_confirm(collection, x, x_updated, ):
+                    st.rerun() # Konflikt: auf der Edit-Seite bleiben
                 util.studiengang.update_many({"_id": { "$in": stu_list}}, { "$addToSet" : { "modul": x["_id"]}})
                 util.studiengang.update_many({"_id": { "$nin": stu_list}}, { "$pull" : { "modul": x["_id"]}})
-                tools.update_confirm(collection, x, x_updated, )
             st.session_state.edit = ""
             switch_page("module")           
 

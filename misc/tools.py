@@ -99,8 +99,10 @@ def update_confirm(collection, x, x_updated, reset = True):
     else:
         util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
         flash("🎉 Erfolgreich geändert!")
-    if reset:
-        reset_vars("")
+        # reset (verlässt den Edit-Kontext) nur bei Erfolg: Bei einem Konflikt
+        # soll der User auf der Edit-Seite bleiben.
+        if reset:
+            reset_vars("")
     return res.matched_count > 0
 
 def new(collection, ini = {}, switch = True):

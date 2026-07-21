@@ -116,8 +116,8 @@ if st.session_state.logged_in:
         x_updated = {"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "hp_sichtbar": hp_sichtbar, "prefix_de": prefix_de, "prefix_en": prefix_en}
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
-            tools.update_confirm(collection, x, x_updated, )
-            st.session_state.edit = ""
+            if tools.update_confirm(collection, x, x_updated, ):
+                st.session_state.edit = "" # bei Konflikt: Edit-Kontext behalten
             st.rerun()
 
     st.write("### Rubrik")
@@ -170,8 +170,8 @@ if st.session_state.logged_in:
                     x_updated = {"hp_sichtbar": hp_sichtbar, "titel_de": titel_de, "titel_en": titel_en, "untertitel_de": untertitel_de, "untertitel_en": untertitel_en, "prefix_de": prefix_de, "prefix_en": prefix_en, "suffix_de": suffix_de, "suffix_en": suffix_en, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.rubrik] else False)
                     if submit:
-                        tools.update_confirm(collection, x, x_updated, )
-                        st.session_state.edit = ""
+                        if tools.update_confirm(collection, x, x_updated, ):
+                            st.session_state.edit = "" # bei Konflikt: Edit-Kontext behalten
                         st.rerun()                      
 
     st.write("### Kategorie von Codes")
@@ -224,8 +224,8 @@ if st.session_state.logged_in:
                     x_updated = {"hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar, "name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
                     submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.codekategorie] else False)
                     if submit:
-                        tools.update_confirm(collection, x, x_updated, )
-                        st.session_state.edit = ""
+                        if tools.update_confirm(collection, x, x_updated, ):
+                            st.session_state.edit = "" # bei Konflikt: Edit-Kontext behalten
                         st.rerun()                      
 
     st.write("### Codes")
@@ -274,8 +274,8 @@ if st.session_state.logged_in:
                     x_updated = {"codekategorie": codekategorie, "name": name, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
-                        tools.update_confirm(collection, x, x_updated, )
-                        st.session_state.edit = ""
+                        if tools.update_confirm(collection, x, x_updated, ):
+                            st.session_state.edit = "" # bei Konflikt: Edit-Kontext behalten
                         st.rerun()                      
 
     with st.expander("Codes einstellen"):

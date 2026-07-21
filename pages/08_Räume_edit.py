@@ -83,8 +83,8 @@ if st.session_state.logged_in:
         if submit:
             if new_entry:
                 tools.new(collection, ini = x_updated, switch=False)
-            else:
-                tools.update_confirm(collection, x, x_updated, )
+            elif not tools.update_confirm(collection, x, x_updated, ):
+                st.rerun() # Konflikt: auf der Edit-Seite bleiben
             st.session_state.edit = ""
             switch_page("Räume")
 

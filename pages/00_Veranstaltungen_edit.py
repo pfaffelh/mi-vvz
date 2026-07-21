@@ -224,7 +224,8 @@ if st.session_state.logged_in:
         submit = st.button('Speichern (Grunddaten)', type = 'primary')
         if submit:
             st.session_state.expanded = "grunddaten"
-            tools.update_confirm(collection, x, ver_updated, reset = False)
+            if not tools.update_confirm(collection, x, ver_updated, reset = False):
+                st.rerun() # Konflikt: neu laden, damit Warnung und aktueller Stand erscheinen
 
     with st.expander("Personen, Termine etc", expanded = True if st.session_state.expanded == "termine" else False):
         ## Personen, dh Dozent*innen, Assistent*innen und weitere Organisation
@@ -521,7 +522,8 @@ if st.session_state.logged_in:
             if st.session_state.translation_tmp is not None:
                 x.update(st.session_state.translation_tmp[1])
                 st.session_state.translation_tmp = None
-            tools.update_confirm(collection, x, ver_updated, reset = False)
+            if not tools.update_confirm(collection, x, ver_updated, reset = False):
+                st.rerun() # Konflikt: neu laden, damit Warnung und aktueller Stand erscheinen
         with col2_button:
             translate = st.button("Übersetzungsvorschlag (nur für leere Felder)")
         if translate:
@@ -644,7 +646,8 @@ if st.session_state.logged_in:
         submit = st.button('Speichern (Verwendbarkeit)', type = 'primary', key = f"verwendbarkeit_{x['_id']}")
         if submit:
             st.session_state.expanded = "verwendbarkeit"
-            tools.update_confirm(util.veranstaltung, x, x_updated, False,)
+            if not tools.update_confirm(util.veranstaltung, x, x_updated, False,):
+                st.rerun() # Konflikt: neu laden, damit Warnung und aktueller Stand erscheinen
 
     ## Deputate
     with st.expander("Deputate", expanded = True if st.session_state.expanded == "deputate" else False):
@@ -665,12 +668,14 @@ if st.session_state.logged_in:
         submit = st.button('Speichern (Deputate)', type = 'primary', key = f"deputate_{x['_id']}")
         if submit:
             st.session_state.expanded = "deputate"
-            tools.update_confirm(util.veranstaltung, x, x_updated, False,)
+            if not tools.update_confirm(util.veranstaltung, x, x_updated, False,):
+                st.rerun() # Konflikt: neu laden, damit Warnung und aktueller Stand erscheinen
 
     if save_all:
         sync_termine()
         correct_deputate(x)
-        tools.update_confirm(collection, x, ver_updated_all, reset = False)
+        if not tools.update_confirm(collection, x, ver_updated_all, reset = False):
+            st.rerun() # Konflikt: auf der Edit-Seite bleiben
         ver_updated_all = dict()
         switch_page("Veranstaltungen")
 
