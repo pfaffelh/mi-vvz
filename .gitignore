@@ -5,3 +5,4 @@
 *.log
 /texfiles/
 /mongo/*_backup*
+/pages/__pycache__/
