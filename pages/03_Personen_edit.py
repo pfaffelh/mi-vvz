@@ -43,6 +43,7 @@ if st.session_state.logged_in:
 
     else:
         x = collection.find_one({"_id": st.session_state.edit})
+        tools.merke_bearbeitet(x)
         st.header(tools.repr(collection, x["_id"], False))
 
     col1, col2, col3, col4 = st.columns([1, 1, 2, 1])

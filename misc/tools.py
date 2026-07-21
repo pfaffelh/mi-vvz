@@ -53,7 +53,9 @@ def move_up_list(collection, id, field, element):
         x = list[i-1]
         list[i-1] = element
         list[i] = x
-        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": bearbeitet_jetzt()}})
+        stempel = bearbeitet_jetzt()
+        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": stempel}})
+        st.session_state.setdefault("bearbeitet_gesehen", {})[id] = stempel
         _doc.clear()
 
 def move_down_list(collection, id, field, element):
@@ -63,7 +65,9 @@ def move_down_list(collection, id, field, element):
         x = list[i+1]
         list[i+1] = element
         list[i] = x
-        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": bearbeitet_jetzt()}})
+        stempel = bearbeitet_jetzt()
+        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": stempel}})
+        st.session_state.setdefault("bearbeitet_gesehen", {})[id] = stempel
         _doc.clear()
 
 # Kein "bearbeitet"-Stempel hier: Einziger Aufrufer ist sync_termine, das im
@@ -78,15 +82,27 @@ def bearbeitet_jetzt(angelegt = False):
     aktion = "Angelegt" if angelegt else "Zuletzt bearbeitet"
     return f"{aktion} von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}"
 
+# Merkt sich, welchen "bearbeitet"-Stand eines Items dieser User zuerst gesehen
+# hat. Gegen diesen Stand prüft update_confirm die Konfliktfreiheit: x selbst
+# taugt nicht als Vergleichsbasis, weil die Edit-Seiten x bei jedem Rerun (auch
+# dem des Speichern-Klicks selbst) frisch aus der DB laden. Auf jeder Edit-Seite
+# direkt nach dem Laden von x aufrufen.
+def merke_bearbeitet(x):
+    if x.get("_id") == "new":
+        return
+    st.session_state.setdefault("bearbeitet_gesehen", {}).setdefault(x["_id"], x.get("bearbeitet"))
+
 # Speichert x_updated in x, mit Konfliktprüfung über das "bearbeitet"-Feld
 # (Optimistic Locking): Geschrieben wird nur, wenn das Dokument seit dem Laden
 # von x nicht anderweitig verändert wurde. Andernfalls bleibt der fremde Stand
 # erhalten und der User bekommt eine Warnung mit dem aktuellen "bearbeitet".
 def update_confirm(collection, x, x_updated, reset = True):
+    gesehen = st.session_state.setdefault("bearbeitet_gesehen", {})
     filter = {"_id": x["_id"]}
-    if "bearbeitet" in x:
-        filter["bearbeitet"] = x["bearbeitet"]
-    res = collection.update_one(filter, {"$set": {**x_updated, "bearbeitet": bearbeitet_jetzt()}})
+    if x["_id"] in gesehen or "bearbeitet" in x:
+        filter["bearbeitet"] = gesehen.get(x["_id"], x.get("bearbeitet"))
+    stempel = bearbeitet_jetzt()
+    res = collection.update_one(filter, {"$set": {**x_updated, "bearbeitet": stempel}})
     _doc.clear()
     if res.matched_count == 0:
         aktuell = collection.find_one({"_id": x["_id"]})
@@ -94,9 +110,14 @@ def update_confirm(collection, x, x_updated, reset = True):
             flash("⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich gelöscht.")
             util.logger.info(f"User {st.session_state.user}: Speichern in {st.session_state.collection_name[collection]} fehlgeschlagen, Item wurde zwischenzeitlich gelöscht.")
         else:
+            # Aktuellen Stand als gesehen merken: der User bekommt die Warnung,
+            # sieht nach dem Rerun den neuen Stand, und der nächste Speichern-
+            # Versuch geht durch.
+            gesehen[x["_id"]] = aktuell["bearbeitet"]
             flash(f"⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich geändert ({aktuell['bearbeitet']}) Bitte den aktuellen Stand prüfen und erneut speichern.")
             util.logger.info(f"User {st.session_state.user}: Speicherkonflikt in {st.session_state.collection_name[collection]} bei Item {repr(collection, x['_id'])}.")
     else:
+        gesehen[x["_id"]] = stempel
         util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
         flash("🎉 Erfolgreich geändert!")
         # reset (verlässt den Edit-Kontext) nur bei Erfolg: Bei einem Konflikt
@@ -113,8 +134,10 @@ def new(collection, ini = {}, switch = True):
     for key, value in ini.items():
         st.session_state.new[collection][key] = value
     st.session_state.new[collection].pop("_id", None)
-    st.session_state.new[collection]["bearbeitet"] = bearbeitet_jetzt(angelegt = True)
+    stempel = bearbeitet_jetzt(angelegt = True)
+    st.session_state.new[collection]["bearbeitet"] = stempel
     x = collection.insert_one(st.session_state.new[collection])
+    st.session_state.setdefault("bearbeitet_gesehen", {})[x.inserted_id] = stempel
     _doc.clear()
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} ein neues Item angelegt.")

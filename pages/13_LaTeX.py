@@ -29,6 +29,7 @@ st.session_state.page = "LaTeX"
 
 sem_id = st.session_state.semester_id
 sem = util.semester.find_one({"_id" : sem_id})
+tools.merke_bearbeitet(sem)
 sem_kurzname = sem["kurzname"]
 
 if st.session_state.logged_in:

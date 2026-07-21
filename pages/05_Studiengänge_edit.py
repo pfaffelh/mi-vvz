@@ -38,6 +38,7 @@ if st.session_state.logged_in:
         x["_id"] = "new"
     else:
         x = collection.find_one({"_id": st.session_state.edit})
+        tools.merke_bearbeitet(x)
         st.subheader(tools.repr(collection, x["_id"], False))
     col1, col2 = st.columns([1, 1])
     with col1:

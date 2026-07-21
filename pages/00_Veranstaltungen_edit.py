@@ -131,6 +131,7 @@ semesters = list(util.list_semesters())
 # Ab hier wird die Seite angezeigt
 if st.session_state.logged_in:
     x = util.veranstaltung.find_one({"_id": st.session_state.edit})
+    tools.merke_bearbeitet(x)
     st.subheader(tools.repr(collection, x["_id"]))
     st.write(x["bearbeitet"])
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])

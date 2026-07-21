@@ -162,6 +162,7 @@ if st.session_state.logged_in:
     # den globalen Zustand und brauchen st.rerun(scope="app").
     @st.fragment
     def render_row(v):
+        tools.merke_bearbeitet(v)
         cols = st.columns(col_list)
         with cols[0]:
             if st.button('↓', key=f'down-{v["_id"]}'):
@@ -196,6 +197,7 @@ if st.session_state.logged_in:
                 if v["regel"] == "Jedes Semester" or (is_WS(m) and v["regel"] == "Jedes Wintersemester") or (not is_WS(m) and v["regel"] == "Jedes Sommersemester"):
                     if p:
                         with st.popover(", ".join([nachname_dict.get(q, "?") for q in p["dozent"]]), use_container_width=True):
+                            tools.merke_bearbeitet(p)
                             st.write(p["bearbeitet"])
                             dozent_p = st.multiselect("Dozent*innen", per_dict.keys(), p["dozent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key = f"dozent_{p['_id']}")
                             sem_p = st.selectbox("Semester", options = semesters, index = semesters.index(m), key = f"sem_{p['_id']}")

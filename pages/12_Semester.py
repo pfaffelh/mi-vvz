@@ -46,6 +46,7 @@ if st.session_state.logged_in:
     st.write("Mit 😎 gekennzeichnete Semester sind auf der [Homepage](https://www.math.uni-freiburg.de/nlehre/de/) sichtbar.")
     st.write(" ")
     x = util.semester.find_one({"_id": st.session_state.semester_id})
+    tools.merke_bearbeitet(x)
 
     col1, col2 = st.columns([1,1])
     with col1:
@@ -130,6 +131,7 @@ if st.session_state.logged_in:
     query = { "semester": st.session_state.semester_id }
     y = list(collection.find(query, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
+        tools.merke_bearbeitet(x)
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
 #            st.write(x["rang"])
@@ -186,6 +188,7 @@ if st.session_state.logged_in:
     y = list(collection.find(query, sort=[("rang", pymongo.ASCENDING)]))
 
     for x in y:
+        tools.merke_bearbeitet(x)
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
             st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, query, ))
@@ -236,6 +239,7 @@ if st.session_state.logged_in:
     query = { "semester": st.session_state.semester_id }
     y = list(collection.find(query, sort=[("rang", pymongo.ASCENDING)]))
     for x in y:
+        tools.merke_bearbeitet(x)
         co1, co2, co3 = st.columns([1,1,23]) 
         with co1: 
             st.button('↓', key=f'down-{x["_id"]}', on_click = tools.move_down, args = (collection, x, query, ))
