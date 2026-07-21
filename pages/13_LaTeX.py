@@ -65,8 +65,8 @@ if st.session_state.logged_in:
         vorspann = st.text_area("Vorspann mit LaTeX-Befehlen", sem[f"vorspann_kommentare_{lang}"], height = 200 )
         submit = st.button("Speichern")
         if submit:
-            util.semester.update_one({"_id" : sem_id}, { "$set" : {f"vorspann_kommentare_{lang}" : vorspann, f"wasserzeichen_kommentare_{lang}" : wasserzeichen}})
-            st.success("Wasserzeichen und Vorspann gespeichert.")
+            tools.update_confirm(util.semester, sem, {f"vorspann_kommentare_{lang}" : vorspann, f"wasserzeichen_kommentare_{lang}" : wasserzeichen}, reset = False)
+            st.rerun()
 
     # includefile = st.text_input('Zusätzliches tex-File, das eingebunden werden soll', f"Kommentare_{sem_kurzname}-vorspann-{'en' if en else 'de'}.tex", key = "includefile")
 

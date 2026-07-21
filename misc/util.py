@@ -170,6 +170,7 @@ def setup_session_state():
     leer = st.session_state.leer
 
     semester_id = st.session_state.semester_id
+    bearbeitet_neu = f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}"
     st.session_state.new = {
         gebaeude: {"name_de": "neu",
                 "name_en": "",
@@ -177,6 +178,7 @@ def setup_session_state():
                 "adresse": "",
                 "url": "",
                 "sichtbar": True,
+                "bearbeitet": bearbeitet_neu,
                 "kommentar": ""},
         raum: {"name_de": "neu",
             "name_en": "",
@@ -185,6 +187,7 @@ def setup_session_state():
             "raum": "",
             "groesse": 0,
             "sichtbar": True,
+            "bearbeitet": bearbeitet_neu,
             "kommentar": ""
         },
         person: {"name": "Neue Person",
@@ -202,7 +205,7 @@ def setup_session_state():
                 "gebaeude1": leer[gebaeude],
                 "gebaeude2": leer[gebaeude],
                 "kommentar_html": "",
-                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
+                "bearbeitet": bearbeitet_neu,
                 "kommentar": "",
                 "url": "",
                 "sichtbar": True,
@@ -224,6 +227,7 @@ def setup_session_state():
                 "kurzname": "",
                 "kommentar": "",
                 "sichtbar": True,
+                "bearbeitet": bearbeitet_neu,
                 "modul": [],
                 "semester": []
         },
@@ -232,6 +236,7 @@ def setup_session_state():
                 "kurzname": "",
                 "kommentar": "",
                 "sichtbar": True,
+                "bearbeitet": bearbeitet_neu,
                 "studiengang": []
         },
         rubrik: {"titel_de": "Neue Rubrik",
@@ -245,6 +250,7 @@ def setup_session_state():
                 "hp_sichtbar": True,
                 "veranstaltung": [] ,
                 "kommentar": "",
+                "bearbeitet": bearbeitet_neu,
                 "semester": st.session_state.semester_id
         },
         code:  {"name": "",
@@ -253,6 +259,7 @@ def setup_session_state():
                 "codekategorie": leer[codekategorie],
                 "veranstaltung": [] ,
                 "kommentar": "",
+                "bearbeitet": bearbeitet_neu,
                 "semester": st.session_state.semester_id
         },
         codekategorie:  {
@@ -264,12 +271,14 @@ def setup_session_state():
                 "code": [],
                 "semester": [],
                 "kommentar": "",
+                "bearbeitet": bearbeitet_neu,
                 "komm_sichtbar" : False
         },
         terminart: {"name_de": "Neu",
                     "name_en": "",
                     "hp_sichtbar": True,
                     "komm_sichtbar": True,
+                    "bearbeitet": bearbeitet_neu,
                     "cal_sichtbar": False
         },
         anforderung: {"name_de": "Neu",
@@ -277,6 +286,7 @@ def setup_session_state():
                     "anforderungskategorie": leer[anforderungkategorie],
                     "kommentar": "",
                     "sichtbar": True,
+                    "bearbeitet": bearbeitet_neu,
                     "semester": [st.session_state.semester_id]
         },
         anforderungkategorie: {
@@ -284,18 +294,21 @@ def setup_session_state():
             "name_en": "",
             "kommentar": "",
             "sichtbar": True,
+            "bearbeitet": bearbeitet_neu,
             "kurzname" : ""
         },
         planungveranstaltung: {
             "name": "",
             "sws": "",
             "regel": "Jedes Wintersemester",
+            "bearbeitet": bearbeitet_neu,
             "kommentar": ""
         },
         planung: {
             "dozent": [],
             "sem": "",
             "kommentar": "",
+            "bearbeitet": bearbeitet_neu,
             "veranstaltung": leer[planungveranstaltung]
         }
     }

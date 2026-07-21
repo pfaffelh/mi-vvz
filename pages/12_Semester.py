@@ -91,7 +91,8 @@ if st.session_state.logged_in:
                      "vorspann_kommentare_en": "", 
                      "wasserzeichen_kommentare_de": "", 
                      "wasserzeichen_kommentare_en": "", 
-                     "veranstaltung": [], 
+                     "veranstaltung": [],
+                     "bearbeitet": tools.bearbeitet_jetzt(angelegt = True),
                      "rang": s[0]["rang"]+1
                      }
         rub_list = list(util.rubrik.find({"semester": s[1]["_id"]}, sort = [("rang", pymongo.ASCENDING)]))
@@ -104,6 +105,7 @@ if st.session_state.logged_in:
             df_new = st.data_editor(
                 df, height = None, column_config = {"_id": None}, disabled=["Name"], hide_index = True)
         st.button("Semester anlegen", on_click=tools.semester_anlegen, args = (x_updated, df_new, personen_uebernehmen, anforderung_uebernehmen, veranstaltungen_uebernehmen), type="primary")
+    st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
         name_de = st.text_input('Name (de)', x["name_de"], disabled = True)
         name_en = st.text_input('Name (en)', x["name_en"], disabled = True)
@@ -153,6 +155,7 @@ if st.session_state.logged_in:
                     with colu3: 
                         st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
+                st.write(x["bearbeitet"])
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
                     titel_de=st.text_input('Titel (de)', x["titel_de"], key=f'titel-de-{x["_id"]}')
@@ -208,6 +211,7 @@ if st.session_state.logged_in:
                     with colu3: 
                         st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
+                st.write(x["bearbeitet"])
                 with st.form(f'ID-{x["_id"]}'):
                     hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
                     komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False)
@@ -257,6 +261,7 @@ if st.session_state.logged_in:
                         st.rerun()
                     with colu3: 
                         st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
+                st.write(x["bearbeitet"])
                 with st.form(f'ID-{x["_id"]}'):
                     codekategorie_list = list(util.codekategorie.find({"semester": st.session_state.semester_id}, sort = [("rang", pymongo.ASCENDING)]))
                     codekategorie_dict = {r["_id"]: tools.repr(util.codekategorie, r["_id"], show_collection = False) for r in codekategorie_list}

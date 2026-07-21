@@ -60,6 +60,7 @@ if st.session_state.logged_in:
                 with colu3: 
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
+    st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
         sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
         name_de=st.text_input('Name (de)', x["name_de"])

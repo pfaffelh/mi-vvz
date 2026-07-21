@@ -53,8 +53,8 @@ def move_up_list(collection, id, field, element):
         x = list[i-1]
         list[i-1] = element
         list[i] = x
-    collection.update_one({"_id": id}, { "$set": {field: list}})
-    _doc.clear()
+        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": bearbeitet_jetzt()}})
+        _doc.clear()
 
 def move_down_list(collection, id, field, element):
     list = collection.find_one({"_id": id})[field]
@@ -63,20 +63,45 @@ def move_down_list(collection, id, field, element):
         x = list[i+1]
         list[i+1] = element
         list[i] = x
-    collection.update_one({"_id": id}, { "$set": {field: list}})
-    _doc.clear()
+        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": bearbeitet_jetzt()}})
+        _doc.clear()
 
+# Kein "bearbeitet"-Stempel hier: Einziger Aufrufer ist sync_termine, das im
+# selben Speichervorgang direkt vor update_confirm läuft. Ein Stempel würde
+# dessen Konfliktprüfung als Selbst-Konflikt auslösen.
 def remove_from_list(collection, id, field, element):
     collection.update_one({"_id": id}, {"$pull": {field: element}})
     _doc.clear()
 
+# Inhalt des Felds "bearbeitet", das jede Collection führt.
+def bearbeitet_jetzt(angelegt = False):
+    aktion = "Angelegt" if angelegt else "Zuletzt bearbeitet"
+    return f"{aktion} von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}"
+
+# Speichert x_updated in x, mit Konfliktprüfung über das "bearbeitet"-Feld
+# (Optimistic Locking): Geschrieben wird nur, wenn das Dokument seit dem Laden
+# von x nicht anderweitig verändert wurde. Andernfalls bleibt der fremde Stand
+# erhalten und der User bekommt eine Warnung mit dem aktuellen "bearbeitet".
 def update_confirm(collection, x, x_updated, reset = True):
-    util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
-    collection.update_one({"_id" : x["_id"]}, {"$set": x_updated })
+    filter = {"_id": x["_id"]}
+    if "bearbeitet" in x:
+        filter["bearbeitet"] = x["bearbeitet"]
+    res = collection.update_one(filter, {"$set": {**x_updated, "bearbeitet": bearbeitet_jetzt()}})
     _doc.clear()
+    if res.matched_count == 0:
+        aktuell = collection.find_one({"_id": x["_id"]})
+        if aktuell is None:
+            flash("⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich gelöscht.")
+            util.logger.info(f"User {st.session_state.user}: Speichern in {st.session_state.collection_name[collection]} fehlgeschlagen, Item wurde zwischenzeitlich gelöscht.")
+        else:
+            flash(f"⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich geändert ({aktuell['bearbeitet']}) Bitte den aktuellen Stand prüfen und erneut speichern.")
+            util.logger.info(f"User {st.session_state.user}: Speicherkonflikt in {st.session_state.collection_name[collection]} bei Item {repr(collection, x['_id'])}.")
+    else:
+        util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
+        flash("🎉 Erfolgreich geändert!")
     if reset:
         reset_vars("")
-    flash("🎉 Erfolgreich geändert!")
+    return res.matched_count > 0
 
 def new(collection, ini = {}, switch = True):
     if list(collection.find({ "rang" : { "$exists": True }})) != []:
@@ -86,6 +111,7 @@ def new(collection, ini = {}, switch = True):
     for key, value in ini.items():
         st.session_state.new[collection][key] = value
     st.session_state.new[collection].pop("_id", None)
+    st.session_state.new[collection]["bearbeitet"] = bearbeitet_jetzt(angelegt = True)
     x = collection.insert_one(st.session_state.new[collection])
     _doc.clear()
     st.session_state.edit=x.inserted_id
@@ -213,7 +239,7 @@ def kopiere_veranstaltung(id, sem_id, kopiere_personen, kopiere_termine, kopiere
         "einmaliger_termin": v["einmaliger_termin"] if kopiere_termine else [],
         "hp_sichtbar": v["hp_sichtbar"],
         "komm_sichtbar": v["komm_sichtbar"],
-        "bearbeitet": "",
+        "bearbeitet": bearbeitet_jetzt(angelegt = True),
         "deputat": v["deputat"] if kopiere_personen else []
     }
     for et in v_new["einmaliger_termin"]:
@@ -271,6 +297,7 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, anforderung_uebernehme
             k_loc = k["_id"]
             del k["_id"] # andernfalls gibt es einen duplicate key error
             k["semester"] = sem_id
+            k["bearbeitet"] = bearbeitet_jetzt(angelegt = True)
             k_new = util.rubrik.insert_one(k)
             kopie[k_loc] = k_new.inserted_id
             util.semester.update_one({"_id": sem_id}, {"$push": {"rubrik": k_new.inserted_id}})
@@ -278,6 +305,7 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, anforderung_uebernehme
             k_loc = k["_id"]
             del k["_id"]  # andernfalls gibt es einen duplicate key error
             k["semester"] = sem_id
+            k["bearbeitet"] = bearbeitet_jetzt(angelegt = True)
             k_new = util.codekategorie.insert_one(k)
             kopie[k_loc] = k_new.inserted_id
             util.semester.update_one({"_id": sem_id}, {"$push": {"codekategorie": k_new.inserted_id}})
@@ -286,6 +314,7 @@ def semester_anlegen(x_updated, df, personen_uebernehmen, anforderung_uebernehme
             del k["_id"]  # andernfalls gibt es einen duplicate key error
             k["codekategorie"] = kopie[k["codekategorie"]]
             k["semester"] = sem_id
+            k["bearbeitet"] = bearbeitet_jetzt(angelegt = True)
             k_new = util.code.insert_one(k)
             kopie[k_loc] = k_new.inserted_id
             util.semester.update_one({"_id": sem_id}, {"$push": {"code": k_new.inserted_id}})
@@ -549,7 +578,7 @@ def veranstaltung_anlegen(sem_id, rub_id, v_dict):
         "organisation": [],
         "woechentlicher_termin": [],
         "einmaliger_termin": [],
-        "bearbeitet": "",
+        "bearbeitet": bearbeitet_jetzt(angelegt = True),
         "deputat": []
     }
     for key, value in v_dict.items():

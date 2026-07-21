@@ -61,6 +61,7 @@ if st.session_state.logged_in:
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
         
 
+    st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
         hp_sichtbar = st.checkbox(f"Auf Hauptseite sichtbar {'😎' if x['hp_sichtbar'] else ''}", x["hp_sichtbar"], disabled = False)
         komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False)

@@ -21,9 +21,6 @@ tools.delete_temporary()
 from misc.css_styles import init_css
 init_css()
 
-date_format = '%d.%m.%Y um %H:%M:%S.'
-bearbeitet = f"Zuletzt bearbeitet von {st.session_state.username} am {datetime.datetime.now().strftime(date_format)}"
-
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
@@ -159,7 +156,7 @@ if st.session_state.logged_in:
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1, "email2": email2, "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1, "email2": email2, "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 

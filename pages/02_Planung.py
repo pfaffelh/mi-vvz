@@ -182,6 +182,7 @@ if st.session_state.logged_in:
                     st.button(label="Abbrechen", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{v['_id']}")
         with cols[3]:
             with st.popover(v["name"]):
+                st.write(v["bearbeitet"])
                 name_v = st.text_input("Name", v["name"], key = f"name_{v['_id']}")
                 sws_v = st.text_input("SWS", v["sws"], key = f"sws_{v['_id']}")
                 regel_v = st.selectbox("Regelmäßigkeit", ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"), ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester").index(v["regel"]), key = f"regel_{v['_id']}")
@@ -195,6 +196,7 @@ if st.session_state.logged_in:
                 if v["regel"] == "Jedes Semester" or (is_WS(m) and v["regel"] == "Jedes Wintersemester") or (not is_WS(m) and v["regel"] == "Jedes Sommersemester"):
                     if p:
                         with st.popover(", ".join([nachname_dict.get(q, "?") for q in p["dozent"]]), use_container_width=True):
+                            st.write(p["bearbeitet"])
                             dozent_p = st.multiselect("Dozent*innen", per_dict.keys(), p["dozent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key = f"dozent_{p['_id']}")
                             sem_p = st.selectbox("Semester", options = semesters, index = semesters.index(m), key = f"sem_{p['_id']}")
                             kommentar_p = st.text_input("Kommentar", p["kommentar"], key = f"kommentar_{p['_id']}")
