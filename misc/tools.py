@@ -15,9 +15,20 @@ from datetime import datetime
 def flash(msg):
     st.session_state.setdefault("_pending_toasts", []).append(msg)
 
+# Anders als flash() (kurzer Toast) bleibt diese Warnung dauerhaft oben auf
+# der Seite stehen — bei jedem Rerun, bis wieder erfolgreich gespeichert
+# wurde (update_confirm räumt sie dann ab).
+def warnung_setzen(msg):
+    st.session_state.speicher_warnung = msg
+
+def warnung_loeschen():
+    st.session_state.speicher_warnung = None
+
 def show_pending_toasts():
     for msg in st.session_state.pop("_pending_toasts", []):
         st.toast(msg)
+    if st.session_state.get("speicher_warnung"):
+        st.warning(st.session_state.speicher_warnung)
 
 # Dedupliziert find_one-Lookups innerhalb eines Reruns (und über kurze
 # Rerun-Folgen via TTL). Streamlits Hasher kennt bson.ObjectId nicht, daher
@@ -107,17 +118,20 @@ def update_confirm(collection, x, x_updated, reset = True):
     if res.matched_count == 0:
         aktuell = collection.find_one({"_id": x["_id"]})
         if aktuell is None:
-            flash("⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich gelöscht.")
+            warnung_setzen("⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich gelöscht.")
             util.logger.info(f"User {st.session_state.user}: Speichern in {st.session_state.collection_name[collection]} fehlgeschlagen, Item wurde zwischenzeitlich gelöscht.")
         else:
             # Aktuellen Stand als gesehen merken: der User bekommt die Warnung,
             # sieht nach dem Rerun den neuen Stand, und der nächste Speichern-
             # Versuch geht durch.
             gesehen[x["_id"]] = aktuell["bearbeitet"]
-            flash(f"⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich geändert ({aktuell['bearbeitet']}) Bitte den aktuellen Stand prüfen und erneut speichern.")
+            warnung_setzen(f"⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich geändert ({aktuell['bearbeitet']}) "
+                           "Die Anzeige wurde auf den aktuellen Stand gebracht; Deine noch nicht gespeicherten Eingaben stehen weiterhin in den Feldern. "
+                           "Du kannst jetzt erneut speichern — Achtung: Felder, die ihr beide geändert habt, werden dabei mit Deinem Stand überschrieben.")
             util.logger.info(f"User {st.session_state.user}: Speicherkonflikt in {st.session_state.collection_name[collection]} bei Item {repr(collection, x['_id'])}.")
     else:
         gesehen[x["_id"]] = stempel
+        warnung_loeschen()
         util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
         flash("🎉 Erfolgreich geändert!")
         # reset (verlässt den Edit-Kontext) nur bei Erfolg: Bei einem Konflikt
@@ -421,6 +435,7 @@ def logout():
 
 def reset_vars(text=""):
     st.session_state.edit = ""
+    warnung_loeschen()
     if text != "":
         flash(text)
 
