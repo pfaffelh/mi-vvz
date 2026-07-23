@@ -504,7 +504,7 @@ if st.session_state.logged_in:
         literatur_en = st.text_area('Literatur (en)', x["literatur_en"])
         vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"])
         vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"])
-        st.write("Kommentare für die LaTeX-Files können unter _Grundlaten_ eingegeben werden.")
+        st.write("Kommentare für die LaTeX-Files können unter _Grunddaten_ eingegeben werden.")
         ver_updated = {
         #    "komm_sichtbar": komm_sichtbar,
             "inhalt_de": inhalt_de,
