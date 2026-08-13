@@ -203,8 +203,8 @@ if st.session_state.logged_in:
         code_list = [c["_id"] for c in co]
         kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = "Dieser Kommentar erscheint auf www.math...")
         kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = "Dieser Kommentar erscheint auf www.math...")
-        kommentar_latex_de = st.text_area('Kommentar (Latex, de)', x["kommentar_latex_de"])
-        kommentar_latex_en = st.text_area('Kommentar (Latex, en)', x["kommentar_latex_en"])
+        kommentar_latex_de = st.text_area('Bemerkung (Latex, de)', x["kommentar_latex_de"])
+        kommentar_latex_en = st.text_area('Bemerkung (Latex, en)', x["kommentar_latex_en"])
         url=st.text_input('URL', x["url"], help = "Gemeint ist die URL, auf der Inhalte zur Veranstaltung hinterlegt sind, etwa Skript, Übungsblätter etc.")
         ver_updated = {
             "komm_sichtbar": komm_sichtbar,

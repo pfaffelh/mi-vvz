@@ -182,7 +182,6 @@
 \VAR{veranstaltung["kommentar"]}
 %% endif 
 %% endif
-%% if data["verw_kurz"]
 \subsubsection*{\large
     %% if data["lang"] == "de"
     Verwendbar in folgenden Modulen:
@@ -193,15 +192,18 @@
 %% for m in veranstaltung["verwendbarkeit_modul"]
 \VAR{m["titel"]}\\
 %% endfor 
-%% endif 
+
+\medskip
+
+\VAR{veranstaltung["kommentar_verwendbarkeit"]}
 
 %% if not data["verw_kurz"]
 \cleardoublepage
 \subsubsection*{\large
     %% if data["lang"] == "de"
-    Verwendbarkeit, Studien- und Prüfungsleistungen:
+    Studien- und Prüfungsleistungen:
     %% else 
-    Usability and assessments:
+    Assessments:
     %% endif 
 }
 
@@ -260,10 +262,6 @@
 %% endfor
 
 %% endif 
-
-\medskip
-
-\VAR{veranstaltung["kommentar_verwendbarkeit"]}
 
 %% endfor
 %% endfor
