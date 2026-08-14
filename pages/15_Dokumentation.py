@@ -33,26 +33,26 @@ if st.session_state.logged_in:
 
     for x in list(util.notiz.find(sort = [("rang", pymongo.ASCENDING)])):
         tools.merke_bearbeitet(x)
-        co1, co2, co3, co4, co5 = st.columns([1, 1, 1, 1, 21])
+        co1, co2, co3, co4 = st.columns([1, 1, 21, 2])
         with co1:
             st.button('↓', key=f'notiz-down-{x["_id"]}', on_click = tools.move_down, args = (util.notiz, x, ))
         with co2:
             st.button('↑', key=f'notiz-up-{x["_id"]}', on_click = tools.move_up, args = (util.notiz, x, ))
         with co3:
-            with st.popover('🗙'):
-                if st.button("Wirklich löschen!", type = 'primary', key = f'notiz-del-{x["_id"]}'):
-                    tools.delete_item_update_dependent_items(util.notiz, x["_id"], False)
-                    st.rerun()
-                st.button("Abbrechen", key = f'notiz-nodel-{x["_id"]}', on_click = st.success, args = ("Nicht gelöscht!", ))
-        with co4:
-            with st.popover('✏️'):
+            # Überschrift ist die Kurzfassung aus tools.repr (erste 60 Zeichen)
+            with st.expander(tools.repr(util.notiz, x["_id"])):
                 st.write(x["bearbeitet"])
+                st.markdown(x["text"])
                 text = st.text_area("Text", x["text"], key = f'notiz-text-{x["_id"]}')
                 if st.button("Speichern", key = f'notiz-save-{x["_id"]}'):
                     tools.update_confirm(util.notiz, x, {"text": text}, False)
                     st.rerun()
-        with co5:
-            st.markdown(x["text"])
+        with co4:
+            with st.popover('🗙'):
+                if st.button("Wirklich löschen!", type = 'primary', key = f'notiz-del-{x["_id"]}'):
+                    tools.delete_item_update_dependent_items(util.notiz, x["_id"], False)
+                    st.rerun()
+                st.button("Abbrechen", key = f'notiz-nodel-{x["_id"]}', on_click = tools.flash, args = ("Nicht gelöscht!", ))
     st.divider()
 
     with st.expander("# Hilfetexte"):
@@ -81,6 +81,7 @@ if st.session_state.logged_in:
                         st.rerun()
             with co3:
                 st.markdown(tools.hilfe(key))
+    st.divider()
 
     with st.expander("# Allgemeine Steuerung"):
         st.markdown("Man arbeitet immer im Semester, das links oben angegeben ist. ")

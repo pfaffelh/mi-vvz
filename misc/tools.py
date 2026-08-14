@@ -559,7 +559,9 @@ def repr(collection, id, show_collection = True, short = False):
     elif collection == util.planung:
         res = f"{', '.join([repr(util.person, y, False, True) for y in x['dozent']])}"
     elif collection == util.notiz:
-        res = x['text'][:60]
+        # Whitespace zusammenziehen: der Text ist mehrzeiliges Markdown, die
+        # Kurzfassung steht als Überschrift eines Expanders.
+        res = " ".join(x['text'].split())[:60] or "(leer)"
     if show_collection:
         res = f"{st.session_state.collection_name[collection]}: {res}"
     return res
