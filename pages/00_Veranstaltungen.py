@@ -32,16 +32,16 @@ if st.session_state.logged_in:
     st.write("Mit 🤓 gekennzeichnete Veranstaltungen sind im [Kommentierten Vorlesungsverzeichnis](https://www.math.uni-freiburg.de/nlehre/de/lehrveranstaltungen/) sichtbar.")
 
     with st.popover(f'Neue Veranstaltung anlegen'):
-        name_de=st.text_input('Name (de)', "")
-        name_en=st.text_input('Name (en)', "")
-        kurzname=st.text_input('Kurzname', "", help = "Wird im Raumplan verwendet.")
+        name_de=st.text_input('Name (de)', "", help = tools.hilfe("veranstaltung.name_de"))
+        name_en=st.text_input('Name (en)', "", help = tools.hilfe("veranstaltung.name_en"))
+        kurzname=st.text_input('Kurzname', "", help = tools.hilfe("veranstaltung.kurzname"))
         pe = list(util.person.find({"semester": { "$elemMatch": { "$eq": st.session_state.semester_id}}}, sort = [("name", pymongo.ASCENDING)]))
         per_dict = {p["_id"]: tools.repr(util.person, p["_id"], False, True) for p in pe }
-        doz_list = st.multiselect("Dozent*innen", per_dict.keys(), [], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+        doz_list = st.multiselect("Dozent*innen", per_dict.keys(), [], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", help = tools.hilfe("veranstaltung.dozent_innen"))
         doz = list(util.person.find({"_id": {"$in": doz_list}}, sort=[("name", pymongo.ASCENDING)]))
         doz_list = [d["_id"] for d in doz]
         kat = [g["_id"] for g in list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))]
-        kat = st.selectbox("Rubrik", [x for x in kat], index = 0, format_func = (lambda a: tools.repr(util.rubrik, a)))
+        kat = st.selectbox("Rubrik", [x for x in kat], index = 0, format_func = (lambda a: tools.repr(util.rubrik, a)), help = tools.hilfe("veranstaltung.rubrik"))
         v = {
             "name_de": name_de,
             "name_en": name_en,

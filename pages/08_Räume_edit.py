@@ -68,17 +68,17 @@ if st.session_state.logged_in:
 
     st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_en=st.text_input('Name (en)', x["name_en"])
-        kurzname=st.text_input('Kurzname', x["kurzname"], disabled = True if x["_id"] in st.session_state.hauptraum_ids else False)
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("raum.sichtbar"))
+        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("raum.name_de"))
+        name_en=st.text_input('Name (en)', x["name_en"], help = tools.hilfe("raum.name_en"))
+        kurzname=st.text_input('Kurzname', x["kurzname"], disabled = True if x["_id"] in st.session_state.hauptraum_ids else False, help = tools.hilfe("raum.kurzname"))
         if x["gebaeude"] not in gebaeude_sichtbar:
             gebaeude_sichtbar.insert(0, x["gebaeude"])
         index = [g for g in gebaeude_sichtbar].index(x["gebaeude"])
-        gebaeude1 = st.selectbox("Gebäude", [x for x in gebaeude_sichtbar], index = index, format_func = (lambda a: tools.repr(util.gebaeude, a)))
-        raum=st.text_input('Raum', x["raum"])
-        groesse=st.number_input('Groesse', value = x["groesse"], min_value = 0)
-        kommentar=st.text_area('Kommentar', x["kommentar"])
+        gebaeude1 = st.selectbox("Gebäude", [x for x in gebaeude_sichtbar], index = index, format_func = (lambda a: tools.repr(util.gebaeude, a)), help = tools.hilfe("raum.gebaeude"))
+        raum=st.text_input('Raum', x["raum"], help = tools.hilfe("raum.raum"))
+        groesse=st.number_input('Groesse', value = x["groesse"], min_value = 0, help = tools.hilfe("raum.groesse"))
+        kommentar=st.text_area('Kommentar', x["kommentar"], help = tools.hilfe("raum.kommentar"))
         x_updated = ({"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "gebaeude": gebaeude1, "raum": raum, "groesse": groesse, "sichtbar": sichtbar, "kommentar": kommentar})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:

@@ -34,7 +34,7 @@ semesters = util.list_semesters()
 if st.session_state.logged_in:
     st.header("Veranstaltungen")
     sem_id = st.session_state.semester_id
-    alle_codes = st.checkbox("Alle Codes anzeigen", True)
+    alle_codes = st.checkbox("Alle Codes anzeigen", True, help = tools.hilfe("www.alle_codes_anzeigen"))
     if alle_codes:
         codekategorie_list = [x["_id"] for x in list(util.codekategorie.find({"semester": sem_id}))]
     else:

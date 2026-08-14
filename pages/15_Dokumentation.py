@@ -1,5 +1,6 @@
 import streamlit as st
-from streamlit_extras.switch_page_button import switch_page 
+import pymongo
+from streamlit_extras.switch_page_button import switch_page
 
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -22,6 +23,65 @@ tools.display_navigation()
 
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
+    st.header("Notizen")
+    with st.popover("Neue Notiz"):
+        with st.form("notiz_neu", clear_on_submit=True):
+            text_neu = st.text_area("Text", key="notiz_neu_text")
+            if st.form_submit_button("Anlegen", type="primary"):
+                tools.new(util.notiz, {"text": text_neu}, False)
+                st.rerun()
+
+    for x in list(util.notiz.find(sort = [("rang", pymongo.ASCENDING)])):
+        tools.merke_bearbeitet(x)
+        co1, co2, co3, co4, co5 = st.columns([1, 1, 1, 1, 21])
+        with co1:
+            st.button('↓', key=f'notiz-down-{x["_id"]}', on_click = tools.move_down, args = (util.notiz, x, ))
+        with co2:
+            st.button('↑', key=f'notiz-up-{x["_id"]}', on_click = tools.move_up, args = (util.notiz, x, ))
+        with co3:
+            with st.popover('🗙'):
+                if st.button("Wirklich löschen!", type = 'primary', key = f'notiz-del-{x["_id"]}'):
+                    tools.delete_item_update_dependent_items(util.notiz, x["_id"], False)
+                    st.rerun()
+                st.button("Abbrechen", key = f'notiz-nodel-{x["_id"]}', on_click = st.success, args = ("Nicht gelöscht!", ))
+        with co4:
+            with st.popover('✏️'):
+                st.write(x["bearbeitet"])
+                text = st.text_area("Text", x["text"], key = f'notiz-text-{x["_id"]}')
+                if st.button("Speichern", key = f'notiz-save-{x["_id"]}'):
+                    tools.update_confirm(util.notiz, x, {"text": text}, False)
+                    st.rerun()
+        with co5:
+            st.markdown(x["text"])
+    st.divider()
+
+    with st.expander("# Hilfetexte"):
+        st.markdown("Das sind die Texte, die in der App hinter den Fragezeichen neben den Eingabefeldern stehen. "
+                    "Felder ohne Text zeigen kein Fragezeichen an; sobald hier etwas eingetragen ist, erscheint es. "
+                    "Vom Standard abweichende Texte sind mit 🖉 markiert und können damit zurückgesetzt werden.")
+        geaendert = tools._hilfetexte()
+        gruppe = st.selectbox("Seite", util.HILFE_GRUPPE.keys(),
+                              format_func = (lambda g: util.HILFE_GRUPPE[g]), key = "hilfe_gruppe")
+        for key, eintrag in [(k, e) for k, e in util.HILFE.items() if k.split(".")[0] == gruppe]:
+            co1, co2, co3 = st.columns([1, 8, 16])
+            with co1:
+                if key in geaendert:
+                    st.button('🖉', key = f'hilfe-reset-{key}',
+                              help = "Auf den Standard zurücksetzen",
+                              on_click = tools.hilfe_zuruecksetzen, args = (key, ))
+            with co2:
+                with st.popover(eintrag["label"], use_container_width = True):
+                    st.caption(key)
+                    if key in geaendert:
+                        st.write(util.hilfe.find_one({"key": key})["bearbeitet"])
+                        st.caption(f"Standard: {eintrag['text'] or '(leer)'}")
+                    text = st.text_area("Text", tools.hilfe(key), key = f'hilfe-text-{key}')
+                    if st.button("Speichern", key = f'hilfe-save-{key}'):
+                        tools.hilfe_setzen(key, text)
+                        st.rerun()
+            with co3:
+                st.markdown(tools.hilfe(key))
+
     with st.expander("# Allgemeine Steuerung"):
         st.markdown("Man arbeitet immer im Semester, das links oben angegeben ist. ")
         st.markdown("Es gibt Items, die jedem Semester einzeln zugeordnet sind (Rubrik, Code, Codekategorie) und solche, die in allen Semestern zugänglich sind (Person, Studiengang, Modul, Anforderung, Terminart).")

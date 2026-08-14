@@ -52,7 +52,7 @@ if st.session_state.logged_in:
     with col1:
         st.write("Hier zurück ohne speichern Button")
     with col2:
-        with st.popover(f'{tools.repr(collection, st.session_state.semester_id, False, False)} löschen', help = "Dieses Semester wird in der Tat aus der Datenbank gelöscht!"):
+        with st.popover(f'{tools.repr(collection, st.session_state.semester_id, False, False)} löschen', help = tools.hilfe("semester.loeschen")):
             s = ("  \n".join(tools.find_dependent_items(collection, x["_id"])))
             if s:
                 st.write("Eintrag wirklich löschen?  \n" + s + "  \nwerden dadurch geändert.")
@@ -72,9 +72,9 @@ if st.session_state.logged_in:
     with st.expander(f'Neues Semester anlegen'):
         s = list(util.semester.find({}, sort = [("rang", pymongo.DESCENDING)]))
         d = tools.new_semester_dict()
-        new_name_de = st.text_input('Name des angelegten Semesters (de)', d["name_de"], disabled = True)
-        new_name_en = st.text_input('Name des angelegten Semesters (en)', d["name_en"], disabled = True)
-        new_kurzname = st.text_input('Kurzname des angelegten Semesters', d["kurzname"], disabled = True)
+        new_name_de = st.text_input('Name des angelegten Semesters (de)', d["name_de"], disabled = True, help = tools.hilfe("semester.neu.name_de"))
+        new_name_en = st.text_input('Name des angelegten Semesters (en)', d["name_en"], disabled = True, help = tools.hilfe("semester.neu.name_en"))
+        new_kurzname = st.text_input('Kurzname des angelegten Semesters', d["kurzname"], disabled = True, help = tools.hilfe("semester.neu.kurzname"))
         new_hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar", value = False, key=f'kopie-hp_sichtbar')
         personen_uebernehmen = st.checkbox(f"Personen aus {s[0]['name_de']} in die Personenliste des Semesters übernehmen", value = True, key=f'personen_uebernehmen')
         anforderung_uebernehmen = st.checkbox(f"Anforderungen aus {s[0]['name_de']} übernehmen", value = True, key=f'anforderung_uebernehmen')
@@ -108,12 +108,12 @@ if st.session_state.logged_in:
         st.button("Semester anlegen", on_click=tools.semester_anlegen, args = (x_updated, df_new, personen_uebernehmen, anforderung_uebernehmen, veranstaltungen_uebernehmen), type="primary")
     st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
-        name_de = st.text_input('Name (de)', x["name_de"], disabled = True)
-        name_en = st.text_input('Name (en)', x["name_en"], disabled = True)
-        kurzname = st.text_input('Kurzname', x["kurzname"], disabled = True)
-        hp_sichtbar = st.checkbox(f"Auf www.math... sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
-        prefix_de = st.text_area('Prefix (de)', x["prefix_de"], help="Dieser Text erscheint oben auf der Veranstaltungsseite des Semesters.")
-        prefix_en = st.text_area('Prefix (en)', x["prefix_en"], help="Dieser Text erscheint oben auf der Veranstaltungsseite des Semesters.")
+        name_de = st.text_input('Name (de)', x["name_de"], disabled = True, help = tools.hilfe("semester.name_de"))
+        name_en = st.text_input('Name (en)', x["name_en"], disabled = True, help = tools.hilfe("semester.name_en"))
+        kurzname = st.text_input('Kurzname', x["kurzname"], disabled = True, help = tools.hilfe("semester.kurzname"))
+        hp_sichtbar = st.checkbox(f"Auf www.math... sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar', help = tools.hilfe("semester.hp_sichtbar"))
+        prefix_de = st.text_area('Prefix (de)', x["prefix_de"], help=tools.hilfe("semester.prefix_de"))
+        prefix_en = st.text_area('Prefix (en)', x["prefix_en"], help=tools.hilfe("semester.prefix_en"))
         x_updated = {"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "hp_sichtbar": hp_sichtbar, "prefix_de": prefix_de, "prefix_en": prefix_en}
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
@@ -150,7 +150,7 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", help = "Diese Rubrik wird beim Kopieren von Veranstaltungen benötigt und kann daher nicht gelöscht werden.", disabled = True if x["_id"] == st.session_state.leer[util.rubrik] else False)
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", help = tools.hilfe("rubrik.loeschen"), disabled = True if x["_id"] == st.session_state.leer[util.rubrik] else False)
                     if submit:
                         tools.delete_item_update_dependent_items(collection, x["_id"], False)
                         st.rerun()
@@ -159,16 +159,16 @@ if st.session_state.logged_in:
 
                 st.write(x["bearbeitet"])
                 with st.form(f'ID-{x["_id"]}'):
-                    hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
-                    titel_de=st.text_input('Titel (de)', x["titel_de"], key=f'titel-de-{x["_id"]}')
-                    titel_en=st.text_input('Titel (en)', x["titel_en"], key=f'titel-en-{x["_id"]}')
-                    untertitel_de=st.text_input('Untertitel (de)', x["untertitel_de"], key=f'untertitel-de-{x["_id"]}')
-                    untertitel_en=st.text_input('Untertitel (en)', x["untertitel_en"], key=f'untertitel-en-{x["_id"]}')
-                    prefix_de=st.text_area('Prefix (de)', x["prefix_de"], key=f'prefix-de-{x["_id"]}')
-                    prefix_en=st.text_area('Prefix (en)', x["prefix_en"], key=f'prefix-en-{x["_id"]}')
-                    suffix_de=st.text_area('Suffix (de)', x["suffix_de"], key=f'suffix-de-{x["_id"]}')
-                    suffix_en=st.text_area('Suffix (en)', x["suffix_en"], key=f'suffix-en-{x["_id"]}')
-                    kommentar=st.text_area('Kommentar', x["kommentar"])
+                    hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar', help = tools.hilfe("rubrik.hp_sichtbar"))
+                    titel_de=st.text_input('Titel (de)', x["titel_de"], key=f'titel-de-{x["_id"]}', help = tools.hilfe("rubrik.titel_de"))
+                    titel_en=st.text_input('Titel (en)', x["titel_en"], key=f'titel-en-{x["_id"]}', help = tools.hilfe("rubrik.titel_en"))
+                    untertitel_de=st.text_input('Untertitel (de)', x["untertitel_de"], key=f'untertitel-de-{x["_id"]}', help = tools.hilfe("rubrik.untertitel_de"))
+                    untertitel_en=st.text_input('Untertitel (en)', x["untertitel_en"], key=f'untertitel-en-{x["_id"]}', help = tools.hilfe("rubrik.untertitel_en"))
+                    prefix_de=st.text_area('Prefix (de)', x["prefix_de"], key=f'prefix-de-{x["_id"]}', help = tools.hilfe("rubrik.prefix_de"))
+                    prefix_en=st.text_area('Prefix (en)', x["prefix_en"], key=f'prefix-en-{x["_id"]}', help = tools.hilfe("rubrik.prefix_en"))
+                    suffix_de=st.text_area('Suffix (de)', x["suffix_de"], key=f'suffix-de-{x["_id"]}', help = tools.hilfe("rubrik.suffix_de"))
+                    suffix_en=st.text_area('Suffix (en)', x["suffix_en"], key=f'suffix-en-{x["_id"]}', help = tools.hilfe("rubrik.suffix_en"))
+                    kommentar=st.text_area('Kommentar', x["kommentar"], help = tools.hilfe("rubrik.kommentar"))
                     x_updated = {"hp_sichtbar": hp_sichtbar, "titel_de": titel_de, "titel_en": titel_en, "untertitel_de": untertitel_de, "untertitel_en": untertitel_en, "prefix_de": prefix_de, "prefix_en": prefix_en, "suffix_de": suffix_de, "suffix_en": suffix_en, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.rubrik] else False)
                     if submit:
@@ -216,13 +216,13 @@ if st.session_state.logged_in:
 
                 st.write(x["bearbeitet"])
                 with st.form(f'ID-{x["_id"]}'):
-                    hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar')
-                    komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False)
-                    name_de=st.text_input('Titel (de)', x["name_de"], key=f'titel-de-{x["_id"]}')
-                    name_en=st.text_input('Titel (en)', x["name_en"], key=f'titel-en-{x["_id"]}')
-                    beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}')
-                    beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
-                    kommentar=st.text_area('Kommentar', x["kommentar"])
+                    hp_sichtbar = st.checkbox(f"Auf Homepage sichtbar {'😎' if x['hp_sichtbar'] else ''}", value = x["hp_sichtbar"], key=f'ID-{x["_id"]}-hp_sichtbar', help = tools.hilfe("codekategorie.hp_sichtbar"))
+                    komm_sichtbar = st.checkbox(f"Im kommentierten VVZ sichtbar {'🤓' if x['komm_sichtbar'] else ''}", x["komm_sichtbar"], disabled = False, help = tools.hilfe("codekategorie.komm_sichtbar"))
+                    name_de=st.text_input('Titel (de)', x["name_de"], key=f'titel-de-{x["_id"]}', help = tools.hilfe("codekategorie.name_de"))
+                    name_en=st.text_input('Titel (en)', x["name_en"], key=f'titel-en-{x["_id"]}', help = tools.hilfe("codekategorie.name_en"))
+                    beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}', help = tools.hilfe("codekategorie.beschreibung_de"))
+                    beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}', help = tools.hilfe("codekategorie.beschreibung_en"))
+                    kommentar=st.text_area('Kommentar', x["kommentar"], help = tools.hilfe("codekategorie.kommentar"))
                     code = []
                     x_updated = {"hp_sichtbar": hp_sichtbar, "komm_sichtbar": komm_sichtbar, "name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
                     submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.codekategorie] else False)
@@ -270,11 +270,11 @@ if st.session_state.logged_in:
                     codekategorie_list = list(util.codekategorie.find({"semester": st.session_state.semester_id}, sort = [("rang", pymongo.ASCENDING)]))
                     codekategorie_dict = {r["_id"]: tools.repr(util.codekategorie, r["_id"], show_collection = False) for r in codekategorie_list}
                     index = [g["_id"] for g in codekategorie_list].index(x["codekategorie"])
-                    codekategorie = st.selectbox("Codekategorie", codekategorie_dict.keys(), index, format_func = (lambda a: codekategorie_dict[a]), key = f"codekategorie_{x}")
-                    name=st.text_input('Name', x["name"], key=f'name-{x["_id"]}')
-                    beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}')
-                    beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
-                    kommentar=st.text_area('Kommentar', x["kommentar"])
+                    codekategorie = st.selectbox("Codekategorie", codekategorie_dict.keys(), index, format_func = (lambda a: codekategorie_dict[a]), key = f"codekategorie_{x}", help = tools.hilfe("code.codekategorie"))
+                    name=st.text_input('Name', x["name"], key=f'name-{x["_id"]}', help = tools.hilfe("code.name"))
+                    beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}', help = tools.hilfe("code.beschreibung_de"))
+                    beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}', help = tools.hilfe("code.beschreibung_en"))
+                    kommentar=st.text_area('Kommentar', x["kommentar"], help = tools.hilfe("code.kommentar"))
                     x_updated = {"codekategorie": codekategorie, "name": name, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
@@ -283,7 +283,7 @@ if st.session_state.logged_in:
                         st.rerun()                      
 
     with st.expander("Codes einstellen"):
-        codekategorie = st.selectbox("Codekategorie", codekategorie_dict.keys(), index, format_func = (lambda a: codekategorie_dict[a]), key = f"codekategorie_wahl")
+        codekategorie = st.selectbox("Codekategorie", codekategorie_dict.keys(), index, format_func = (lambda a: codekategorie_dict[a]), key = f"codekategorie_wahl", help = tools.hilfe("code.einstellen.codekategorie"))
         y = list(util.code.find({"codekategorie" : codekategorie}))
         ver_list = []
         rub_list = list(util.rubrik.find({"semester": st.session_state.semester_id}, sort=[("rang", pymongo.ASCENDING)]))

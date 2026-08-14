@@ -148,14 +148,14 @@ if st.session_state.logged_in:
             st.write("Kopiere " + tools.repr(collection, x["_id"]))
             st.write("In welches Semester soll kopiert werden?")
             sem_ids = [x["_id"] for x in semesters]
-            kop_sem_id = st.selectbox(label="In welches Semester kopieren?", options = sem_ids, index = sem_ids.index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = f"kopiere_veranstaltung_{x['_id']}_sem")
+            kop_sem_id = st.selectbox(label="In welches Semester kopieren?", options = sem_ids, index = sem_ids.index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = f"kopiere_veranstaltung_{x['_id']}_sem", help = tools.hilfe("veranstaltung.veranstaltung_kopieren.in_welches_semester_kopieren"))
             if kop_sem_id != st.session_state.semester_id:
                 st.write("Rubrik und Code können nicht kopiert werden, da sie semesterabhängig sind. URL wird nicht kopiert.")
             st.write("Was soll mitkopiert werden?")
-            kopiere_personen = st.checkbox("Personen", value = True, key = f"kopiere_veranstaltung_{x['_id']}_per")
-            kopiere_termine = st.checkbox("Termine/Räume", value = False, key = f"kopiere_veranstaltung_{x['_id']}_ter", help = "Zeiten wöchentlicher Termine werden kopiert; Einmalige Termine werden angelegt, aber Start und Ende auf None gesetzt.")
-            kopiere_kommVVZ = st.checkbox("Kommentiertes VVZ", value = True, key = f"kopiere_veranstaltung_{x['_id']}_komm")
-            kopiere_verwendbarkeit = st.checkbox("Verwendbarkeit", value = True, key = f"kopiere_veranstaltung_{x['_id']}_ver")
+            kopiere_personen = st.checkbox("Personen", value = True, key = f"kopiere_veranstaltung_{x['_id']}_per", help = tools.hilfe("veranstaltung.veranstaltung_kopieren.personen"))
+            kopiere_termine = st.checkbox("Termine/Räume", value = False, key = f"kopiere_veranstaltung_{x['_id']}_ter", help = tools.hilfe("veranstaltung.kopiere_termine"))
+            kopiere_kommVVZ = st.checkbox("Kommentiertes VVZ", value = True, key = f"kopiere_veranstaltung_{x['_id']}_komm", help = tools.hilfe("veranstaltung.veranstaltung_kopieren.kommentiertes_vvz"))
+            kopiere_verwendbarkeit = st.checkbox("Verwendbarkeit", value = True, key = f"kopiere_veranstaltung_{x['_id']}_ver", help = tools.hilfe("veranstaltung.veranstaltung_kopieren.verwendbarkeit"))
             colu1, colu2 = st.columns([1,1])
             with colu1:
                 submit = st.button(label = "Kopieren", type = 'primary', key = f"copy-{x['_id']}")
@@ -185,27 +185,27 @@ if st.session_state.logged_in:
 
     with st.expander("Grunddaten", expanded = True if st.session_state.expanded == "grunddaten" else False):
         #with st.form(f'Grunddaten-{x["_id"]}'):
-        hp_sichtbar = st.checkbox("Auf Homepages sichtbar 😎", x["hp_sichtbar"])
-        komm_sichtbar = st.checkbox("In Kommentaren sichtbar 🤓", x["komm_sichtbar"], key = "komm_sichtbar1")
-        name_de=st.text_input('Name (de)', x["name_de"])
-        name_en=st.text_input('Name (en)', x["name_en"])
-        midname_de=st.text_input('HisInOne Kürzel', x["midname_de"])
+        hp_sichtbar = st.checkbox("Auf Homepages sichtbar 😎", x["hp_sichtbar"], help = tools.hilfe("veranstaltung.grunddaten.hp_sichtbar"))
+        komm_sichtbar = st.checkbox("In Kommentaren sichtbar 🤓", x["komm_sichtbar"], key = "komm_sichtbar1", help = tools.hilfe("veranstaltung.grunddaten.komm_sichtbar"))
+        name_de=st.text_input('Name (de)', x["name_de"], help = tools.hilfe("veranstaltung.grunddaten.name_de"))
+        name_en=st.text_input('Name (en)', x["name_en"], help = tools.hilfe("veranstaltung.grunddaten.name_en"))
+        midname_de=st.text_input('HisInOne Kürzel', x["midname_de"], help = tools.hilfe("veranstaltung.grunddaten.midname_de"))
         midname_en="" #st.text_input('Mittelkurzer Name (en)', x["midname_en"])
-        kurzname=st.text_input('Kurzname', x["kurzname"], help = "Wird im Raumplan verwendet.")
+        kurzname=st.text_input('Kurzname', x["kurzname"], help = tools.hilfe("veranstaltung.kurzname"))
         ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12, 15, 18] 
-        ects = st.selectbox("Typische Anzahl an ECTS-Punkten.", ects_all, index = ects_all.index(x["ects"]), placeholder = "Bitte auswählen!")
+        ects = st.selectbox("Typische Anzahl an ECTS-Punkten.", ects_all, index = ects_all.index(x["ects"]), placeholder = "Bitte auswählen!", help = tools.hilfe("veranstaltung.grunddaten.typische_anzahl_an_ects_punkten"))
         kat = [g["_id"] for g in list(util.rubrik.find({"semester": x["semester"]}))]
         index = [g for g in kat].index(x["rubrik"])
-        kat = st.selectbox("Rubrik", [x for x in kat], index = index, format_func = (lambda a: tools.repr(util.rubrik, a)))
-        code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({"$or": [{"semester": st.session_state.semester_id}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: tools.repr(util.code, a, show_collection=False)), placeholder = "Bitte auswählen", help = "Es können nur Codes aus dem ausgewählten Semester verwendet werden.")
+        kat = st.selectbox("Rubrik", [x for x in kat], index = index, format_func = (lambda a: tools.repr(util.rubrik, a)), help = tools.hilfe("veranstaltung.grunddaten.rubrik"))
+        code_list = st.multiselect("Codes", [x["_id"] for x in util.code.find({"$or": [{"semester": st.session_state.semester_id}, {"_id": {"$in": x["code"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["code"], format_func = (lambda a: tools.repr(util.code, a, show_collection=False)), placeholder = "Bitte auswählen", help = tools.hilfe("veranstaltung.code"))
         # Sortiere codes nach ihrem Rang 
         co = list(util.code.find({"_id": {"$in": code_list}}, sort=[("rang", pymongo.ASCENDING)]))
         code_list = [c["_id"] for c in co]
-        kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = "Dieser Kommentar erscheint auf www.math...")
-        kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = "Dieser Kommentar erscheint auf www.math...")
-        kommentar_latex_de = st.text_area('Bemerkung (Latex, de)', x["kommentar_latex_de"])
-        kommentar_latex_en = st.text_area('Bemerkung (Latex, en)', x["kommentar_latex_en"])
-        url=st.text_input('URL', x["url"], help = "Gemeint ist die URL, auf der Inhalte zur Veranstaltung hinterlegt sind, etwa Skript, Übungsblätter etc.")
+        kommentar_html_de = st.text_area('Kommentar (HTML, de)', x["kommentar_html_de"], help = tools.hilfe("veranstaltung.kommentar_html_de"))
+        kommentar_html_en = st.text_area('Kommentar (HTML, en)', x["kommentar_html_en"], help = tools.hilfe("veranstaltung.kommentar_html_en"))
+        kommentar_latex_de = st.text_area('Bemerkung (Latex, de)', x["kommentar_latex_de"], help = tools.hilfe("veranstaltung.grunddaten.kommentar_latex_de"))
+        kommentar_latex_en = st.text_area('Bemerkung (Latex, en)', x["kommentar_latex_en"], help = tools.hilfe("veranstaltung.grunddaten.kommentar_latex_en"))
+        url=st.text_input('URL', x["url"], help = tools.hilfe("veranstaltung.url"))
         ver_updated = {
             "komm_sichtbar": komm_sichtbar,
             "hp_sichtbar": hp_sichtbar,
@@ -239,15 +239,15 @@ if st.session_state.logged_in:
         per_dict = {p["_id"]: tools.repr(util.person, p["_id"], False, True) for p in pe }
         col1, col2, col3 = st.columns([1,1,1])
         with col1:
-            doz_list = st.multiselect("Dozent*innen", per_dict.keys(), x["dozent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+            doz_list = st.multiselect("Dozent*innen", per_dict.keys(), x["dozent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", help = tools.hilfe("veranstaltung.personen.dozent_innen"))
             doz = list(util.person.find({"_id": {"$in": doz_list}}, sort=[("name", pymongo.ASCENDING)]))
             doz_list = [d["_id"] for d in doz]
         with col2: 
-            ass_list = st.multiselect("Assistent*innen", per_dict.keys(), x["assistent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+            ass_list = st.multiselect("Assistent*innen", per_dict.keys(), x["assistent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", help = tools.hilfe("veranstaltung.personen.assistent_innen"))
             ass = list(util.person.find({"_id": {"$in": ass_list}}, sort=[("name", pymongo.ASCENDING)]))
             ass_list = [d["_id"] for d in ass]
         with col3: 
-            org_list = st.multiselect("Organisation", per_dict.keys(), x["organisation"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+            org_list = st.multiselect("Organisation", per_dict.keys(), x["organisation"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", help = tools.hilfe("veranstaltung.personen.organisation"))
             org = list(util.person.find({"_id": {"$in": org_list}}, sort=[("name", pymongo.ASCENDING)]))
             org_list = [d["_id"] for d in org]
 
@@ -283,20 +283,20 @@ if st.session_state.logged_in:
                 terminart_list = list(util.terminart.find({}, sort = [("name_de", pymongo.ASCENDING)]))
                 terminart_dict = {r["_id"]: tools.repr(util.terminart, r["_id"], show_collection = False) + (" 😎" if r["hp_sichtbar"] else "") for r in terminart_list}
                 index = [g["_id"] for g in terminart_list].index(w["key"])
-                w_key = st.selectbox("Art des Termins", terminart_dict.keys(), index, format_func = (lambda a: terminart_dict[a]), key = f"wt_{i}")
+                w_key = st.selectbox("Art des Termins", terminart_dict.keys(), index, format_func = (lambda a: terminart_dict[a]), key = f"wt_{i}", help = tools.hilfe("veranstaltung.woechentliche_termine.art_des_termins"))
             with cols[3]:
                 wochentage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
                 try:
                     wochentag_index = wochentage.index(w["wochentag"])
                 except:
                     wochentag_index = None
-                w_wochentag = st.selectbox("Tag", wochentage, wochentag_index, key = f"termin_{i}_wochentag", placeholder = "Bitte auswählen")
+                w_wochentag = st.selectbox("Tag", wochentage, wochentag_index, key = f"termin_{i}_wochentag", placeholder = "Bitte auswählen", help = tools.hilfe("veranstaltung.woechentliche_termine.tag"))
             with cols[4]:
                 start_display = w["start"] if w["start"] else None # datetime.time(9, 00)
-                w_start = st.time_input("Start", start_display, key =f"termin_{i}_start", step=3600)
+                w_start = st.time_input("Start", start_display, key =f"termin_{i}_start", step=3600, help = tools.hilfe("veranstaltung.woechentliche_termine.start"))
             with cols[5]:
                 ende_display = w["ende"] if w["ende"] else None # datetime.time(9, 00)
-                w_ende = st.time_input("Ende", ende_display, key =f"termin_{i}_ende", step=3600)
+                w_ende = st.time_input("Ende", ende_display, key =f"termin_{i}_ende", step=3600, help = tools.hilfe("veranstaltung.woechentliche_termine.ende"))
             with cols[6]:
                 st.write("")
                 st.write("")
@@ -311,16 +311,16 @@ if st.session_state.logged_in:
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": w["raum"]}]}, sort = [("name_de", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in    termin_raum }
                 index = [g["_id"] for g in termin_raum].index(w["raum"])
-                w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum")
+                w_raum = st.selectbox("Raum", termin_raum_dict.keys(), index, format_func = (lambda a: termin_raum_dict[a]), key = f"termin_{i}_raum", help = tools.hilfe("veranstaltung.woechentliche_termine.raum"))
             with cols[3]:
-                w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"termin_{i}_person")
+                w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"termin_{i}_person", help = tools.hilfe("veranstaltung.woechentliche_termine.personen"))
             cols = st.columns([1,1,10,10,5,1])
             with cols[2]:
-                w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"termin_{i}_kommentar_de_latex")
-                w_kommentar_de_html = st.text_input("Kommentar (de, html)", w["kommentar_de_html"], key =f"termin_{i}_kommentar_de_html")
+                w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"termin_{i}_kommentar_de_latex", help = tools.hilfe("veranstaltung.woechentliche_termine.kommentar_de_latex"))
+                w_kommentar_de_html = st.text_input("Kommentar (de, html)", w["kommentar_de_html"], key =f"termin_{i}_kommentar_de_html", help = tools.hilfe("veranstaltung.woechentliche_termine.kommentar_de_html"))
             with cols[3]:
-                w_kommentar_en_latex = st.text_input("Kommentar (en, LaTeX)", w["kommentar_en_latex"], key =f"termin_{i}_kommentar_en_latex")
-                w_kommentar_en_html = st.text_input("Kommentar (en, html)", w["kommentar_en_html"], key =f"termin_{i}_kommentar_en_html")
+                w_kommentar_en_latex = st.text_input("Kommentar (en, LaTeX)", w["kommentar_en_latex"], key =f"termin_{i}_kommentar_en_latex", help = tools.hilfe("veranstaltung.woechentliche_termine.kommentar_en_latex"))
+                w_kommentar_en_html = st.text_input("Kommentar (en, html)", w["kommentar_en_html"], key =f"termin_{i}_kommentar_en_html", help = tools.hilfe("veranstaltung.woechentliche_termine.kommentar_en_html"))
             #st.divider()
             woechentlicher_termin.append({
                 "key": w_key,
@@ -400,11 +400,11 @@ if st.session_state.logged_in:
                 index = ta.index(w["key"])
                 w_key = st.selectbox("", ta, index = index, format_func = (lambda a: tools.repr(st.session_state.terminart, a)), key = f"et_{i}")
             with cols[3]:
-                w_startdatum = st.date_input("Start", value = None if w["startdatum"] == None else w["startdatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_startdatum")
+                w_startdatum = st.date_input("Start", value = None if w["startdatum"] == None else w["startdatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_startdatum", help = tools.hilfe("veranstaltung.einmalige_termine.start"))
                 #st.write(type(w_startdatum))
                 w_startdatum = None if w_startdatum == None else datetime.datetime.combine(w_startdatum, datetime.time.min)
             with cols[4]:
-                w_enddatum = st.date_input("Ende", value = w["enddatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_enddatum")
+                w_enddatum = st.date_input("Ende", value = w["enddatum"], format = "DD.MM.YYYY", key = f"einmaliger_termin_{i}_enddatum", help = tools.hilfe("veranstaltung.einmalige_termine.enddatum"))
                 w_enddatum = None if w_enddatum == None else datetime.datetime.combine(w_enddatum, datetime.time.max)
             with cols[5]:
                 st.write("")
@@ -421,24 +421,24 @@ if st.session_state.logged_in:
 #                termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("rang", pymongo.ASCENDING)]))
                 termin_raum = list(util.raum.find({"$or": [{"sichtbar": True}, {"_id": {"$in": w["raum"]}}]}, sort = [("name_de", pymongo.ASCENDING)]))
                 termin_raum_dict = {r["_id"]: tools.repr(util.raum, r["_id"], show_collection = False) for r in termin_raum }
-                w_raum = st.multiselect("Raum", termin_raum_dict.keys(), w["raum"], format_func = (lambda a: termin_raum_dict[a]), placeholder = "Bitte auswählen", key = f"einmaliger_termin_{i}_raum")
+                w_raum = st.multiselect("Raum", termin_raum_dict.keys(), w["raum"], format_func = (lambda a: termin_raum_dict[a]), placeholder = "Bitte auswählen", key = f"einmaliger_termin_{i}_raum", help = tools.hilfe("veranstaltung.einmalige_termine.raum"))
             with cols[3]:
-                w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"etermin_{i}_person")
+                w_person = st.multiselect("Personen", per_dict.keys(), w["person"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key =f"etermin_{i}_person", help = tools.hilfe("veranstaltung.einmalige_termine.personen"))
             with cols[4]:
-                w_startzeit = st.time_input("", value = w["startzeit"], key = f"einmaliger_termin_{i}_startzeit")
+                w_startzeit = st.time_input("", value = w["startzeit"], key = f"einmaliger_termin_{i}_startzeit", help = tools.hilfe("veranstaltung.einmalige_termine.startzeit"))
                 w_startzeit = None if w_startzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_startzeit)
             with cols[5]:
-                w_endzeit = st.time_input("", value = w["endzeit"], key = f"einmaliger_termin_{i}_endzeit")
+                w_endzeit = st.time_input("", value = w["endzeit"], key = f"einmaliger_termin_{i}_endzeit", help = tools.hilfe("veranstaltung.einmalige_termine.endzeit"))
                 w_endzeit = None if w_endzeit == None else datetime.datetime.combine(datetime.datetime(1970,1,1), w_endzeit)
                 if w_endzeit is not None and w_enddatum is None:
                     w_enddatum = datetime.combine(w_startdatum.date(), w_endzeit)
             cols = st.columns([1,1,10,10,1])
             with cols[2]:
-                w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"einmaliger_termin_{i}_kommentar_de_latex")
-                w_kommentar_de_html = st.text_input("Kommentar (de, html)", w["kommentar_de_html"], key =f"einmaliger_termin_{i}_kommentar_de_html")
+                w_kommentar_de_latex = st.text_input("Kommentar (de, LaTeX)", w["kommentar_de_latex"], key =f"einmaliger_termin_{i}_kommentar_de_latex", help = tools.hilfe("veranstaltung.einmalige_termine.kommentar_de_latex"))
+                w_kommentar_de_html = st.text_input("Kommentar (de, html)", w["kommentar_de_html"], key =f"einmaliger_termin_{i}_kommentar_de_html", help = tools.hilfe("veranstaltung.einmalige_termine.kommentar_de_html"))
             with cols[3]:
-                w_kommentar_en_latex = st.text_input("Kommentar (en, LaTeX)", w["kommentar_en_latex"], key =f"einmaliger_termin_{i}_kommentar_en_latex")
-                w_kommentar_en_html = st.text_input("Kommentar (en, html)", w["kommentar_en_html"], key =f"einmaliger_termin_{i}_kommentar_en_html")
+                w_kommentar_en_latex = st.text_input("Kommentar (en, LaTeX)", w["kommentar_en_latex"], key =f"einmaliger_termin_{i}_kommentar_en_latex", help = tools.hilfe("veranstaltung.einmalige_termine.kommentar_en_latex"))
+                w_kommentar_en_html = st.text_input("Kommentar (en, html)", w["kommentar_en_html"], key =f"einmaliger_termin_{i}_kommentar_en_html", help = tools.hilfe("veranstaltung.einmalige_termine.kommentar_en_html"))
 
             einmaliger_termin.append({
                 "key": w_key,
@@ -498,12 +498,12 @@ if st.session_state.logged_in:
         if st.session_state.translation_tmp is not None:
             x.update(st.session_state.translation_tmp[0])
         # komm_sichtbar = st.checkbox("In Kommentaren sichtbar", x["komm_sichtbar"], key = "komm_sichtbar2")
-        inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"])
-        inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"])
-        literatur_de = st.text_area('Literatur (de)', x["literatur_de"])
-        literatur_en = st.text_area('Literatur (en)', x["literatur_en"])
-        vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"])
-        vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"])
+        inhalt_de = st.text_area('Inhalt (de)', x["inhalt_de"], help = tools.hilfe("veranstaltung.kommentiertes_vorlesungsverzei.inhalt_de"))
+        inhalt_en = st.text_area('Inhalt (en)', x["inhalt_en"], help = tools.hilfe("veranstaltung.kommentiertes_vorlesungsverzei.inhalt_en"))
+        literatur_de = st.text_area('Literatur (de)', x["literatur_de"], help = tools.hilfe("veranstaltung.kommentiertes_vorlesungsverzei.literatur_de"))
+        literatur_en = st.text_area('Literatur (en)', x["literatur_en"], help = tools.hilfe("veranstaltung.kommentiertes_vorlesungsverzei.literatur_en"))
+        vorkenntnisse_de = st.text_area('Vorkenntnisse (de)', x["vorkenntnisse_de"], help = tools.hilfe("veranstaltung.kommentiertes_vorlesungsverzei.vorkenntnisse_de"))
+        vorkenntnisse_en = st.text_area('Vorkenntnisse (en)', x["vorkenntnisse_en"], help = tools.hilfe("veranstaltung.kommentiertes_vorlesungsverzei.vorkenntnisse_en"))
         st.write("Kommentare für die LaTeX-Files können unter _Grunddaten_ eingegeben werden.")
         ver_updated = {
         #    "komm_sichtbar": komm_sichtbar,
@@ -540,11 +540,11 @@ if st.session_state.logged_in:
     ## Verwendbarkeiten
     with st.expander("Verwendbarkeit", expanded = True if st.session_state.expanded == "verwendbarkeit" else False):
         st.subheader("Verwendbarkeit")
-        with st.popover("Aus anderer Veranstaltung importieren", help = "Es wird eine Auswahlliste angezeigt, bestehend aus Veranstaltungen im aktuellen und vergangenen Semester."):
+        with st.popover("Aus anderer Veranstaltung importieren", help = tools.hilfe("veranstaltung.verwendbarkeit_import")):
             semester_kurzname = util.semester.find_one({"_id": st.session_state.semester_id})["kurzname"]
             letztes_semester_id = util.semester.find_one({"kurzname": tools.last_semester_kurzname(semester_kurzname)})["_id"]
             ver_auswahl = list(util.veranstaltung.find({"$or": [{"semester": st.session_state.semester_id}, {"semester": letztes_semester_id}]}, sort = [("name_de", pymongo.ASCENDING)]))
-            verwendbarkeit_import = st.selectbox("Veranstaltung", [v["_id"] for v in ver_auswahl], format_func = (lambda a: tools.repr(util.veranstaltung, a, show_collection=False)))
+            verwendbarkeit_import = st.selectbox("Veranstaltung", [v["_id"] for v in ver_auswahl], format_func = (lambda a: tools.repr(util.veranstaltung, a, show_collection=False)), help = tools.hilfe("veranstaltung.aus_anderer_veranstaltung_impo.veranstaltung"))
             v = util.veranstaltung.find_one({"_id": verwendbarkeit_import})
             x_updated = {"verwendbarkeit_modul": v["verwendbarkeit_modul"],
                             "verwendbarkeit_anforderung": v["verwendbarkeit_anforderung"],
@@ -570,7 +570,7 @@ if st.session_state.logged_in:
                 x["verwendbarkeit_modul"].remove(m)
             
         mo_dict = {m["_id"]: tools.repr(util.modul, m["_id"], show_collection = False) for m in mo }
-        mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen", key = f"anf_mod_{x['_id']}")
+        mod_list = st.multiselect("Module", mo_dict.keys(), x["verwendbarkeit_modul"], format_func = (lambda a: mo_dict[a]), placeholder = "Bitte auswählen", key = f"anf_mod_{x['_id']}", help = tools.hilfe("veranstaltung.verwendbarkeit.module"))
 
         ects = {}
         ects_all = [0, 1, 2, 3, 4, 4.5, 5, 5.25, 5.5, 6, 7, 7.5, 8, 9, 10, 10.5, 11, 12, 15, 18, 21] 
@@ -603,7 +603,7 @@ if st.session_state.logged_in:
             ver_an.extend(list(util.anforderung.find({"anforderungskategorie": y["_id"], "$or": [{"semester": {"$elemMatch": {"$eq": st.session_state.semester_id}}}, {"_id": { "$in": x["verwendbarkeit_anforderung"]}}]}, sort = [("name_de", pymongo.ASCENDING)])))        
         # st.write(ver_an)
         an_dict = {a["_id"]: tools.repr(util.anforderung, a["_id"], show_collection = False) for a in ver_an }
-        an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen", key = f"anf_{x['_id']}")
+        an_list = st.multiselect("Anforderung", an_dict.keys(), x["verwendbarkeit_anforderung"], format_func = (lambda a: an_dict[a]), placeholder = "Bitte auswählen", key = f"anf_{x['_id']}", help = tools.hilfe("veranstaltung.verwendbarkeit.anforderung"))
         no_cols = sum([len(ects[m]) for m in mod_list])
         cols = st.columns([15] + [15/len(mod_ects_list) for x in mod_ects_list])
         previous_m = ""
@@ -639,8 +639,8 @@ if st.session_state.logged_in:
                 with cols[i+3]:
                     g.loc[str(a),f"{str(m[0])}_{m[1]}"] = float(st.checkbox(f"{m[0]}_{m[1]}_{a}", True if { "modul": m[0], "ects": float(m[1]), "anforderung": a } in x["verwendbarkeit"] else False, key = f"anforderung_{a}_modul_{m[0]}_ects_{m[1]}", label_visibility="collapsed"))
         verwendbarkeit = [{"modul": m[0], "ects": float(m[1]), "anforderung": a} for m in mod_ects_list for a in an_list if g.loc[str(a),f"{str(m[0])}_{m[1]}"] == True]
-        kommentar_verwendbarkeit_de = st.text_area('Kommentar zur Verwendbarkeit (html, de)', x["kommentar_verwendbarkeit_de"])
-        kommentar_verwendbarkeit_en = st.text_area('Kommentar zur Verwendbarkeit (html, en)', x["kommentar_verwendbarkeit_en"])
+        kommentar_verwendbarkeit_de = st.text_area('Kommentar zur Verwendbarkeit (html, de)', x["kommentar_verwendbarkeit_de"], help = tools.hilfe("veranstaltung.verwendbarkeit.kommentar_verwendbarkeit_de"))
+        kommentar_verwendbarkeit_en = st.text_area('Kommentar zur Verwendbarkeit (html, en)', x["kommentar_verwendbarkeit_en"], help = tools.hilfe("veranstaltung.verwendbarkeit.kommentar_verwendbarkeit_en"))
 
         x_updated = { "verwendbarkeit_modul": mod_list, "verwendbarkeit_anforderung": an_list, "verwendbarkeit": verwendbarkeit, "kommentar_verwendbarkeit_de": kommentar_verwendbarkeit_de, "kommentar_verwendbarkeit_en": kommentar_verwendbarkeit_en }
         ver_updated_all.update(x_updated)
@@ -658,12 +658,12 @@ if st.session_state.logged_in:
         for d in deputat:
             cols = st.columns([1,1,3])
             with cols[0]:
-                st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d['person']}")
+                st.text_input("Person", tools.repr(util.person, d["person"], False), label_visibility='hidden', disabled = True, key = f"deputat_{d['person']}", help = tools.hilfe("veranstaltung.deputate.person"))
             with cols[1]:
-                d["sws"] = st.number_input("SWS", min_value = 0.0, max_value = None, value = d["sws"], step = 1.0, key = f"sws_{d['person']}")
+                d["sws"] = st.number_input("SWS", min_value = 0.0, max_value = None, value = d["sws"], step = 1.0, key = f"sws_{d['person']}", help = tools.hilfe("veranstaltung.deputate.sws"))
             with cols[2]:
-                d["kommentar"] = st.text_input("Kommentar (für Homepage)", d["kommentar"], key = f"kommentar_{d['person']}")
-                d["kommentar_intern"] = st.text_input("Kommentar (intern)", d["kommentar_intern"], key = f"kommentar_intern_{d['person']}")
+                d["kommentar"] = st.text_input("Kommentar (für Homepage)", d["kommentar"], key = f"kommentar_{d['person']}", help = tools.hilfe("veranstaltung.deputate.kommentar"))
+                d["kommentar_intern"] = st.text_input("Kommentar (intern)", d["kommentar_intern"], key = f"kommentar_intern_{d['person']}", help = tools.hilfe("veranstaltung.deputate.kommentar_intern"))
             x_updated = {"deputat" : deputat}
             ver_updated_all.update(x_updated)
 

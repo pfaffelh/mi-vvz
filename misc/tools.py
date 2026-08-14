@@ -39,6 +39,38 @@ def _doc(coll_name, doc_id):
     coll = util._vvz_db[coll_name]
     return coll.find_one({"_id": doc_id})
 
+# Die in der App geänderten Hilfetexte. Ein Query pro Rerun für alle Widgets;
+# die Collection ist klein und ändert sich selten.
+@st.cache_data(ttl=30)
+def _hilfetexte():
+    return {h["key"]: h["text"] for h in util.hilfe.find()}
+
+# Der help-Text eines Widgets: der in der App geänderte, sonst der Standard aus
+# util.HILFE. Ein leerer geänderter Text zählt als "nicht geändert", damit ein
+# versehentlich leergeräumtes Feld nicht den Hilfetext verschwinden lässt.
+def hilfe(key):
+    return _hilfetexte().get(key) or hilfe_standard(key)
+
+def hilfe_standard(key):
+    return util.HILFE.get(key, {}).get("text", "")
+
+def hilfe_setzen(key, text):
+    if text.strip() == hilfe_standard(key).strip():
+        hilfe_zuruecksetzen(key)
+        return
+    util.hilfe.update_one({"key": key},
+                          {"$set": {"text": text, "bearbeitet": bearbeitet_jetzt()}},
+                          upsert = True)
+    _hilfetexte.clear()
+    util.logger.info(f"User {st.session_state.user} hat den Hilfetext {key} geändert.")
+    flash("🎉 Hilfetext geändert!")
+
+def hilfe_zuruecksetzen(key):
+    if util.hilfe.delete_one({"key": key}).deleted_count:
+        _hilfetexte.clear()
+        util.logger.info(f"User {st.session_state.user} hat den Hilfetext {key} auf den Standard zurückgesetzt.")
+        flash("🎉 Hilfetext auf Standard zurückgesetzt!")
+
 def move_up(collection, x, query = {}):
     query["rang"] = {"$lt": x["rang"]}
     target = collection.find_one(query, sort = [("rang",pymongo.DESCENDING)])
@@ -526,6 +558,8 @@ def repr(collection, id, show_collection = True, short = False):
         res = f"{x['name']}"
     elif collection == util.planung:
         res = f"{', '.join([repr(util.person, y, False, True) for y in x['dozent']])}"
+    elif collection == util.notiz:
+        res = x['text'][:60]
     if show_collection:
         res = f"{st.session_state.collection_name[collection]}: {res}"
     return res

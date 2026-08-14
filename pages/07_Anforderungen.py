@@ -94,11 +94,11 @@ if st.session_state.logged_in:
                     with colu3: 
                         st.button(label="Nein", on_click = tools.reset_vars, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
                 with st.form(f'ID-{x["_id"]}'):
-                    sichtbar = st.checkbox("In Auswahlmenüs sichtbar", value = x["sichtbar"], key=f'ID-{x["_id"]}-sichtbar')
-                    name_de=st.text_input('Name (de)', x["name_de"], key=f'name_de-{x["_id"]}')
-                    name_en=st.text_input('Name (en)', x["name_en"], key=f'name_en-{x["_id"]}')
-                    kurzname=st.text_input('Kurzname', x["kurzname"], key=f'kurzname-{x["_id"]}')
-                    kommentar=st.text_area('Kommentar', x["kommentar"])
+                    sichtbar = st.checkbox("In Auswahlmenüs sichtbar", value = x["sichtbar"], key=f'ID-{x["_id"]}-sichtbar', help = tools.hilfe("anforderungkategorie.sichtbar"))
+                    name_de=st.text_input('Name (de)', x["name_de"], key=f'name_de-{x["_id"]}', help = tools.hilfe("anforderungkategorie.name_de"))
+                    name_en=st.text_input('Name (en)', x["name_en"], key=f'name_en-{x["_id"]}', help = tools.hilfe("anforderungkategorie.name_en"))
+                    kurzname=st.text_input('Kurzname', x["kurzname"], key=f'kurzname-{x["_id"]}', help = tools.hilfe("anforderungkategorie.kurzname"))
+                    kommentar=st.text_area('Kommentar', x["kommentar"], help = tools.hilfe("anforderungkategorie.kommentar"))
                     x_updated = {"sichtbar": sichtbar, "name_de": name_de, "name_en": name_en, "kurzname": kurzname, "kommentar": kommentar}
                     submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.anforderungkategorie] else False)
                     if submit:

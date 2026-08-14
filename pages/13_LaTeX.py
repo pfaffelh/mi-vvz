@@ -39,11 +39,11 @@ if st.session_state.logged_in:
 
     col0, col1 = st.columns([1,1])
     with col0:
-        which = st.selectbox("Was soll erstellt werden?", ["Kommentiertes Vorlesungsverzeichnis", "... und Ergänzungen der Modulhandbücher"], index = None, placeholder = "Bitte auswählen")
+        which = st.selectbox("Was soll erstellt werden?", ["Kommentiertes Vorlesungsverzeichnis", "... und Ergänzungen der Modulhandbücher"], index = None, placeholder = "Bitte auswählen", help = tools.hilfe("latex.was_soll_erstellt_werden"))
         kommentare = True if which == "Kommentiertes Vorlesungsverzeichnis" else False
         modulhandbuch = not kommentare
     with col1: 
-        la = st.selectbox("Sprache", ["deutsch", "englisch"], index = None, placeholder = "Bitte auswählen")
+        la = st.selectbox("Sprache", ["deutsch", "englisch"], index = None, placeholder = "Bitte auswählen", help = tools.hilfe("latex.sprache"))
 
     en = True if la == "englisch" else False
     lang = "en" if en else "de"
@@ -62,8 +62,8 @@ if st.session_state.logged_in:
     verw_kurz = True if kommentare else False
 
     with st.expander("Wasserzeichen und Vorspann (LaTeX)"):
-        wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', sem[f"wasserzeichen_kommentare_{lang}"], key = "watermark")
-        vorspann = st.text_area("Vorspann mit LaTeX-Befehlen", sem[f"vorspann_kommentare_{lang}"], height = 200 )
+        wasserzeichen = st.text_input('Wasserzeichen, z.B. Vorläufige Version', sem[f"wasserzeichen_kommentare_{lang}"], key = "watermark", help = tools.hilfe("latex.wasserzeichen_und_vorspann_lat.wasserzeichen_z_b_vorlaeufige_version"))
+        vorspann = st.text_area("Vorspann mit LaTeX-Befehlen", sem[f"vorspann_kommentare_{lang}"], height = 200 , help = tools.hilfe("latex.wasserzeichen_und_vorspann_lat.vorspann_mit_latex_befehlen"))
         submit = st.button("Speichern")
         if submit:
             tools.update_confirm(util.semester, sem, {f"vorspann_kommentare_{lang}" : vorspann, f"wasserzeichen_kommentare_{lang}" : wasserzeichen}, reset = False)

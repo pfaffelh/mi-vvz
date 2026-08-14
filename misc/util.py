@@ -148,7 +148,8 @@ def setup_session_state():
         veranstaltung: "Veranstaltungen",
         dictionary: "Lexikon",
         planungveranstaltung: "Planungskategorie",
-        planung: "Planung"
+        planung: "Planung",
+        notiz: "Notizen"
     }
 
     # leer-Dict: 10 find_one-Calls auf praktisch unveränderliche Anker-Datensätze.
@@ -310,6 +311,11 @@ def setup_session_state():
             "kommentar": "",
             "bearbeitet": bearbeitet_neu,
             "veranstaltung": leer[planungveranstaltung]
+        },
+        notiz: {
+            "text": "",
+            "rang": 0,
+            "bearbeitet": bearbeitet_neu
         }
     }
     # Für den Raumplan: 8 find_one-Calls auf statische Räume — einmal pro Session.
@@ -365,6 +371,7 @@ def setup_session_state():
                     {"collection": person, "field": "veranstaltung", "list": True}],
         dictionary: [],
         planung: [],
+        notiz: [],
         planungveranstaltung: [{"collection": planung, "field": "veranstaltung", "list": False}]
     }
 
@@ -403,6 +410,11 @@ veranstaltung = _vvz_db["veranstaltung"]
 dictionary = _vvz_db["dictionary"]
 planungveranstaltung = _vvz_db["planungveranstaltung"]
 planung = _vvz_db["planung"]
+notiz = _vvz_db["notiz"]
+hilfe = _vvz_db["hilfe"]
+
+# Standardtexte und Beschriftungen der Hilfetexte, siehe misc/hilfetexte.py.
+from misc.hilfetexte import HILFE, HILFE_GRUPPE
 
 _user_db = get_mongo_client()["user"]
 users = _user_db["user"]

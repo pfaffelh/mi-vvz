@@ -60,13 +60,13 @@ if st.session_state.logged_in:
 
     st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_en=st.text_input('Name (en)', x["name_en"])
-        kurzname=st.text_input('Kurzname', x["kurzname"])
-        kommentar=st.text_input('Kommentar', x["kommentar"])
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("modul.sichtbar"))
+        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("modul.name_de"))
+        name_en=st.text_input('Name (en)', x["name_en"], help = tools.hilfe("modul.name_en"))
+        kurzname=st.text_input('Kurzname', x["kurzname"], help = tools.hilfe("modul.kurzname"))
+        kommentar=st.text_input('Kommentar', x["kommentar"], help = tools.hilfe("modul.kommentar"))
         #stu_list = st.multiselect("Studiengänge", [x["_id"] for x in util.studiengang.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["studiengang"]}}]}, sort = [("rang", pymongo.ASCENDING)])], x["studiengang"], format_func = (lambda a: tools.repr(util.studiengang, a, False)), placeholder = "Bitte auswählen")
-        stu_list = st.multiselect("Studiengänge", [x["_id"] for x in util.studiengang.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["studiengang"]}}]}, sort = [("name", pymongo.ASCENDING)])], x["studiengang"], format_func = (lambda a: tools.repr(util.studiengang, a, False)), placeholder = "Bitte auswählen")
+        stu_list = st.multiselect("Studiengänge", [x["_id"] for x in util.studiengang.find({"$or": [{"sichtbar": True}, {"_id": {"$in": x["studiengang"]}}]}, sort = [("name", pymongo.ASCENDING)])], x["studiengang"], format_func = (lambda a: tools.repr(util.studiengang, a, False)), placeholder = "Bitte auswählen", help = tools.hilfe("modul.studiengaenge"))
         # stu = list(util.studiengang.find({"_id": {"$in": stu_list}}, sort=[("rang", pymongo.ASCENDING)]))
         stu = list(util.studiengang.find({"_id": {"$in": stu_list}}, sort=[("name", pymongo.ASCENDING)]))
         stu_list = [s["_id"] for s in stu]

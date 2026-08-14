@@ -72,28 +72,28 @@ if st.session_state.logged_in:
 
     sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
     st.write(x["bearbeitet"])
-    hp_sichtbar = st.checkbox("Im [Personenverzeichnis](https://www.math.uni-freiburg.de/cd2021/personen_de/) sichtbar", x["hp_sichtbar"])
+    hp_sichtbar = st.checkbox("Im [Personenverzeichnis](https://www.math.uni-freiburg.de/cd2021/personen_de/) sichtbar", x["hp_sichtbar"], help = tools.hilfe("person.hp_sichtbar"))
     # ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
-        name=st.text_input('Name (de)', x["name"])
+        name=st.text_input('Name (de)', x["name"], help = tools.hilfe("person.name"))
     with col2:
-        name_en=st.text_input('Name (en), nur falls abweichend', x["name_en"])
+        name_en=st.text_input('Name (en), nur falls abweichend', x["name_en"], help = tools.hilfe("person.name_en"))
     with col3:
-        vorname=st.text_input('Vorname', x["vorname"])
+        vorname=st.text_input('Vorname', x["vorname"], help = tools.hilfe("person.vorname"))
     with col4:
-        name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
+        name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"], help = tools.hilfe("person.name_prefix"))
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        titel=st.text_input('Titel', x["titel"])
+        titel=st.text_input('Titel', x["titel"], help = tools.hilfe("person.titel"))
     with col2:
-        abschluss=st.text_input('hochster Abschluss', x["abschluss"])
+        abschluss=st.text_input('hochster Abschluss', x["abschluss"], help = tools.hilfe("person.abschluss"))
     with col3: 
         query1 = {"$and": [{"$or": [{"einstiegsdatum": None}, {"einstiegsdatum": {"$lt": datetime.datetime.now()}}]}, {"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.datetime.now()}}]}]}
         query2 = {"_id" : {"$in" : x["vorgesetzte"]}}
         pe = list(collection.find({"$or" : [query1, query2]}, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
         per_dict = {p["_id"]: tools.repr(util.person, p["_id"], False, True) for p in pe }
-        vorgesetzte = st.multiselect("Vorgesetzte", per_dict.keys(), x["vorgesetzte"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+        vorgesetzte = st.multiselect("Vorgesetzte", per_dict.keys(), x["vorgesetzte"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", help = tools.hilfe("person.vorgesetzte"))
         v = list(util.person.find({"_id": {"$in": vorgesetzte}}, sort=[("name", pymongo.ASCENDING)]))
         vorgesetzte = [d["_id"] for d in v]
     codes_list = []
@@ -102,9 +102,9 @@ if st.session_state.logged_in:
         codes_list = codes_list + loc
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        gender = st.selectbox("Gender auswählen", ["m", "w", "d", "kA"], ["m", "w", "d", "kA"].index(x["gender"]))
+        gender = st.selectbox("Gender auswählen", ["m", "w", "d", "kA"], ["m", "w", "d", "kA"].index(x["gender"]), help = tools.hilfe("person.gender_auswaehlen"))
     with col2:
-        kennung=st.text_input('RZ-Kennung', x["kennung"])
+        kennung=st.text_input('RZ-Kennung', x["kennung"], help = tools.hilfe("person.kennung"))
 
     otherperson = collection.find_one({"_id" : { "$ne" : x["_id"]}, "name" : name, "vorname" : vorname})
     if otherperson:
@@ -113,38 +113,38 @@ if st.session_state.logged_in:
         else:
             st.warning(f"Eine Person mit demselben Namen gibt es bereits!")
 
-    code = st.multiselect("Zugehörigkeiten", codes_list, x["code"], format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
+    code = st.multiselect("Zugehörigkeiten", codes_list, x["code"], format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen", help = tools.hilfe("person.zugehoerigkeiten"))
     
     col1, col2, col3, col4 = st.columns([2, 1, 2, 1])
     with col1:
-        email1=st.text_input('Email 1', x["email1"])
+        email1=st.text_input('Email 1', x["email1"], help = tools.hilfe("person.email1"))
     with col2:
-        tel1=st.text_input('Telefonnummer 1', x["tel1"])
+        tel1=st.text_input('Telefonnummer 1', x["tel1"], help = tools.hilfe("person.tel1"))
     with col3:
         gebaeude_sichtbar = [ x["_id"]  for x in geb ]
         if x["gebaeude1"] not in gebaeude_sichtbar:
             gebaeude_sichtbar.insert(0, x["gebaeude1"])
         index1 = [g for g in gebaeude_sichtbar].index(x["gebaeude1"])
-        gebaeude1 = st.selectbox("Gebäude 1", [x for x in gebaeude_sichtbar], index = index1, format_func = (lambda a: tools.repr(util.gebaeude, a, False)))
+        gebaeude1 = st.selectbox("Gebäude 1", [x for x in gebaeude_sichtbar], index = index1, format_func = (lambda a: tools.repr(util.gebaeude, a, False)), help = tools.hilfe("person.gebaeude_1"))
     with col4:
-        raum1 = st.text_input('Raum (Büro) 1', x["raum1"])
+        raum1 = st.text_input('Raum (Büro) 1', x["raum1"], help = tools.hilfe("person.raum1"))
     with col1:
-        email2=st.text_input('Email 2', x["email2"])
+        email2=st.text_input('Email 2', x["email2"], help = tools.hilfe("person.email2"))
     with col2:
-        tel2=st.text_input('Telefonnummer 2', x["tel2"])
+        tel2=st.text_input('Telefonnummer 2', x["tel2"], help = tools.hilfe("person.tel2"))
     with col3:
         gebaeude_sichtbar = [x["_id"]  for x in geb]
         if x["gebaeude2"] not in gebaeude_sichtbar:
             gebaeude_sichtbar.insert(0, x["gebaeude2"])
         index2 = [g for g in gebaeude_sichtbar].index(x["gebaeude2"])
-        gebaeude2 = st.selectbox("Gebäude 2", [x for x in gebaeude_sichtbar], index = index2, format_func = (lambda a: tools.repr(util.gebaeude, a, False)))
+        gebaeude2 = st.selectbox("Gebäude 2", [x for x in gebaeude_sichtbar], index = index2, format_func = (lambda a: tools.repr(util.gebaeude, a, False)), help = tools.hilfe("person.gebaeude_2"))
     with col4:
-        raum2 = st.text_input('Raum (Büro) 2', x["raum2"])
+        raum2 = st.text_input('Raum (Büro) 2', x["raum2"], help = tools.hilfe("person.raum2"))
     with col1:
-        url=st.text_input('Homepage', x["url"])
+        url=st.text_input('Homepage', x["url"], help = tools.hilfe("person.url"))
 
-    kommentar_html=st.text_input('Kommentar für Homepage', x["kommentar_html"])
-    kommentar=st.text_input('Kommentar (intern)', x["kommentar"])
+    kommentar_html=st.text_input('Kommentar für Homepage', x["kommentar_html"], help = tools.hilfe("person.kommentar_html"))
+    kommentar=st.text_input('Kommentar (intern)', x["kommentar"], help = tools.hilfe("person.kommentar"))
 
     einstiegsdatum = x["einstiegsdatum"]
     ausstiegsdatum = x["ausstiegsdatum"]
@@ -153,7 +153,7 @@ if st.session_state.logged_in:
     kommentar_stelle = x["kommentar_stelle"]
     kommentar_abwesend = x["kommentar_abwesend"]
 
-    semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+    semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen", help = tools.hilfe("person.semester"))
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 

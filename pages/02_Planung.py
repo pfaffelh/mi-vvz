@@ -89,10 +89,10 @@ if st.session_state.logged_in:
     col1, col2, col3 = st.columns([1,1,1])
     with col1:
         st.write("Anzeige von...")
-        semester_start = st.selectbox(label="von", options = semesters, index = semesters.index(tools.get_semester_in_years(1)), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_von")
+        semester_start = st.selectbox(label="von", options = semesters, index = semesters.index(tools.get_semester_in_years(1)), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_von", help = tools.hilfe("planung.zeitraum_von"))
     with col2:
         st.write("...bis...")
-        semester_end = st.selectbox(label="von", options = semesters, index = semesters.index(tools.get_semester_in_years(4)), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_bis")
+        semester_end = st.selectbox(label="von", options = semesters, index = semesters.index(tools.get_semester_in_years(4)), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_bis", help = tools.hilfe("planung.zeitraum_bis"))
     semester_auswahl = sembetween(semester_start, semester_end)
     st.divider()
     
@@ -147,10 +147,10 @@ if st.session_state.logged_in:
     with cols[3]:
         with st.popover("Neue Veranstaltung"):
             with st.form("Veranstaltung anlegen", clear_on_submit=True):
-                name["new"] = st.text_input("Name", key = "name_v_neu")
-                sws["new"] = st.text_input("SWS", key = "sws_v_neu")
-                regel["new"] = st.selectbox("Regelmäßigkeit", ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"), key = "regel_v_neu")
-                kommentar["new"] = st.text_input("Kommentar", key = "kommentar_v_neu")
+                name["new"] = st.text_input("Name", key = "name_v_neu", help = tools.hilfe("planungveranstaltung.neu.name"))
+                sws["new"] = st.text_input("SWS", key = "sws_v_neu", help = tools.hilfe("planungveranstaltung.neu.sws"))
+                regel["new"] = st.selectbox("Regelmäßigkeit", ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"), key = "regel_v_neu", help = tools.hilfe("planungveranstaltung.neu.regelmaessigkeit"))
+                kommentar["new"] = st.text_input("Kommentar", key = "kommentar_v_neu", help = tools.hilfe("planungveranstaltung.neu.kommentar"))
                 st.form_submit_button("Veranstaltung anlegen", on_click = tools.new, args = (util.planungveranstaltung, {"name": name["new"], "sws": sws["new"], "regel": regel["new"], "kommentar": kommentar["new"]}, False,))
 #    for i, m in enumerate(semester_auswahl):
 #        with cols[i+4]:
@@ -184,10 +184,10 @@ if st.session_state.logged_in:
         with cols[3]:
             with st.popover(v["name"]):
                 st.write(v["bearbeitet"])
-                name_v = st.text_input("Name", v["name"], key = f"name_{v['_id']}")
-                sws_v = st.text_input("SWS", v["sws"], key = f"sws_{v['_id']}")
-                regel_v = st.selectbox("Regelmäßigkeit", ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"), ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester").index(v["regel"]), key = f"regel_{v['_id']}")
-                kommentar_v = st.text_input("Kommentar", v["kommentar"], key = f"kommentar_{v['_id']}")
+                name_v = st.text_input("Name", v["name"], key = f"name_{v['_id']}", help = tools.hilfe("planungveranstaltung.name"))
+                sws_v = st.text_input("SWS", v["sws"], key = f"sws_{v['_id']}", help = tools.hilfe("planungveranstaltung.sws"))
+                regel_v = st.selectbox("Regelmäßigkeit", ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester"), ("Jedes Wintersemester", "Jedes Sommersemester", "Jedes Semester").index(v["regel"]), key = f"regel_{v['_id']}", help = tools.hilfe("planungveranstaltung.regelmaessigkeit"))
+                kommentar_v = st.text_input("Kommentar", v["kommentar"], key = f"kommentar_{v['_id']}", help = tools.hilfe("planungveranstaltung.kommentar"))
                 if st.button("Speichern", key = f"save_{v['_id']}"):
                     tools.update_confirm(util.planungveranstaltung, v, {"name": name_v, "sws": sws_v, "regel": regel_v, "kommentar": kommentar_v}, False)
                     st.rerun(scope="app")
@@ -199,9 +199,9 @@ if st.session_state.logged_in:
                         with st.popover(", ".join([nachname_dict.get(q, "?") for q in p["dozent"]]), use_container_width=True):
                             tools.merke_bearbeitet(p)
                             st.write(p["bearbeitet"])
-                            dozent_p = st.multiselect("Dozent*innen", per_dict.keys(), p["dozent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key = f"dozent_{p['_id']}")
-                            sem_p = st.selectbox("Semester", options = semesters, index = semesters.index(m), key = f"sem_{p['_id']}")
-                            kommentar_p = st.text_input("Kommentar", p["kommentar"], key = f"kommentar_{p['_id']}")
+                            dozent_p = st.multiselect("Dozent*innen", per_dict.keys(), p["dozent"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key = f"dozent_{p['_id']}", help = tools.hilfe("planung.dozent_innen"))
+                            sem_p = st.selectbox("Semester", options = semesters, index = semesters.index(m), key = f"sem_{p['_id']}", help = tools.hilfe("planung.semester"))
+                            kommentar_p = st.text_input("Kommentar", p["kommentar"], key = f"kommentar_{p['_id']}", help = tools.hilfe("planung.kommentar"))
                             colu1, colu2 = st.columns([1,1])
                             with colu1:
                                 if st.button("Speichern", key = f"save_{p['_id']}"):
@@ -213,9 +213,9 @@ if st.session_state.logged_in:
                                     st.rerun(scope="app")
                     else:
                         with st.popover("➕", use_container_width=True):
-                            dozent_new = st.multiselect("Dozent*innen", per_dict.keys(), format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key = f"dozent_{v['_id']}_{m}")
-                            sem_new = st.selectbox("Semester", options = semesters, index = semesters.index(m), key = f"sem_{v['_id']}_{m}")
-                            kommentar_new = st.text_input("Kommentar", key = f"kommentar_{v['_id']}_{m}")
+                            dozent_new = st.multiselect("Dozent*innen", per_dict.keys(), format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen", key = f"dozent_{v['_id']}_{m}", help = tools.hilfe("planung.neu.dozent_innen"))
+                            sem_new = st.selectbox("Semester", options = semesters, index = semesters.index(m), key = f"sem_{v['_id']}_{m}", help = tools.hilfe("planung.neu.semester"))
+                            kommentar_new = st.text_input("Kommentar", key = f"kommentar_{v['_id']}_{m}", help = tools.hilfe("planung.neu.kommentar"))
                             if st.button("Speichern", key = f"save_{v['_id']}_{m}"):
                                 tools.new(util.planung, {"veranstaltung": v["_id"], "dozent": dozent_new, "sem": sem_new, "kommentar": kommentar_new}, False)
                                 st.rerun(scope="app")

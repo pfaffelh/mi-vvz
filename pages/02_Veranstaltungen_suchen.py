@@ -53,28 +53,28 @@ if st.session_state.logged_in:
         col1, col2, col3 = st.columns([1,1,1])
         with col1:
             st.write("von...")
-            semester_id_von = st.selectbox(label="von", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_von")
+            semester_id_von = st.selectbox(label="von", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_von", help = tools.hilfe("suche.veranstaltungen.von"))
             semester_von = util.semester.find_one({"_id": semester_id_von})
         with col2:
             st.write("...bis...")
-            semester_id_bis = st.selectbox(label="bis", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_bis")
+            semester_id_bis = st.selectbox(label="bis", options = [x["_id"] for x in semesters], index = [s["_id"] for s in semesters].index(st.session_state.semester_id), format_func = (lambda a: util.semester.find_one({"_id": a})["name_de"]), placeholder = "Wähle ein Semester", label_visibility = "collapsed", key = "semester_bis", help = tools.hilfe("suche.veranstaltungen.bis"))
             semester_bis = util.semester.find_one({"_id": semester_id_bis})
         semester_auswahl = list(util.semester.find({"rang": {"$gte": semester_von["rang"], "$lte": semester_bis["rang"]}}))
 
         # Auswahl von Rubriken 
         rubrik_vorauswahl = list(util.rubrik.find({"semester": {"$in": [x["_id"] for x in semester_auswahl]}, "veranstaltung": {"$ne": []}}, sort = [("titel_de", pymongo.ASCENDING)]))
-        rubrik_list = st.multiselect("Rubriken", [x["_id"] for x in rubrik_vorauswahl], [], format_func = (lambda a: tools.repr(util.rubrik, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchte Veranstaltung muss einen der ausgewählten Rubriken tragen. Falls keine Rubrik angegeben ist, werden Rubriken in der Suche nicht berücksichtigt.")
+        rubrik_list = st.multiselect("Rubriken", [x["_id"] for x in rubrik_vorauswahl], [], format_func = (lambda a: tools.repr(util.rubrik, a, False, False)), placeholder = "Bitte auswählen", help = tools.hilfe("suche.rubrik"))
 
         # Auswahl von Codes
         code_vorauswahl = list(util.code.find({"semester": {"$in": [x["_id"] for x in semester_auswahl]}, "veranstaltung": {"$ne": []}}, sort = [("beschreibung_de", pymongo.ASCENDING)]))
-        code_list = st.multiselect("Codes", [x["_id"] for x in code_vorauswahl], [], format_func = (lambda a: tools.repr(util.code, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen einen der ausgewählten Codes tragen. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
+        code_list = st.multiselect("Codes", [x["_id"] for x in code_vorauswahl], [], format_func = (lambda a: tools.repr(util.code, a, False, False)), placeholder = "Bitte auswählen", help = tools.hilfe("suche.code"))
 
         # Auswahl von Personen
         person_vorauswahl = list(util.person.find({"semester": {"$elemMatch": {"$in": [x["_id"] for x in semester_auswahl]}}, "veranstaltung": {"$ne": []}}, sort = [("name", pymongo.ASCENDING)]))
-        person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen mit einer der ausgewählten Personen verbunden sein. Falls kein Code angegeben ist, werden Codes in der Suche nicht berücksichtigt.")
+        person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = tools.hilfe("suche.person"))
 
         # Freitextsuche im Titel
-        te = st.text_input("Titel enthält", help = "Es wird nach ganzen Wörtern mit einer oder-Verknüpfung gesucht")
+        te = st.text_input("Titel enthält", help = tools.hilfe("suche.titel"))
 
         # Erstellung der Query
         query = {}
@@ -95,14 +95,14 @@ if st.session_state.logged_in:
         # Auswahl der Ausgabe
         col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
-            ausgabe_semester = st.checkbox("Semester", True, key = "semester1")
+            ausgabe_semester = st.checkbox("Semester", True, key = "semester1", help = tools.hilfe("suche.veranstaltungen.semester"))
         with col2:
-            ausgabe_rubrik = st.checkbox("Rubrik", True)
+            ausgabe_rubrik = st.checkbox("Rubrik", True, help = tools.hilfe("suche.veranstaltungen.rubrik"))
         ausgabe_titel = True
         with col3:
-            ausgabe_dozent = st.checkbox("Dozent*innen", True, key = "dozent1")
+            ausgabe_dozent = st.checkbox("Dozent*innen", True, key = "dozent1", help = tools.hilfe("suche.veranstaltungen.dozent_innen"))
         with col4:
-            ausgabe_assistent = st.checkbox("Assistent*innen", True)
+            ausgabe_assistent = st.checkbox("Assistent*innen", True, help = tools.hilfe("suche.veranstaltungen.assistent_innen"))
 
         semester = [tools.repr(util.semester, r["semester"], False, True) for r in result]
         titel = [r["name_de"] for r in result]
@@ -146,7 +146,7 @@ if st.session_state.logged_in:
         # QUERY
         # Auswahl von Personen
         person_vorauswahl = list(util.person.find({"semester": {"$elemMatch": {"$in": [x["_id"] for x in semester_auswahl]}}, "veranstaltung": {"$ne": []}}, sort = [("name", pymongo.ASCENDING)]))
-        person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = "Die gesuchten Veranstaltungen müssen mit einer der ausgewählten Personen verbunden sein.")
+        person_list = st.multiselect("Personen", [x["_id"] for x in person_vorauswahl], [], format_func = (lambda a: tools.repr(util.person, a, False, False)), placeholder = "Bitte auswählen", help = tools.hilfe("suche.person_termine"))
 
         # Erstellung der Query
         query = {}
@@ -205,25 +205,25 @@ if st.session_state.logged_in:
     with st.expander("Suche nach einmaligen Terminen..."):
         st.write("")
         col1, col2 = st.columns([1,1])
-        anzeige_start = col1.date_input("von", value = datetime.now() + timedelta(days = -30), format="DD.MM.YYYY")
-        anzeige_ende = col2.date_input("bis", value = datetime.now() + timedelta(days = 90), format="DD.MM.YYYY")
+        anzeige_start = col1.date_input("von", value = datetime.now() + timedelta(days = -30), format="DD.MM.YYYY", help = tools.hilfe("suche.termine.von"))
+        anzeige_ende = col2.date_input("bis", value = datetime.now() + timedelta(days = 90), format="DD.MM.YYYY", help = tools.hilfe("suche.termine.bis"))
 
         # nur_cal = st.toggle("Genau die Termine aus dem Prüfungskalender", True)
         ter_list = [ta["_id"] for ta in list(util.terminart.find({"cal_sichtbar" : True}))]
-        ta_list = st.multiselect("Als Default werden genau die Terminarten aus dem Prüfungskalender gesucht.", [x["_id"] for x in list(util.terminart.find())], ter_list, format_func = (lambda a: tools.repr(util.terminart, a, False, False)), placeholder = "Bitte auswählen")
+        ta_list = st.multiselect("Als Default werden genau die Terminarten aus dem Prüfungskalender gesucht.", [x["_id"] for x in list(util.terminart.find())], ter_list, format_func = (lambda a: tools.repr(util.terminart, a, False, False)), placeholder = "Bitte auswählen", help = tools.hilfe("suche.termine.terminart"))
 
         st.divider()
         st.write("Folgende Felder werden ausgegeben")
         # Auswahl der Ausgabe
         col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
-            ausgabe_semester = st.checkbox("Semester", True, key = "semester2")
+            ausgabe_semester = st.checkbox("Semester", True, key = "semester2", help = tools.hilfe("suche.termine.semester"))
         with col2:
-            ausgabe_veranstaltung = st.checkbox("Veranstaltung", True)
+            ausgabe_veranstaltung = st.checkbox("Veranstaltung", True, help = tools.hilfe("suche.termine.veranstaltung"))
         ausgabe_terminart = True
         ausgabe_termin = True
         with col3:
-            ausgabe_dozent = st.checkbox("Dozent*innen", True, key = "dozent2")
+            ausgabe_dozent = st.checkbox("Dozent*innen", True, key = "dozent2", help = tools.hilfe("suche.termine.dozent_innen"))
 
 
         anzeige_start = datetime.combine(anzeige_start, datetime.min.time())

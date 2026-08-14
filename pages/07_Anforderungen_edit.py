@@ -63,16 +63,16 @@ if st.session_state.logged_in:
 
     st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_de=st.text_input('Name (de)', x["name_de"])
-        name_en=st.text_input('Name (en)', x["name_en"])
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("anforderung.sichtbar"))
+        name_de=st.text_input('Name (de)', x["name_de"], help = tools.hilfe("anforderung.name_de"))
+        name_en=st.text_input('Name (en)', x["name_en"], help = tools.hilfe("anforderung.name_en"))
         anfkat = [x["_id"] for x in list(util.anforderungkategorie.find())]
         index = anfkat.index(x["anforderungskategorie"])
-        anforderungskategorie = st.selectbox("Anforderungskategorie", [x for x in anfkat], index = index, format_func = (lambda a: tools.repr(util.anforderungkategorie, a, show_collection=False)))
-        semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
+        anforderungskategorie = st.selectbox("Anforderungskategorie", [x for x in anfkat], index = index, format_func = (lambda a: tools.repr(util.anforderungkategorie, a, show_collection=False)), help = tools.hilfe("anforderung.anforderungskategorie"))
+        semester_list = st.multiselect("Semester", [x["_id"] for x in util.list_semesters()], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen", help = tools.hilfe("anforderung.semester"))
         se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
         semester_list = [s["_id"] for s in se]
-        kommentar=st.text_input('Kommentar', x["kommentar"])
+        kommentar=st.text_input('Kommentar', x["kommentar"], help = tools.hilfe("anforderung.kommentar"))
         x_updated = ({"name_de": name_de, "name_en": name_en, "anforderungskategorie": anforderungskategorie, "sichtbar": sichtbar, "kommentar": kommentar, "semester": semester_list})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:

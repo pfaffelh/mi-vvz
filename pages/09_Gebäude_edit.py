@@ -64,13 +64,13 @@ if st.session_state.logged_in:
 
     st.write(x["bearbeitet"])
     with st.form(f'ID-{x["_id"]}'):
-        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
-        name_en=st.text_input('Name (en)', x["name_en"])
-        kurzname=st.text_input('Kurzname', x["kurzname"])
-        adresse=st.text_input('Adresse', x["adresse"])
-        url=st.text_input('Url', x["url"])
-        kommentar=st.text_area('Kommentar', x["kommentar"])
+        sichtbar = st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("gebaeude.sichtbar"))
+        name_de=st.text_input('Name (de)', x["name_de"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False), help = tools.hilfe("gebaeude.name_de"))
+        name_en=st.text_input('Name (en)', x["name_en"], help = tools.hilfe("gebaeude.name_en"))
+        kurzname=st.text_input('Kurzname', x["kurzname"], help = tools.hilfe("gebaeude.kurzname"))
+        adresse=st.text_input('Adresse', x["adresse"], help = tools.hilfe("gebaeude.adresse"))
+        url=st.text_input('Url', x["url"], help = tools.hilfe("gebaeude.url"))
+        kommentar=st.text_area('Kommentar', x["kommentar"], help = tools.hilfe("gebaeude.kommentar"))
         x_updated = ({"name_de": name_de, "name_en": name_en, "kurzname": kurzname, "adresse": adresse, "url": url, "sichtbar": sichtbar, "kommentar": kommentar})
         submit = st.form_submit_button('Speichern', type = 'primary')
         if submit:
