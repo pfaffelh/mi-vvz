@@ -7,6 +7,10 @@ from itertools import combinations
 # Seiten-Layout
 st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
+# check if session_state is initialized if not change to main page
+if 'logged_in' not in st.session_state:
+    switch_page("VVZ")
+
 from misc.config import *
 import misc.util as util
 import misc.tools as tools
@@ -19,10 +23,6 @@ init_css()
 
 # make all neccesary variables available to session_state
 # setup_session_state()
-
-# check if session_state is initialized if not change to main page
-if 'logged_in' not in st.session_state:
-    switch_page("VVZ")
 
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
